@@ -63,7 +63,7 @@ from algorithms.klinker.closure import closure
 ################# DATABASE and RELSIM SETUP #######################
 ###################################################################
 # KG - DBpedia
-HOME = abspath(expanduser('~/Documents/pcatxcore/knowledgestream/data/'))
+HOME = abspath(expanduser('~/Documents/streamminer/data/'))
 if not exists(HOME):
 	print 'Data directory not found: %s' % HOME
 	print 'Download data per instructions on:'
