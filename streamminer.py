@@ -311,7 +311,7 @@ def extract_paths_sm(G, relsim_wt, triples, y, weight = 10.0, features=None):
 		label = y[idx]
 		triple_feature = dict()
 
-		targets = G.csr.indices % G.N #shift this function to the caller
+		targets = G.csr.indices % G.N
 		G.csr.data[targets == oid] = 1 # no cost for target t => max. specificity.
 		G.csr.data = np.multiply(relsim_wt, G.csr.data)
 
@@ -340,6 +340,7 @@ def extract_paths_sm(G, relsim_wt, triples, y, weight = 10.0, features=None):
 	print ''
 	if return_features:
 		return features, pos_features, neg_features, measurements
+	#else
 	return measurements
 
 def get_paths_sm(G, s, p, o, relsim_wt, weight = 10.0, maxpaths=-1):
@@ -523,7 +524,6 @@ def add_edge(G, removed_edges):
 # ██████   █████  ██ ██   ██ ███████    ██    ██   ██ ██   ██ ███████
 
 ###########################################################
-
 
 def get_shortest_path(G, sid, pid, oid):
 	#making sure that nodes are integers:
@@ -846,6 +846,7 @@ def yenKSP4(G, sid, pid, oid, K = 20):
 	for path_dict in A:
 		discovered_paths.append(RelationalPathSM(sid, pid, oid, path_dict['path_total_cost'], len(path_dict['path'])-1, path_dict['path'], path_dict['path_rel'], path_dict['path_weights']))
 	return discovered_paths
+
 def predpath_train_model(G, triples, use_interpretable_features=False, cv=10):
 	"""
 	Entry point for building a fact-checking classifier.
