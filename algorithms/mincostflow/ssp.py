@@ -1,5 +1,5 @@
 """
-Successive Shortest Path (SSP) algorithm for solving the minimum cost 
+Successive Shortest Path (SSP) algorithm for solving the minimum cost
 flow problem.
 
 Reference: Ch 9 Network Flows by Ahuja, Magnanti and Orlin.
@@ -18,7 +18,6 @@ from datastructures.flow import Flow
 from algorithms.mincostflow.ssp_helper import compute_shortest_path_distances
 
 # logging config: https://docs.python.org/2/library/logging.html#logrecord-attributes
-log.basicConfig(format='[%(asctime)s] %(message)s', datefmt='%H:%M:%S', level=log.DEBUG)
 
 def disable_logging(lvl):
 	log.disable(lvl)
@@ -32,7 +31,7 @@ _float = np.float
 def succ_shortest_path(G, cost_vec, s, p, t, linkpred=True, return_flow=True, npaths=-1):
 	"""
 	Returns the s-t min cost flow in graph G using Successive Shortest Path (SSP)
-	algorithm. 
+	algorithm.
 
 	* Note: Current implementation only works for undirected graphs.
 
@@ -49,15 +48,15 @@ def succ_shortest_path(G, cost_vec, s, p, t, linkpred=True, return_flow=True, np
 	npaths: int
 		Threshold for maximum number of paths to compute.
 	"""
-	N, R = G.N, G.R 
+	N, R = G.N, G.R
 	pi = np.zeros(N, dtype=_int)
 	flow = dict() # eventual flow
 	excess_at_t = 0
 	ts = time()
 
-	# link prediction: second condition is to avoid unnecessary introduction 
+	# link prediction: second condition is to avoid unnecessary introduction
 	# of a zero in the if clause
-	if linkpred and G[s, t, p] != 0: 
+	if linkpred and G[s, t, p] != 0:
 		G[s, t, p] = 0
 
 	# some prep
@@ -71,7 +70,7 @@ def succ_shortest_path(G, cost_vec, s, p, t, linkpred=True, return_flow=True, np
 
 	# initial reduced cost
 	reduced_cost = cost_mtx.data - pi[G.sources] + pi[G.targets]
-	log.debug('Initial reduced cost: {}'.format(reduced_cost)) 
+	log.debug('Initial reduced cost: {}'.format(reduced_cost))
 
 	# compute shortest path distances
 	t1 = time()
@@ -105,18 +104,18 @@ def succ_shortest_path(G, cost_vec, s, p, t, linkpred=True, return_flow=True, np
 
 		# update residual graph and flow
 		# 	* Decrement forward edge's res. cap by bottleneck
-		#   * Change backward edge's res. cap. by bottleneck 
+		#   * Change backward edge's res. cap. by bottleneck
 		#		[Note: In the case where we may have a directed edge (u, v) but not (v, u),
 		#		a flow from u to v would result in a backward edge from v to u with capacity
-		#		equal to the flow sent on (u, v). However, in the case where we may have both (u, v) 
-		#		and (v, u) from the same predicate, a flow along (u, v) creates an additional capacity 
-		#		along (v, u), which may result in a total capacity that exceeds 1. However, since the 
+		#		equal to the flow sent on (u, v). However, in the case where we may have both (u, v)
+		#		and (v, u) from the same predicate, a flow along (u, v) creates an additional capacity
+		#		along (v, u), which may result in a total capacity that exceeds 1. However, since the
 		#		capacity captures a notion of similarity between predicates, we want it to be less than or
 		#		equal to 1. We therefore make an assumption in this work that there is only
-		#		an edge in one direction. Accordingly, once one of the forward or backward edges is used, we 
-		#		set the capacity of the other edge equal to the flow sent along the chosen edge, which is the bottleneck. 
-		#		This assumption does however mean that it may lead to different results. 
-		#		Current implementation thus makes this simplifying assumption (i.e., old (v, u) value 
+		#		an edge in one direction. Accordingly, once one of the forward or backward edges is used, we
+		#		set the capacity of the other edge equal to the flow sent along the chosen edge, which is the bottleneck.
+		#		This assumption does however mean that it may lead to different results.
+		#		Current implementation thus makes this simplifying assumption (i.e., old (v, u) value
 		#		is overwritten if it exists), and other ways can be devised in future work.]
 		#	* Update cost matrix (NOTE: old actual cost is overwritten)
 		# 	* Update flow
@@ -126,7 +125,7 @@ def succ_shortest_path(G, cost_vec, s, p, t, linkpred=True, return_flow=True, np
 			residual_cap = G.csr[u, N * r + v] # G[u, v, r]
 			if residual_cap - bnck >= 0:
 				G.csr[u, N * r + v] -= bnck # update G[u, v, r]
-			G.csr[v, N * r + u] = bnck # G[v, u, r] 
+			G.csr[v, N * r + u] = bnck # G[v, u, r]
 			cost_mtx[v, N * r + u] = -cost_mtx[u, N * r + v]
 			if return_flow:
 				flow[(u, v, r)] = flow.get((u, v, r), 0.) + bnck
@@ -139,11 +138,10 @@ def succ_shortest_path(G, cost_vec, s, p, t, linkpred=True, return_flow=True, np
 	mincostflow = Flow(s, p, t, maxflow=outflow, annotation='SUCC-SHORTEST-PATH')
 	mincostflow.flow = excess_at_t
 	mincostflow.stream = {
-		'sid': s, 'pid': p, 'oid': t, 'paths': paths, 'relpaths': relpaths, 
+		'sid': s, 'pid': p, 'oid': t, 'paths': paths, 'relpaths': relpaths,
 		'bottlenecks': bncks, 'costs': costs, 'flows': flows
 	}
 	if return_flow:
 		mincostflow.edges = flow # a dict of (i, j, r) -> flow-val
 	mincostflow.time = tend - ts
 	return mincostflow
-		
