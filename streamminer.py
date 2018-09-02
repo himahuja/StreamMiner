@@ -314,12 +314,17 @@ def extract_paths_sm(G, relsim_wt, triples, y, weight = 10.0, features=None):
 		targets = G.csr.indices % G.N
 		G.csr.data[targets == oid] = 1 # no cost for target t => max. specificity.
 		G.csr.data = np.multiply(relsim_wt, G.csr.data)
+		# Alex 1/9/18 - added for debugging purposes
+		log.debug("indices: {} \n\n data: {}".format(G.csr.data, G.csr.indices))
+		log.debug("The masked edges for {}: {}".format(pid, ((G.csr.indices - (G.csr.indices % G.N)) / G.N) == pid))
 
 		# paths = get_paths_sm(G, sid, pid, oid, relsim_wt, \
 								# weight = weight, maxpaths=20)
 		# paths = get_paths_sm_limited(G, sid, pid, oid, relsim_wt, \
 		# 				weight = weight, maxpaths=20, top_n_neighbors=5)
 		paths = yenKSP4(G, sid, pid, oid)
+		log.debug("indices: {} \n\n data: {}".format(G.csr.data, G.csr.indices))
+		log.debug("The masked edges for {}: {}".format(pid, ((G.csr.indices - (G.csr.indices % G.N)) / G.N) == pid))
 		print 'Completed extraction for, s: {}, p: {}, o:{}, paths: {}'.format(sid, pid, oid, len(paths))
 		for pth in paths:
 			ff =  tuple(pth.relational_path)
@@ -1326,11 +1331,13 @@ def main(args=None):
 			dest='outdir', help='Path to the output directory.')
 	parser.add_argument('-m', type=str, required=True,
 			dest='method', help='Method to use: stream, relklinker, klinker, \
-			predpath, streamminer')
+			predpath, sm')
 	args = parser.parse_args()
 
 	# logging
-	disable_logging(log.DEBUG)
+	# Alex 1/9/18 - Commented out to add more logging stuff for debugging
+	#disable_logging(log.DEBUG)
+
 
 	relsim = np.load(RELSIMPATH)
 
@@ -1414,6 +1421,10 @@ def main(args=None):
 		except IOError, e:
 			raise e
 	elif args.method == 'sm':
+		LOGPATH = join(HOME, '../logs')
+		assert exists(LOGPATH)
+		log_file = join(LOGPATH, 'log_streamminer_{}_{}.txt'.format(base, DATE))
+		log.basicConfig(filename=log_file, filemode='w', level=log.DEBUG)
 		vec, model = predpath_train_model_sm(G, spo_df, relsim) # train
 		print 'Time taken: {:.2f}s\n'.format(time() - t1)
 		# save model
