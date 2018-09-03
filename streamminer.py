@@ -807,11 +807,11 @@ def yenKSP3(G, sid, pid, oid, K = 20):
 
 ###################################################################
 def yenKSP4(G, sid, pid, oid, K = 20):
-
 	discovered_paths = []
 	#create graph backup
 	weight_stack, path_stack, rel_stack = relclosure_sm(G, int(sid), int(pid), int(oid), kind='metric', linkpred=True)
-	print "Shortest path for s:{}, p:{}, o:{} is: {}".format(sid, pid, oid, path_stack)
+	log.info("Shortest path for s:{}, p:{}, o:{} is: {}".format(sid, pid, oid, path_stack))
+	#print "Shortest path for s:{}, p:{}, o:{} is: {}".format(sid, pid, oid, path_stack)
 	if not path_stack:
 		return discovered_paths
 	A = [{'path_total_cost': np.sum(weight_stack),
@@ -830,8 +830,8 @@ def yenKSP4(G, sid, pid, oid, K = 20):
 			for path_dict in A:
 				if len(path_dict['path']) > i and rootPath == path_dict['path'][:i+1]:
 					G, removed_edges, flag = delete_edge(G, path_dict['path'][i], path_dict['path_rel'][i+1], path_dict['path'][i+1], removed_edges)
-					if flag == 0: continue
-
+					if flag == 0:
+						continue
 
 			spurPathWeights, spurPath, spurPathRel = relclosure_sm(G, int(spurNode), int(pid), int(oid), kind='metric', linkpred = True)
 
