@@ -18,7 +18,7 @@ from os.path import expanduser, abspath, isfile, isdir, basename, splitext, \
 from time import time
 from datetime import date
 import cPickle as pkl
-
+sys.path.append("..")
 from datastructures.rgraph import Graph, weighted_degree
 
 # OUR METHODS
@@ -38,7 +38,7 @@ from algorithms.linkpred.pref_attach import preferential_attachment
 
 
 # KG - DBpedia
-HOME = abspath(expanduser('~/Documents/pcatxcore/knowledgestream/data/'))
+HOME = abspath(expanduser('~/Documents/streamminer/data/'))
 if not exists(HOME):
 	print 'Data directory not found: %s' % HOME
 	print 'Download data per instructions on:'
