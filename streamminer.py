@@ -152,7 +152,8 @@ def predpath_train_model_sm(G, triples, relsim, use_interpretable_features=False
 	triples = triples[['sid', 'pid', 'oid']].to_dict(orient='records')
 
 	pid = triples[0]['pid']
-	print 'PID is: {}, with type: {}'.format(pid, pid.dtype)
+	log.info('PID is: {}, with type: {}'.format(pid, pid.dtype))
+	#print 'PID is: {}, with type: {}'.format(pid, pid.dtype)
 
 	# G.targets = G.csr.indices % G.N
 	G_bak = {'data': G.csr.data.copy(),
@@ -179,25 +180,30 @@ def predpath_train_model_sm(G, triples, relsim, use_interpretable_features=False
 
 
 	## Removing all the edges with the predicte p in between any nodes.
-	print '=> Removing predicate {} from KG.'.format(pid)
+	log.info('=> Removing predicate {} from KG.\n'.format(pid))
+	#print '=> Removing predicate {} from KG.'.format(pid)
 	eraseedges_mask = ((G.csr.indices - (G.csr.indices % G.N)) / G.N) == pid
 	specificity_wt[eraseedges_mask] = 0
 	G.csr.data = specificity_wt.copy()
-	print ''
+	#print ''
 
 	# Path extraction
-	print '=> Path extraction..(this can take a while)'
+	log.info('=> Path extraction..(this can take a while)')
+	#print '=> Path extraction..(this can take a while)'
 	t1 = time()
 	features, pos_features, neg_features, measurements = extract_paths_sm(G, relsim_wt, triples, y, weight)
-	print 'P: +:{}, -:{}, unique tot:{}'.format(len(pos_features), len(neg_features), len(features))
+	log.info('P: +:{}, -:{}, unique tot:{}'.format(len(pos_features), len(neg_features), len(features)))
+	#print 'P: +:{}, -:{}, unique tot:{}'.format(len(pos_features), len(neg_features), len(features))
 	vec = DictVectorizer()
 	X = vec.fit_transform(measurements)
 	n, m = X.shape
-	print 'Time taken: {:.2f}s'.format(time() - t1)
-	print ''
+	log.info('Time taken: {:.2f}s\n'.format(time() - t1))
+	#print 'Time taken: {:.2f}s'.format(time() - t1)
+	#print ''
 
 	# Path selection
-	print '=> Path selection..'
+	log.info('=> Path selection..')
+	#print '=> Path selection..'
 	t1 = time()
 	pathselect = SelectKBest(mutual_info_classif, k=min(100, m))
 	X_select = pathselect.fit_transform(X, y)
@@ -209,15 +215,16 @@ def predpath_train_model_sm(G, triples, relsim, use_interpretable_features=False
 			select_pos_features.add(feature)
 		if feature in neg_features:
 			select_neg_features.add(feature)
-	print 'D: +:{}, -:{}, tot:{}'.format(
-		len(select_pos_features), len(select_neg_features), X_select.shape[1]
-	)
-	print 'Time taken: {:.2f}s'.format(time() - t1)
-	print ''
+	log.info('D: +:{}, -:{}, tot:{}'.format(len(select_pos_features), len(select_neg_features), X_select.shape[1]))
+	log.info('Time taken: {:.2f}s\n'.format(time() - t1))
+	#print 'D: +:{}, -:{}, tot:{}'.format(len(select_pos_features), len(select_neg_features), X_select.shape[1])
+	#print 'Time taken: {:.2f}s'.format(time() - t1)
+	#print ''
 
 	# Fact interpretation
 	if use_interpretable_features and len(select_neg_features) > 0:
-		print '=> Fact interpretation..'
+		log.info('=> Fact interpretation..')
+		#print '=> Fact interpretation..'
 		t1 = time()
 		theta = 10
 		select_neg_idx = [i for i, f in enumerate(vec.get_feature_names()) if f in select_neg_features]
@@ -231,19 +238,22 @@ def predpath_train_model_sm(G, triples, relsim, use_interpretable_features=False
 				select_neg_features.remove(f)
 		vec = vec.restrictidx(keepidx, indices=True)
 		X_select = X_select[:, keepidx]
-		print 'D*: +:{}, -:{}, tot:{}'.format(
-			len(select_pos_features), len(select_neg_features), X_select.shape[1]
-		)
-		print 'Time taken: {:.2f}s'.format(time() - t1)
-		print ''
+		log.info('D*: +:{}, -:{}, tot:{}'.format(len(select_pos_features), len(select_neg_features), X_select.shape[1]))
+		log.info('Time taken: {:.2f}s\n'.format(time() - t1))
+		#print 'D*: +:{}, -:{}, tot:{}'.format(len(select_pos_features), len(select_neg_features), X_select.shape[1])
+		#print 'Time taken: {:.2f}s'.format(time() - t1)
+		#print ''
 
 	# Model creation
-	print '=> Model building..'
+	log.info('=> Model building..')
+	#print '=> Model building..'
 	t1 = time()
 	model = find_best_model(X_select, y, cv=cv)
-	print '#Features: {}, best-AUROC: {:.5f}'.format(X_select.shape[1], model['best_score'])
-	print 'Time taken: {:.2f}s'.format(time() - t1)
-	print ''
+	log.info('#Features: {}, best-AUROC: {:.5f}'.format(X_select.shape[1], model['best_score']))
+	#print '#Features: {}, best-AUROC: {:.5f}'.format(X_select.shape[1], model['best_score'])
+	log.info('Time taken: {:.2f}s\n'.format(time() - t1))
+	#print 'Time taken: {:.2f}s'.format(time() - t1)
+	#print ''
 	############################################
 	## From KStream
 	np.copyto(G.csr.data, G_bak['data'])
@@ -315,16 +325,16 @@ def extract_paths_sm(G, relsim_wt, triples, y, weight = 10.0, features=None):
 		G.csr.data[targets == oid] = 1 # no cost for target t => max. specificity.
 		G.csr.data = np.multiply(relsim_wt, G.csr.data)
 		# Alex 1/9/18 - added for debugging purposes
-		log.debug("indices: {}, data: {}".format(G.csr.data, G.csr.indices))
-		log.debug("The masked edges for {}: {}".format(pid, ((G.csr.indices - (G.csr.indices % G.N)) / G.N) == pid))
+		log.debug("(extract_paths_sm, Before YenKSP4) indices: {}, data: {}".format(G.csr.data, G.csr.indices))
+		log.debug("(extract_paths_sm, Before YenKSP4) The masked edges for {}: {}".format(pid, ((G.csr.indices - (G.csr.indices % G.N)) / G.N) == pid))
 
 		# paths = get_paths_sm(G, sid, pid, oid, relsim_wt, \
 								# weight = weight, maxpaths=20)
 		# paths = get_paths_sm_limited(G, sid, pid, oid, relsim_wt, \
 		# 				weight = weight, maxpaths=20, top_n_neighbors=5)
 		paths = yenKSP4(G, sid, pid, oid)
-		log.debug("indices: {}, data: {}".format(G.csr.data, G.csr.indices))
-		log.debug("The masked edges for {}: {}".format(pid, ((G.csr.indices - (G.csr.indices % G.N)) / G.N) == pid))
+		log.debug("(extract_paths_sm, After YenKSP4) indices: {}, data: {}".format(G.csr.data, G.csr.indices))
+		log.debug("(extract_paths_sm, After YenKSP4) The masked edges for {}: {}".format(pid, ((G.csr.indices - (G.csr.indices % G.N)) / G.N) == pid))
 		trus = [elem == True for elem in ((G.csr.indices - (G.csr.indices % G.N)) / G.N) == pid]
 		logger = log.getLogger()
 		for i in range(len(logger.handlers)):
@@ -835,9 +845,10 @@ def yenKSP4(G, sid, pid, oid, K = 20):
 							'path': totalPath,
 							'path_rel': totalPathRel,
 							'path_weights': totalWeights}
-				print("---------------------------------")
-				print(totalPath)
-				print(totalPathRel)
+				log.info("totalPath: {}, totalPathRel: {}".format(totalPath, totalPathRel))
+				#print("---------------------------------")
+				#print(totalPath)
+				#print(totalPathRel)
 				if not (potential_k in B):
 					B.append(potential_k)
 			# Add back the removed edges
@@ -890,6 +901,7 @@ def predpath_train_model(G, triples, use_interpretable_features=False, cv=10):
 
 	# Remove all edges in G corresponding to predicate p.
 	pid = triples[0]['pid']
+
 	print '=> Removing predicate {} from KG.'.format(pid)
 	eraseedges_mask = ((G.csr.indices - (G.csr.indices % G.N)) / G.N) == pid
 	G.csr.data[eraseedges_mask] = 0
