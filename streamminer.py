@@ -517,7 +517,7 @@ def delete_edge(G, s, p, o, removed_edges):
 				G.csr.data[ start + np.where(check)[0][0] ] = 0
 	except:
 		flag = 0
-	return G, removed_edges, flag
+	return removed_edges, flag
 
 def add_edge(G, removed_edges):
 	for removed_edge in removed_edges:
@@ -532,7 +532,6 @@ def add_edge(G, removed_edges):
 		bar[np.where(neighbors == o)[0][0]] = 1
 		check = foo.astype(int) & bar.astype(int)
 		G.csr.data[ start + np.where(check)[0][0] ] = cost
-	return G
 ###########################################################
 
 # ██████       ██ ██ ██   ██ ███████ ████████ ██████   █████  ███████
@@ -807,19 +806,22 @@ def yenKSP3(G, sid, pid, oid, K = 20):
 
 ###################################################################
 def yenKSP4(G, sid, pid, oid, K = 20):
+
 	discovered_paths = []
 	#create graph backup
 	weight_stack, path_stack, rel_stack = relclosure_sm(G, int(sid), int(pid), int(oid), kind='metric', linkpred=True)
 	log.info("Shortest path for s:{}, p:{}, o:{} is: {}".format(sid, pid, oid, path_stack))
 	#print "Shortest path for s:{}, p:{}, o:{} is: {}".format(sid, pid, oid, path_stack)
 	if not path_stack:
+		## if the first shortest path is empty, retuen empty discoverd_paths
 		return discovered_paths
 	A = [{'path_total_cost': np.sum(weight_stack),
 		'path': path_stack,
 		'path_rel': rel_stack,
 		'path_weights': weight_stack}]
 	B = []
-	for k in xrange(1, K):
+	for k in xrange(1, K): #for the k-th path, it assumes all paths 1..k-1 are available
+
 		for i in xrange(0, len(A[-1]['path'])-1):
 			spurNode = A[-1]['path'][i]
 			rootPath = A[-1]['path'][:i+1]
@@ -829,7 +831,7 @@ def yenKSP4(G, sid, pid, oid, K = 20):
 			removed_edges = []
 			for path_dict in A:
 				if len(path_dict['path']) > i and rootPath == path_dict['path'][:i+1]:
-					G, removed_edges, flag = delete_edge(G, path_dict['path'][i], path_dict['path_rel'][i+1], path_dict['path'][i+1], removed_edges)
+					removed_edges, flag = delete_edge(G, path_dict['path'][i], path_dict['path_rel'][i+1], path_dict['path'][i+1], removed_edges)
 					if flag == 0:
 						continue
 
@@ -846,15 +848,13 @@ def yenKSP4(G, sid, pid, oid, K = 20):
 							'path_rel': totalPathRel,
 							'path_weights': totalWeights}
 				log.info("totalPath: {}, totalPathRel: {}".format(totalPath, totalPathRel))
-				#print("---------------------------------")
-				#print(totalPath)
-				#print(totalPathRel)
 				if not (potential_k in B):
 					B.append(potential_k)
 			# Add back the removed edges
-			G = add_edge(G, removed_edges)
+			add_edge(G, removed_edges)
 				# for removed_edge in removed_edges:
 				# 	G.csr[removed_edge[0], removed_edge[2]*G.N + removed_edge[1]] = removed_edge[3]
+			sys.stdout.flush()
 		if len(B):
 			B = sorted(B, key=lambda k: k['path_total_cost'])
 			A.append(B[0])
