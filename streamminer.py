@@ -308,37 +308,28 @@ def extract_paths_sm(G, relsim_wt, triples, y, weight = 10.0, features=None):
 		return_features = True
 		features, pos_features, neg_features = set(), set(), set()
 	measurements = []
-	# Make backup here
-		## Create graph backup
-	G_bak = {
-		'data': G.csr.data.copy(),
-		'indices': G.csr.indices.copy(),
-		'indptr': G.csr.indptr.copy()
-	}
+
+	tmp_data = G.csr.data.copy()
+	tmp_indices = G.csr.indices.copy()
 
 	for idx, triple in enumerate(triples):
 		sid, pid, oid = triple['sid'], triple['pid'], triple['oid']
 		label = y[idx]
 		triple_feature = dict()
 
-		targets = G.csr.indices % G.N
-		G.csr.data[targets == oid] = 1 # no cost for target t => max. specificity.
-		G.csr.data = np.multiply(relsim_wt, G.csr.data)
-		# Alex 1/9/18 - added for debugging purposes
-		log.debug("(extract_paths_sm, Before YenKSP4) indices: {}, data: {}".format(G.csr.data, G.csr.indices))
-		log.debug("(extract_paths_sm, Before YenKSP4) The masked edges for {}: {}".format(pid, ((G.csr.indices - (G.csr.indices % G.N)) / G.N) == pid))
+		targets = tmp_indices % G.N
+		tmp_data[targets == oid] = 1 # no cost for target t => max. specificity.
+		tmp_data = np.multiply(relsim_wt, tmp_data)
+		log.debug("(extract_paths_sm, Before YenKSP4) indices: {}, data: {}".format(tmp_data, tmp_indices))
+		log.debug("(extract_paths_sm, Before YenKSP4) The masked edges for {}: {}".format(pid, ((tmp_indices - (tmp_indices % G.N)) / G.N) == pid))
 
 		# paths = get_paths_sm(G, sid, pid, oid, relsim_wt, \
 								# weight = weight, maxpaths=20)
 		# paths = get_paths_sm_limited(G, sid, pid, oid, relsim_wt, \
 		# 				weight = weight, maxpaths=20, top_n_neighbors=5)
 		paths = yenKSP4(G, sid, pid, oid)
-		log.debug("(extract_paths_sm, After YenKSP4) indices: {}, data: {}".format(G.csr.data, G.csr.indices))
-		log.debug("(extract_paths_sm, After YenKSP4) The masked edges for {}: {}".format(pid, ((G.csr.indices - (G.csr.indices % G.N)) / G.N) == pid))
-		trus = [elem == True for elem in ((G.csr.indices - (G.csr.indices % G.N)) / G.N) == pid]
-		logger = log.getLogger()
-		for i in range(len(logger.handlers)):
-			logger.handlers[i].flush()
+		log.debug("(extract_paths_sm, After YenKSP4) indices: {}, data: {}".format(tmp_data, tmp_indices))
+		log.debug("(extract_paths_sm, After YenKSP4) The masked edges for {}: {}".format(pid, ((tmp_indices - (tmp_indices % G.N)) / G.N) == pid))
 		for pth in paths:
 			ff =  tuple(pth.relational_path)
 			if ff not in features:
@@ -352,9 +343,6 @@ def extract_paths_sm(G, relsim_wt, triples, y, weight = 10.0, features=None):
 			triple_feature[ff] = triple_feature.get(ff, 0) + 1
 		measurements.append(triple_feature)
 		sys.stdout.flush()
-		np.copyto(G.csr.data, G_bak['data'])
-		np.copyto(G.csr.indices, G_bak['indices'])
-		np.copyto(G.csr.indptr, G_bak['indptr'])
 	print ''
 	if return_features:
 		return features, pos_features, neg_features, measurements
