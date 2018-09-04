@@ -8,6 +8,10 @@ The Directory where this will work: `$HOME/Documents/streamminer`
 
 Download data from the following URL http://carl.cs.indiana.edu/data/fact-checking/data.zip and decompress it inside streamminer directory.
 
+## CSR Matrix
+
+[Compressed Sparse Row Format (CSR)](https://www.scipy-lectures.org/advanced/scipy_sparse/csr_matrix.html)
+
 ## Issues:
 
 #### Memory Usage
