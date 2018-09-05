@@ -845,7 +845,7 @@ def yenKSP4(G, sid, pid, oid, K = 5):
 
 			spurPathWeights, spurPath, spurPathRel = relclosure_sm(G, int(spurNode), int(pid), int(oid), kind='metric', linkpred = True)
 
-			if spurPath and not([node for node in spurPath if node in rootPath[:-1]]):
+			if spurPath and not([node for node in spurPath if node in rootPath[:-1]]) and spurPathRel != [-1]:
 				# print("Supplementary path was found!")
 				totalPath = rootPath[:-1] + spurPath
 				totalDist = np.sum(rootPathWeights[:]) + np.sum(spurPathWeights[1:])
