@@ -341,6 +341,7 @@ def extract_paths_sm(G, relsim_wt, triples, y, weight = 10.0, features=None):
 				else:
 					raise Exception("Unknown class label: {}".format(label))
 			triple_feature[ff] = triple_feature.get(ff, 0) + 1
+		print triple_feature
 		measurements.append(triple_feature)
 		sys.stdout.flush()
 	print ''
@@ -844,7 +845,7 @@ def yenKSP4(G, sid, pid, oid, K = 5):
 
 			spurPathWeights, spurPath, spurPathRel = relclosure_sm(G, int(spurNode), int(pid), int(oid), kind='metric', linkpred = True)
 
-			if spurPath:
+			if spurPath and not([node for node in spurPath if node in rootPath[:-1]]):
 				# print("Supplementary path was found!")
 				totalPath = rootPath[:-1] + spurPath
 				totalDist = np.sum(rootPathWeights[:]) + np.sum(spurPathWeights[1:])
@@ -856,11 +857,11 @@ def yenKSP4(G, sid, pid, oid, K = 5):
 							   'path_weights': totalWeights}
 				# log.info("totalPath: {}, totalPathRel: {}".format(totalPath, totalPathRel))
 				if not (potential_k in B or potential_k in A) :
+					# removes repititive projects in A & B
 					B.append(potential_k)
 			# Add back the removed edges & nodes
 			# add_node(G, removed_nodes)
 			add_edge(G, removed_edges)
-
 			sys.stdout.flush()
 		if len(B):
 			B = sorted(B, key=lambda k: k['path_total_cost'])
