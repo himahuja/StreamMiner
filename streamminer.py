@@ -259,7 +259,7 @@ def predpath_train_model_sm(G, triples, relsim, use_interpretable_features=False
 	np.copyto(G.csr.data, G_bak['data'])
 	np.copyto(G.csr.indices, G_bak['indices'])
 	np.copyto(G.csr.indptr, G_bak['indptr'])
-	np.copyto(cost_vec, cost_vec_bak)
+	# np.copyto(cost_vec, cost_vec_bak)x
 	############################################
 
 	return vec, model
@@ -320,16 +320,16 @@ def extract_paths_sm(G, relsim_wt, triples, y, weight = 10.0, features=None):
 		targets = tmp_indices % G.N
 		tmp_data[targets == oid] = 1 # no cost for target t => max. specificity.
 		tmp_data = np.multiply(relsim_wt, tmp_data)
-		log.debug("(extract_paths_sm, Before YenKSP4) indices: {}, data: {}".format(tmp_data, tmp_indices))
-		log.debug("(extract_paths_sm, Before YenKSP4) The masked edges for {}: {}".format(pid, ((tmp_indices - (tmp_indices % G.N)) / G.N) == pid))
+		# log.debug("(extract_paths_sm, Before YenKSP4) indices: {}, data: {}".format(tmp_indices, tmp_data))
+		log.debug("(extract_paths_sm, Before YenKSP4) The number of masked edges for {}: {}".format(pid, np.sum(((tmp_indices - (tmp_indices % G.N)) / G.N) == pid)) )
 
 		# paths = get_paths_sm(G, sid, pid, oid, relsim_wt, \
 								# weight = weight, maxpaths=20)
 		# paths = get_paths_sm_limited(G, sid, pid, oid, relsim_wt, \
 		# 				weight = weight, maxpaths=20, top_n_neighbors=5)
 		paths = yenKSP4(G, sid, pid, oid)
-		log.debug("(extract_paths_sm, After YenKSP4) indices: {}, data: {}".format(tmp_data, tmp_indices))
-		log.debug("(extract_paths_sm, After YenKSP4) The masked edges for {}: {}".format(pid, ((tmp_indices - (tmp_indices % G.N)) / G.N) == pid))
+		# log.debug("(extract_paths_sm, After YenKSP4) indices: {}, data: {}".format(tmp_indices, tmp_data))
+		log.debug("(extract_paths_sm, After YenKSP4) The number of masked edges for {}: {}".format(pid, np.sum(((tmp_indices - (tmp_indices % G.N)) / G.N) == pid)) )
 		for pth in paths:
 			ff =  tuple(pth.relational_path)
 			if ff not in features:
@@ -461,51 +461,67 @@ def relax(weight, u, v, r, Dist, prev):
 		Dist[v] = d
 		prev[v] = (-weight, u, r)
 
-def delete_edge(G, s, p, o, removed_edges):
+def delete_node(G, s):
+	# for now it just deletes outward edges from the s node
+	s = int(s)
+	deletedNodes = []
+	start = G.csr.indptr[s]
+	end = G.csr.indptr[s+1]
+	# neighbors = G.csr.indices[start:end] % G.N # nbrs in wide-CSR
+	# rels = (G.csr.indices[start:end] - neighbors) / G.N
+	# for neighbor in neighbors:
+	# 	sub_start =
+	tmp = G.csr.data[start:end]
+	# deleting data values
+	G.csr.data[start:end] = 0
+	deletedNodes.append((s, tmp))
+	return deletedNodes
 
-	flag = 0
+def add_node(G, removedNodes):
+	for removedNode in removedNodes:
+		start = G.csr.indptr[removedNode[0]]
+		end = G.csr.indptr[removedNode[0]+1]
+		G.csr.data[start:end] = removedNode[1]
+
+def delete_edge(G, s, p, o):
 	s, p, o = int(s), int(p), int(o)
+	deletedEdges = []
 
-	try:
-		start = G.csr.indptr[s]
-		end = G.csr.indptr[s+1]
-		neighbors = G.csr.indices[start:end] % G.N# nbrs in wide-CSR
-		rels = (G.csr.indices[start:end] - neighbors) / G.N
-		foo = np.zeros(rels.shape[0])
-		bar = np.zeros(neighbors.shape[0])
-		foo[np.where(rels == p)[0][0]] = 1
-		bar[np.where(neighbors == o)[0][0]] = 1
-		check = foo.astype(int) & bar.astype(int)
+	# deleting the edge: s --> o
+	start = G.csr.indptr[s]
+	end = G.csr.indptr[s+1]
+	neighbors = G.csr.indices[start:end] % G.N# nbrs in wide-CSR
+	rels = (G.csr.indices[start:end] - neighbors) / G.N
+	foo = np.zeros(rels.shape[0])
+	bar = np.zeros(neighbors.shape[0])
+	foo[np.where(rels == p)[0][0]] = 1
+	bar[np.where(neighbors == o)[0][0]] = 1
+	check = foo.astype(int) & bar.astype(int)
 
-		if np.sum(check) == 1:
-			edge = G.csr.data[ start + np.where(check)[0][0] ]
-			if edge == 0:
-				flag = 0
-			else:
-				flag = 1
-				removed_edges.append((s, o, p, edge))
-				G.csr.data[ start + np.where(check)[0][0] ] = 0
+	if np.sum(check) == 1:
+		edge = G.csr.data[ start + np.where(check)[0][0] ]
+		if edge is not 0:
+			deletedEdges.append((s, o, p, edge))
+			G.csr.data[ start + np.where(check)[0][0] ] = 0
 
-		start = G.csr.indptr[o]
-		end = G.csr.indptr[o+1]
-		neighbors = G.csr.indices[start:end] % G.N # nbrs in wide-CSR
-		rels = (G.csr.indices[start:end] - neighbors) / G.N
-		foo = np.zeros(rels.shape[0])
-		bar = np.zeros(neighbors.shape[0])
-		foo[np.where(rels == p)[0][0]] = 1
-		bar[np.where(neighbors == s)[0][0]] = 1
-		check = foo.astype(int) & bar.astype(int)
-		if np.sum(check) == 1:
-			edge = G.csr.data[ start + np.where(check)[0][0] ]
-			if edge == 0:
-				flag = 0
-			else:
-				flag = 1
-				removed_edges.append((o, s, p, edge))
-				G.csr.data[ start + np.where(check)[0][0] ] = 0
-	except:
-		flag = 0
-	return removed_edges, flag
+	# deleting the edge: o --> s
+	start = G.csr.indptr[o]
+	end = G.csr.indptr[o+1]
+	neighbors = G.csr.indices[start:end] % G.N # nbrs in wide-CSR
+	rels = (G.csr.indices[start:end] - neighbors) / G.N
+	foo = np.zeros(rels.shape[0])
+	bar = np.zeros(neighbors.shape[0])
+	foo[np.where(rels == p)[0][0]] = 1
+	bar[np.where(neighbors == s)[0][0]] = 1
+	check = foo.astype(int) & bar.astype(int)
+
+	if np.sum(check) == 1:
+		edge = G.csr.data[ start + np.where(check)[0][0] ]
+		if edge is not 0:
+			deletedEdges.append((o, s, p, edge))
+			G.csr.data[ start + np.where(check)[0][0] ] = 0
+
+	return deletedEdges
 
 def add_edge(G, removed_edges):
 	for removed_edge in removed_edges:
@@ -793,7 +809,7 @@ def yenKSP3(G, sid, pid, oid, K = 20):
 #    ██    ███████ ██   ████ ██   ██ ███████ ██           ██
 
 ###################################################################
-def yenKSP4(G, sid, pid, oid, K = 20):
+def yenKSP4(G, sid, pid, oid, K = 5):
 
 	discovered_paths = []
 	#create graph backup
@@ -808,6 +824,8 @@ def yenKSP4(G, sid, pid, oid, K = 20):
 		'path_rel': rel_stack,
 		'path_weights': weight_stack}]
 	B = []
+	removed_edges = []
+	removed_nodes = []
 	for k in xrange(1, K): #for the k-th path, it assumes all paths 1..k-1 are available
 
 		for i in xrange(0, len(A[-1]['path'])-1):
@@ -816,12 +834,13 @@ def yenKSP4(G, sid, pid, oid, K = 20):
 			rootPathRel = A[-1]['path_rel'][:i+1]
 			rootPathWeights = A[-1]['path_weights'][:i+1]
 			#print "rp: {}, rpr: {}, rpw: {}".format(len(rootPath), len(rootPathRel), len(rootPathWeights))
-			removed_edges = []
+			removed_edges[:] = []
+			removed_nodes[:] = []
 			for path_dict in A:
 				if len(path_dict['path']) > i and rootPath == path_dict['path'][:i+1]:
-					removed_edges, flag = delete_edge(G, path_dict['path'][i], path_dict['path_rel'][i+1], path_dict['path'][i+1], removed_edges)
-					if flag == 0:
-						continue
+					removed_edges.extend( delete_edge(G, path_dict['path'][i], path_dict['path_rel'][i+1], path_dict['path'][i+1]) )
+			# for rootPathNode in rootPath[:-1]:
+			# 	removed_nodes.extend( delete_node(G, rootPathNode) )
 
 			spurPathWeights, spurPath, spurPathRel = relclosure_sm(G, int(spurNode), int(pid), int(oid), kind='metric', linkpred = True)
 
@@ -832,20 +851,21 @@ def yenKSP4(G, sid, pid, oid, K = 20):
 				totalWeights = rootPathWeights[:] + spurPathWeights[1:]
 				totalPathRel = rootPathRel[:] + spurPathRel[1:]
 				potential_k = {'path_total_cost': totalDist,
-							'path': totalPath,
-							'path_rel': totalPathRel,
-							'path_weights': totalWeights}
-				log.info("totalPath: {}, totalPathRel: {}".format(totalPath, totalPathRel))
-				if not (potential_k in B):
+							   'path': totalPath,
+							   'path_rel': totalPathRel,
+							   'path_weights': totalWeights}
+				# log.info("totalPath: {}, totalPathRel: {}".format(totalPath, totalPathRel))
+				if not (potential_k in B or potential_k in A) :
 					B.append(potential_k)
-			# Add back the removed edges
+			# Add back the removed edges & nodes
+			# add_node(G, removed_nodes)
 			add_edge(G, removed_edges)
-				# for removed_edge in removed_edges:
-				# 	G.csr[removed_edge[0], removed_edge[2]*G.N + removed_edge[1]] = removed_edge[3]
+
 			sys.stdout.flush()
 		if len(B):
 			B = sorted(B, key=lambda k: k['path_total_cost'])
 			A.append(B[0])
+			log.info("totalPath: {}, totalPathRel: {} with wieights: {}".format(B[0]['path'], B[0]['path_rel'], B[0]['path_weights']))
 			B.pop(0)
 		else:
 			break
