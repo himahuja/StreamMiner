@@ -176,7 +176,7 @@ def predpath_train_model_sm(G, triples, relsim, use_interpretable_features=False
 	############# Path extraction ###################
 	log.info('=> Path extraction..(this can take a while)')
 	t1 = time()
-	features, pos_features, neg_features, measurements = extract_paths_sm(G, relsim_wt, triples, y, weight)
+	features, pos_features, neg_features, measurements = extract_paths_sm(G, relsim_wt, triples, y)
 	log.info('P: +:{}, -:{}, unique tot:{}'.format(len(pos_features), len(neg_features), len(features)))
 	vec = DictVectorizer()
 	X = vec.fit_transform(measurements)
@@ -247,7 +247,7 @@ def predpath_train_model_sm(G, triples, relsim, use_interpretable_features=False
 
 #############################################################
 
-def extract_paths_sm(G, relsim_wt, triples, y, weight = 10.0, features=None):
+def extract_paths_sm(G, relsim_wt, triples, y, features=None):
 	"""
 	Extracts anchored predicate paths for a given sequence of triples.
 
