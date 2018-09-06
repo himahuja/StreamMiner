@@ -23,6 +23,7 @@ import warnings
 import ujson as json
 import logging as log
 from copy import copy
+import tqdm
 
 from pandas import DataFrame, Series
 from os.path import expanduser, abspath, isfile, isdir, basename, splitext, \
@@ -145,9 +146,6 @@ def predpath_train_model_sm(G, triples, relsim, use_interpretable_features=False
 		and two other key-value pairs, including best parameter
 		and best AUROC score.
 	"""
-	# defining the total path weights
-	weight = 20.0
-
 	y = triples['class'] # ground truth
 	triples = triples[['sid', 'pid', 'oid']].to_dict(orient='records')
 
@@ -155,55 +153,39 @@ def predpath_train_model_sm(G, triples, relsim, use_interpretable_features=False
 	log.info('PID is: {}, with type: {}'.format(pid, pid.dtype))
 	#print 'PID is: {}, with type: {}'.format(pid, pid.dtype)
 
-	# G.targets = G.csr.indices % G.N
-	G_bak = {'data': G.csr.data.copy(),
-	'indices': G.csr.indices.copy(),
-	'indptr': G.csr.indptr.copy()
-	}
-	# cost_vec = cost_vec_bak.copy()
-	# indegsim = weighted_degree(G.indeg_vec, weight=WTFN)
-	# specificity_wt = indegsim[G.targets] # specificity
-
 	# set weights
 	indegsim = weighted_degree(G.indeg_vec, weight=WTFN).reshape((1, G.N))
 	indegsim = indegsim.ravel()
 	targets = G.csr.indices % G.N
 	relations = (G.csr.indices - targets) / G.N
 	#####################################################
-	# Setting paths using relsim (from K-Stream)
 	# set weights
 	relsimvec = np.array(relsim[int(pid), :]) # specific to predicate p
 	relsim_wt = relsimvec[relations] # with the size of relations as the number of relations
-	# G.csr.data = np.multiply(relsim_wt, specificity_wt) # it is the capacity (U) of each edge, under p
 	######################################################
 	specificity_wt = indegsim[targets] # specificity
 
-
 	## Removing all the edges with the predicte p in between any nodes.
 	log.info('=> Removing predicate {} from KG.\n'.format(pid))
-	#print '=> Removing predicate {} from KG.'.format(pid)
 	eraseedges_mask = ((G.csr.indices - (G.csr.indices % G.N)) / G.N) == pid
 	specificity_wt[eraseedges_mask] = 0
+	relsim_wt[eraseedges_mask] = 0
 	G.csr.data = specificity_wt.copy()
-	#print ''
+	print ''
 
-	# Path extraction
+	############# Path extraction ###################
 	log.info('=> Path extraction..(this can take a while)')
-	#print '=> Path extraction..(this can take a while)'
 	t1 = time()
 	features, pos_features, neg_features, measurements = extract_paths_sm(G, relsim_wt, triples, y, weight)
 	log.info('P: +:{}, -:{}, unique tot:{}'.format(len(pos_features), len(neg_features), len(features)))
-	#print 'P: +:{}, -:{}, unique tot:{}'.format(len(pos_features), len(neg_features), len(features))
 	vec = DictVectorizer()
 	X = vec.fit_transform(measurements)
 	n, m = X.shape
 	log.info('Time taken: {:.2f}s\n'.format(time() - t1))
-	#print 'Time taken: {:.2f}s'.format(time() - t1)
-	#print ''
+	print ''
 
-	# Path selection
+	########### Path selection ###############
 	log.info('=> Path selection..')
-	#print '=> Path selection..'
 	t1 = time()
 	pathselect = SelectKBest(mutual_info_classif, k=min(100, m))
 	X_select = pathselect.fit_transform(X, y)
@@ -217,9 +199,7 @@ def predpath_train_model_sm(G, triples, relsim, use_interpretable_features=False
 			select_neg_features.add(feature)
 	log.info('D: +:{}, -:{}, tot:{}'.format(len(select_pos_features), len(select_neg_features), X_select.shape[1]))
 	log.info('Time taken: {:.2f}s\n'.format(time() - t1))
-	#print 'D: +:{}, -:{}, tot:{}'.format(len(select_pos_features), len(select_neg_features), X_select.shape[1])
-	#print 'Time taken: {:.2f}s'.format(time() - t1)
-	#print ''
+	print ''
 
 	# Fact interpretation
 	if use_interpretable_features and len(select_neg_features) > 0:
@@ -254,13 +234,6 @@ def predpath_train_model_sm(G, triples, relsim, use_interpretable_features=False
 	log.info('Time taken: {:.2f}s\n'.format(time() - t1))
 	#print 'Time taken: {:.2f}s'.format(time() - t1)
 	#print ''
-	############################################
-	## From KStream
-	np.copyto(G.csr.data, G_bak['data'])
-	np.copyto(G.csr.indices, G_bak['indices'])
-	np.copyto(G.csr.indptr, G_bak['indptr'])
-	# np.copyto(cost_vec, cost_vec_bak)x
-	############################################
 
 	return vec, model
 
@@ -311,26 +284,29 @@ def extract_paths_sm(G, relsim_wt, triples, y, weight = 10.0, features=None):
 
 	tmp_data = G.csr.data.copy()
 	tmp_indices = G.csr.indices.copy()
+	tmp_indptr = G.csr.indptr.copy()
+	number_of_triples = len(triples)
 
-	for idx, triple in enumerate(triples):
+	for idx, triple in enumerate(tqdm.tqdm(triples)):
 		sid, pid, oid = triple['sid'], triple['pid'], triple['oid']
 		label = y[idx]
 		triple_feature = dict()
 
-		targets = tmp_indices % G.N
-		tmp_data[targets == oid] = 1 # no cost for target t => max. specificity.
-		tmp_data = np.multiply(relsim_wt, tmp_data)
+		targets = G.csr.indices % G.N
+		G.csr.data[targets == oid] = 1 # no cost for target t => max. specificity.
+		G.csr.data = np.multiply(relsim_wt, G.csr.data)
 		# log.debug("(extract_paths_sm, Before YenKSP4) indices: {}, data: {}".format(tmp_indices, tmp_data))
-		log.debug("(extract_paths_sm, Before YenKSP4) The number of masked edges for {}: {}".format(pid, np.sum(((tmp_indices - (tmp_indices % G.N)) / G.N) == pid)) )
-
+		# log.debug("(extract_paths_sm, Before YenKSP4) The number of masked edges for {}: {}".format(pid, np.sum(((tmp_indices - (tmp_indices % G.N)) / G.N) == pid)) )
 		# paths = get_paths_sm(G, sid, pid, oid, relsim_wt, \
 								# weight = weight, maxpaths=20)
 		# paths = get_paths_sm_limited(G, sid, pid, oid, relsim_wt, \
 		# 				weight = weight, maxpaths=20, top_n_neighbors=5)
 		paths = yenKSP4(G, sid, pid, oid)
+		# log.debug("Completed path extraction: {}/{}".format(idx+1, number_of_triples))
 		# log.debug("(extract_paths_sm, After YenKSP4) indices: {}, data: {}".format(tmp_indices, tmp_data))
-		log.debug("(extract_paths_sm, After YenKSP4) The number of masked edges for {}: {}".format(pid, np.sum(((tmp_indices - (tmp_indices % G.N)) / G.N) == pid)) )
+		# log.debug("(extract_paths_sm, After YenKSP4) The number of masked edges for {}: {}".format(pid, np.sum(((tmp_indices - (tmp_indices % G.N)) / G.N) == pid)) )
 		for pth in paths:
+			print pth
 			ff =  tuple(pth.relational_path)
 			if ff not in features:
 				features.add(ff)
@@ -341,9 +317,11 @@ def extract_paths_sm(G, relsim_wt, triples, y, weight = 10.0, features=None):
 				else:
 					raise Exception("Unknown class label: {}".format(label))
 			triple_feature[ff] = triple_feature.get(ff, 0) + 1
-		print triple_feature
 		measurements.append(triple_feature)
 		sys.stdout.flush()
+		G.csr.data = tmp_data.copy()
+		G.csr.indices = tmp_indices.copy()
+		G.csr.indptr = tmp_indptr.copy()
 	print ''
 	if return_features:
 		return features, pos_features, neg_features, measurements
@@ -431,30 +409,13 @@ def get_paths_sm_limited(G, s, p, o, relsim_wt, weight = 10.0, maxpaths=-1, top_
 			relpath_stack.append(curr_relpath + [rel])
 	return discoverd_paths
 
-###################################################
-
+##########################################################
 # ██    ██ ████████ ██ ██      ██ ████████ ███████ ███████
 # ██    ██    ██    ██ ██      ██    ██    ██      ██
 # ██    ██    ██    ██ ██      ██    ██    █████   ███████
 # ██    ██    ██    ██ ██      ██    ██    ██           ██
 #  ██████     ██    ██ ███████ ██    ██    ███████ ███████
-
-###################################################
-def in_lists(list1, list2):
-    result = False
-    node_result = -1
-    if len(list1) < len(list2):
-        toIter = list1
-        toRefer = list2
-    else:
-        toIter = list2
-        toRefer = list1
-    for element in toIter:
-        result = element in toRefer
-        if result:
-            node_result = element
-            break
-    return result, node_result
+##########################################################
 
 def relax(weight, u, v, r, Dist, prev):
 	d = Dist.get(u, inf) + weight
@@ -499,7 +460,7 @@ def delete_edge(G, s, p, o):
 	bar[np.where(neighbors == o)[0][0]] = 1
 	check = foo.astype(int) & bar.astype(int)
 
-	if np.sum(check) == 1:
+	if np.sum(check) > 0:
 		edge = G.csr.data[ start + np.where(check)[0][0] ]
 		if edge is not 0:
 			deletedEdges.append((s, o, p, edge))
@@ -537,271 +498,6 @@ def add_edge(G, removed_edges):
 		bar[np.where(neighbors == o)[0][0]] = 1
 		check = foo.astype(int) & bar.astype(int)
 		G.csr.data[ start + np.where(check)[0][0] ] = cost
-###########################################################
-
-# ██████       ██ ██ ██   ██ ███████ ████████ ██████   █████  ███████
-# ██   ██      ██ ██ ██  ██  ██         ██    ██   ██ ██   ██ ██
-# ██   ██      ██ ██ █████   ███████    ██    ██████  ███████ ███████
-# ██   ██ ██   ██ ██ ██  ██       ██    ██    ██   ██ ██   ██      ██
-# ██████   █████  ██ ██   ██ ███████    ██    ██   ██ ██   ██ ███████
-
-###########################################################
-
-def get_shortest_path(G, sid, pid, oid):
-	#making sure that nodes are integers:
-	# discovered_path = []
-	sid = int(sid)
-	oid = int(oid)
-	#prev is of the type: [weight, node, relation]
-
-	Dist, visited, priority_q, prev = {sid:0}, set(), [(0,sid)], {sid:(0, -1, -1)}
-	path_stack, rel_stack, weight_stack = [], [], []
-	while priority_q:
-		_, u = heapq.heappop(priority_q)
-		if u == oid:
-			k = u
-			path_stack = [oid]
-			while prev[k][1] != -1:
-				path_stack.insert(0, prev[k][1])
-				rel_stack.insert(0, prev[k][2])
-				weight_stack.insert(0, prev[k][0])
-				k = prev[k][1]
-			break
-		if u in visited:
-			continue
-		visited.add(u)
-		# get the neighbours and cost of the node u
-		# returns [relations, neighbors, cost]
-		rels, nbrs, costs = G.get_neighbors_sm_unpacked(int(u))
-		for rel, nbr, cost in zip(rels, nbrs, costs): # for the iteration through keys
-			if cost != 0:
-				relax(-cost, u, nbr, rel, Dist, prev)
-				heapq.heappush(priority_q, (-cost, nbr))
-				# discovered_path = RelationalPathSM(sid, pid, oid, 0., len(path_stack)-1, ..)  								  path_stack, rel_stack, weight_stack)
-	return path_stack, rel_stack, weight_stack
-
-#######################################################################
-
-# ██    ██ ███████ ███    ██     ██   ██ ███████ ██████
-#  ██  ██  ██      ████   ██     ██  ██  ██      ██   ██
-#   ████   █████   ██ ██  ██     █████   ███████ ██████
-#    ██    ██      ██  ██ ██     ██  ██       ██ ██
-#    ██    ███████ ██   ████     ██   ██ ███████ ██
-
-#######################################################################
-def yenKSP(G, sid, pid, oid, K = 20):
-	discovered_paths = []
-	path_stack, rel_stack, weight_stack = get_shortest_path(G, sid, pid, oid)
-	if not path_stack:
-		return discovered_paths
-	A = [{'path_total_cost': np.sum(weight_stack),
-		'path': path_stack,
-		'path_rel': rel_stack,
-		'path_weights': weight_stack}]
-	B = []
-	for k in xrange(1, K):
-		for i in xrange(0, len(A[-1]['path'])-1):
-			spurNode = A[-1]['path'][i]
-			rootPath = A[-1]['path'][:i+1]
-			rootPathRel = A[-1]['path_rel'][:i]
-			rootPathWeights = A[-1]['path_weights'][:i]
-			#print "rp: {}, rpr: {}, rpw: {}".format(len(rootPath), len(rootPathRel), len(rootPathWeights))
-			removed_edges = []
-			for path_dict in A:
-				if len(path_dict['path']) > i and rootPath == path_dict['path'][:i+1]:
-					#find the edge between ith and i+1th node
-					edge = G.csr[path_dict['path'][i], path_dict['path_rel'][i]*G.N+path_dict['path'][i+1]]
-					if edge == 0:
-						continue
-					removed_edges.append((path_dict['path'][i], path_dict['path'][i+1], path_dict['path_rel'][i], edge))
-					edge = 0 #delete the edge
-			spurPath, spurPathRel, spurPathWeights = get_shortest_path(G, spurNode, pid, oid)
-			if spurPath:
-				totalPath = rootPath[:-1] + spurPath
-				totalDist = np.sum(rootPathWeights[:-1]) + np.sum(spurPathWeights)
-				totalWeights = rootPathWeights[:-1] + spurPathWeights
-				totalPathRel = rootPathRel[:-1] + spurPathRel
-				potential_k = {'path_total_cost': totalDist,
-							'path': totalPath,
-							'path_rel': totalPathRel,
-							'path_weights': totalWeights}
-				if not (potential_k in B):
-					B.append(potential_k)
-			for removed_edge in removed_edges:
-				G.csr[removed_edge[0], removed_edge[2]*G.N + removed_edge[1]] = removed_edge[3]
-		if len(B):
-			B = sorted(B, key=lambda k: k['path_total_cost'])
-			A.append(B[0])
-			B.pop(0)
-		else:
-			break
-	for path_dict in A:
-		discovered_paths.append(RelationalPathSM(sid, pid, oid, path_dict['path_total_cost'], len(path_dict['path'])-1, path_dict['path'], path_dict['path_rel'], path_dict['path_weights']))
-	return discovered_paths
-#######################################################################
-
-# ██    ██ ███████ ███    ██     ██   ██ ███████ ██████      ██████
-#  ██  ██  ██      ████   ██     ██  ██  ██      ██   ██          ██
-#   ████   █████   ██ ██  ██     █████   ███████ ██████       █████
-#    ██    ██      ██  ██ ██     ██  ██       ██ ██          ██
-#    ██    ███████ ██   ████     ██   ██ ███████ ██          ███████
-
-#######################################################################
-
-def yenKSP2(G, sid, pid, oid, K = 20):
-	discovered_paths = []
-	path_stack, rel_stack, weight_stack = get_shortest_path(G, sid, pid, oid)
-	print "Shortest path for s:{}, p:{}, o:{} is: {}".format(sid, pid, oid, path_stack)
-	if not path_stack:
-		return discovered_paths
-	A = [{'path_total_cost': np.sum(weight_stack),
-		'path': path_stack,
-		'path_rel': rel_stack,
-		'path_weights': weight_stack}]
-	B = []
-	for k in xrange(1, K):
-		for i in xrange(0, len(A[-1]['path'])-1):
-			spurNode = A[-1]['path'][i]
-			rootPath = A[-1]['path'][:i+1]
-			rootPathRel = A[-1]['path_rel'][:i]
-			rootPathWeights = A[-1]['path_weights'][:i]
-			#print "rp: {}, rpr: {}, rpw: {}".format(len(rootPath), len(rootPathRel), len(rootPathWeights))
-			removed_edges = []
-			for path_dict in A:
-				if len(path_dict['path']) > i and rootPath == path_dict['path'][:i+1]:
-					#find the edge between ith and i+1th node
-					edge1 = G.csr[path_dict['path'][i], path_dict['path_rel'][i]*G.N+path_dict['path'][i+1]]
-					edge2 = G.csr[path_dict['path'][i+1], path_dict['path_rel'][i]*G.N+path_dict['path'][i]]
-					if edge1 == 0:
-						continue
-					if edge2 == 0:
-						continue
-					removed_edges.append((path_dict['path'][i], path_dict['path'][i+1], path_dict['path_rel'][i], edge1))
-					removed_edges.append((path_dict['path'][i+1], path_dict['path'][i], path_dict['path_rel'][i], edge2))
-					edge1 = 0 #delete the edge
-					edge2 = 0
-			while True:
-				spurPath, spurPathRel, spurPathWeights = get_shortest_path(G, spurNode, pid, oid)
-
-				[is_loop, loop_element] = in_lists(spurPath, rootPath[:-1]) ## Check indexing
-				if not is_loop:
-					break
-				else:
-					loop_index = spurPath.index(loop_element) # Check indexing
-					edge1 = G.csr[spurPath[loop_index], spurPathRel[loop_index-1]*G.N + spurPath[loop_index-1]]
-					edge2 = G.csr[spurPath[loop_index-1], spurPathRel[loop_index-1]*G.N + spurPath[loop_index]]
-					if edge1 == 0:
-						continue
-					if edge2 == 0:
-						continue
-					removed_edges.append((spurPath[loop_index], spurPath[loop_index-1], spurPathRel[loop_index-1], edge1))
-					removed_edges.append((spurPath[loop_index-1], spurPath[loop_index], spurPathRel[loop_index-1], edge2))
-					edge1 = 0
-					edge2 = 0
-
-				if spurPath:
-					totalPath = rootPath[:-1] + spurPath
-					totalDist = np.sum(rootPathWeights[:-1]) + np.sum(spurPathWeights)
-					totalWeights = rootPathWeights[:-1] + spurPathWeights
-					totalPathRel = rootPathRel[:-1] + spurPathRel
-					potential_k = {'path_total_cost': totalDist,
-								'path': totalPath,
-								'path_rel': totalPathRel,
-								'path_weights': totalWeights}
-					if not (potential_k in B):
-						B.append(potential_k)
-				# Add back the removed edges
-				for removed_edge in removed_edges:
-					G.csr[removed_edge[0], removed_edge[2]*G.N + removed_edge[1]] = removed_edge[3]
-		if len(B):
-			B = sorted(B, key=lambda k: k['path_total_cost'])
-			A.append(B[0])
-			B.pop(0)
-		else:
-			break
-	for path_dict in A:
-		discovered_paths.append(RelationalPathSM(sid, pid, oid, path_dict['path_total_cost'], len(path_dict['path'])-1, path_dict['path'], path_dict['path_rel'], path_dict['path_weights']))
-	return discovered_paths
-
-##################################################################
-
-# ██    ██ ███████ ███    ██     ██   ██ ███████ ██████      ██████
-#  ██  ██  ██      ████   ██     ██  ██  ██      ██   ██          ██
-#   ████   █████   ██ ██  ██     █████   ███████ ██████       █████
-#    ██    ██      ██  ██ ██     ██  ██       ██ ██               ██
-#    ██    ███████ ██   ████     ██   ██ ███████ ██          ██████
-
-####################################################################
-
-def yenKSP3(G, sid, pid, oid, K = 20):
-
-	discovered_paths = []
-	#create graph backup
-
-	weight_stack, path_stack, rel_stack = relclosure_sm(G, int(sid), int(pid), int(oid), kind='metric', linkpred=False)
-	print "Shortest path for s:{}, p:{}, o:{} is: {}".format(sid, pid, oid, path_stack)
-	if not path_stack:
-		return discovered_paths
-	A = [{'path_total_cost': np.sum(weight_stack),
-		'path': path_stack,
-		'path_rel': rel_stack,
-		'path_weights': weight_stack}]
-	B = []
-	for k in xrange(1, K):
-		for i in xrange(0, len(A[-1]['path'])-1):
-			spurNode = A[-1]['path'][i]
-			rootPath = A[-1]['path'][:i+1]
-			rootPathRel = A[-1]['path_rel'][:i+1]
-			rootPathWeights = A[-1]['path_weights'][:i+1]
-			#print "rp: {}, rpr: {}, rpw: {}".format(len(rootPath), len(rootPathRel), len(rootPathWeights))
-			removed_edges = []
-			for path_dict in A:
-				if len(path_dict['path']) > i and rootPath == path_dict['path'][:i+1]:
-					G, removed_edges, flag = delete_edge(G, path_dict['path'][i], path_dict['path_rel'][i+1], path_dict['path'][i+1], removed_edges)
-					if flag == 0: continue
-
-			while True:
-				spurPathWeights, spurPath, spurPathRel = relclosure_sm(G, int(spurNode), int(pid), int(oid), kind='metric', linkpred = True)
-
-				[is_loop, loop_element] = in_lists(spurPath, rootPath[:-1]) ## Check indexing
-				if not is_loop:
-					break
-				else:
-					loop_index = spurPath.index(loop_element) # Check indexing
-					G, removed_edges, flag = delete_edge(spurPath[loop_index], spurPathRel[loop_index], spurPath[loop_index-1])
-					if flag == 0: continue
-				if spurPath:
-					print("Supplementary path was found!")
-					totalPath = rootPath[:-1] + spurPath
-					totalDist = np.sum(rootPathWeights[:-1]) + np.sum(spurPathWeights)
-					totalWeights = rootPathWeights[:-1] + spurPathWeights
-					totalPathRel = rootPathRel[:-1] + spurPathRel
-					potential_k = {'path_total_cost': totalDist,
-								'path': totalPath,
-								'path_rel': totalPathRel,
-								'path_weights': totalWeights}
-					print(totalPath)
-					if not (potential_k in B):
-						B.append(potential_k)
-				# Add back the removed edges
-				G = add_edge(G, removed_edges)
-				# for removed_edge in removed_edges:
-				# 	G.csr[removed_edge[0], removed_edge[2]*G.N + removed_edge[1]] = removed_edge[3]
-		if len(B):
-			B = sorted(B, key=lambda k: k['path_total_cost'])
-			A.append(B[0])
-			B.pop(0)
-		else:
-			break
-	# Restore the graph backup
-	np.copyto(G.csr.data, G_bak['data'])
-	np.copyto(G.csr.indices, G_bak['indices'])
-	np.copyto(G.csr.indptr, G_bak['indptr'])
-
-	for path_dict in A:
-		discovered_paths.append(RelationalPathSM(sid, pid, oid, path_dict['path_total_cost'], len(path_dict['path'])-1, path_dict['path'], path_dict['path_rel'], path_dict['path_weights']))
-	return discovered_paths
-##################################################################
 
 # ██    ██ ███████ ███    ██ ██   ██ ███████ ██████  ██   ██
 #  ██  ██  ██      ████   ██ ██  ██  ██      ██   ██ ██   ██
@@ -811,11 +507,10 @@ def yenKSP3(G, sid, pid, oid, K = 20):
 
 ###################################################################
 def yenKSP4(G, sid, pid, oid, K = 5):
-
 	discovered_paths = []
 	#create graph backup
 	weight_stack, path_stack, rel_stack = relclosure_sm(G, int(sid), int(pid), int(oid), kind='metric', linkpred=True)
-	log.info("Shortest path for s:{}, p:{}, o:{} is: {}".format(sid, pid, oid, path_stack))
+	# log.debug("Shortest path for s:{}, p:{}, o:{} is: {}".format(sid, pid, oid, path_stack))
 	#print "Shortest path for s:{}, p:{}, o:{} is: {}".format(sid, pid, oid, path_stack)
 	if not path_stack:
 		## if the first shortest path is empty, retuen empty discoverd_paths
@@ -840,12 +535,12 @@ def yenKSP4(G, sid, pid, oid, K = 5):
 			for path_dict in A:
 				if len(path_dict['path']) > i and rootPath == path_dict['path'][:i+1]:
 					removed_edges.extend( delete_edge(G, path_dict['path'][i], path_dict['path_rel'][i+1], path_dict['path'][i+1]) )
-			# for rootPathNode in rootPath[:-1]:
-			# 	removed_nodes.extend( delete_node(G, rootPathNode) )
+			for rootPathNode in rootPath[:-1]:
+				removed_nodes.extend( delete_node(G, rootPathNode) )
 
 			spurPathWeights, spurPath, spurPathRel = relclosure_sm(G, int(spurNode), int(pid), int(oid), kind='metric', linkpred = True)
 
-			if spurPath and not([node for node in spurPath if node in rootPath[:-1]]) and spurPathRel != [-1]:
+			if spurPath and spurPathRel != [-1]:
 				# print("Supplementary path was found!")
 				totalPath = rootPath[:-1] + spurPath
 				totalDist = np.sum(rootPathWeights[:]) + np.sum(spurPathWeights[1:])
@@ -860,17 +555,16 @@ def yenKSP4(G, sid, pid, oid, K = 5):
 					# removes repititive projects in A & B
 					B.append(potential_k)
 			# Add back the removed edges & nodes
-			# add_node(G, removed_nodes)
+			add_node(G, removed_nodes)
 			add_edge(G, removed_edges)
 			sys.stdout.flush()
 		if len(B):
 			B = sorted(B, key=lambda k: k['path_total_cost'])
 			A.append(B[0])
-			log.info("totalPath: {}, totalPathRel: {} with wieights: {}".format(B[0]['path'], B[0]['path_rel'], B[0]['path_weights']))
+			# log.debug("totalPath: {}, totalPathRel: {}".format(B[0]['path'], B[0]['path_rel']))
 			B.pop(0)
 		else:
 			break
-
 	for path_dict in A:
 		discovered_paths.append(RelationalPathSM(sid, pid, oid, path_dict['path_total_cost'], len(path_dict['path'])-1, path_dict['path'], path_dict['path_rel'], path_dict['path_weights']))
 	return discovered_paths
