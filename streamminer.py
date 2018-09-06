@@ -535,8 +535,8 @@ def yenKSP4(G, sid, pid, oid, K = 5):
 			for path_dict in A:
 				if len(path_dict['path']) > i and rootPath == path_dict['path'][:i+1]:
 					removed_edges.extend( delete_edge(G, path_dict['path'][i], path_dict['path_rel'][i+1], path_dict['path'][i+1]) )
-			for rootPathNode in rootPath[:-1]:
-				removed_nodes.extend( delete_node(G, rootPathNode) )
+			# for rootPathNode in rootPath[:-1]:
+			# 	removed_nodes.extend( delete_node(G, rootPathNode) )
 
 			spurPathWeights, spurPath, spurPathRel = relclosure_sm(G, int(spurNode), int(pid), int(oid), kind='metric', linkpred = True)
 
@@ -555,7 +555,7 @@ def yenKSP4(G, sid, pid, oid, K = 5):
 					# removes repititive projects in A & B
 					B.append(potential_k)
 			# Add back the removed edges & nodes
-			add_node(G, removed_nodes)
+			# add_node(G, removed_nodes)
 			add_edge(G, removed_edges)
 			sys.stdout.flush()
 		if len(B):
