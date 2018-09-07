@@ -33,7 +33,7 @@ def test_graph1_creation():
  	])
 	G = make_graph(adj, shape, sym=True, save_csc=True)
 	assert np.array_equal(G.csr.toarray(), G.csc.toarray())
-	dirpath = join(abspath(expanduser(os.curdir)), '_undir')
+	dirpath = join(abspath(expanduser(os.curdir)), '..', 'data', '_undir')
 	if not exists(dirpath):
 		os.mkdir(dirpath)
 	G.save_graph(dirpath)
@@ -49,7 +49,7 @@ def test_graph1_creation():
 
 def test_graph2_creation():
 	# shape of an example graph.
-	shape = (8, 8, 6) 
+	shape = (8, 8, 6)
 
 	# adjacency
 	adj = np.array([
@@ -180,6 +180,9 @@ def test_dbpedia():
 	T.save_graph(dirpath)
 	print 'Graph saved in {:.4f} secs at: {} '.format(time() - t1, dirpath)
 
+def test_mini_dbpedia():
+	adjpath = abspath(expanduser(''))
+
 def test_dbpedia_loading():
 	adjpath = abspath(expanduser('~/Projects/truthy_data/dbpedia/2016-04/processed/kg/adjacency.npy'))
 	shape = (6060993, 6060993, 663)
@@ -198,6 +201,6 @@ if __name__ == '__main__':
 	# test_dbpedia()
 	# test_dbpedia_loading()
 	# test_graph2_creation()
-	# test_graph1_creation()
+	test_graph1_creation()
 	# import cProfile
 	# cProfile.run('test_graph1_creation()', sort='time')
