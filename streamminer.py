@@ -25,6 +25,12 @@ import logging as log
 from copy import copy
 import tqdm
 
+###### Cython benign warning ignore ##########################
+import warnings
+warnings.filterwarnings("ignore", message="numpy.dtype size changed")
+warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
+###############################################################
+
 from pandas import DataFrame, Series
 from os.path import expanduser, abspath, isfile, isdir, basename, splitext, \
 	dirname, join, exists
@@ -328,87 +334,6 @@ def extract_paths_sm(G, relsim_wt, triples, y, features=None):
 	#else
 	return measurements
 
-def get_paths_sm(G, s, p, o, relsim_wt, weight = 10.0, maxpaths=-1):
-	# "Returns all paths of length `length` starting at s and ending in o."
-	path_stack = [[s]]
-	weight_path_stack = [[0.0]]
-	relpath_stack = [[-1]]
-	discoverd_paths = []
-	print 'We\'re checking the path: ({}, {}, {})'.format(s, p, o)
-	while len(path_stack) > 0:
-		curr_path = path_stack.pop()
-		curr_relpath = relpath_stack.pop()
-		node = curr_path[-1]
-		curr_path_weight = weight_path_stack.pop()
-		if np.sum(curr_path_weight) <= weight:
-			if int(node) == int(o):
-				print 'We have found a path!'
-				print 'The total weight of the path is: {}'.format(np.sum(curr_path_weight))
-				path = RelationalPathSM(
-					s, p, o, 0., len(curr_path)-1, curr_path, curr_relpath, curr_path_weight
-				)
-				discoverd_paths.append(path)
-				if maxpaths != -1 and len(discoverd_paths) >= maxpaths:
-					break
-				continue
-		elif np.sum(curr_path_weight) >= weight:
-			continue
-		# print "Node is: {}, o is: {}, s is: {}, p is: {}".format(node, o, s, p)
-		relnbrs, data = G.get_neighbors_sm(int(node))
-		# print 'Data vector is: {}'.format(data)
-		for i in xrange(relnbrs.shape[1]):
-			rel, nbr = relnbrs[:, i]
-			# print "rel is: {}, nbr is: {}".format(rel, nbr)
-			path_stack.append(curr_path + [nbr])
-			weight_path_stack.append(curr_path_weight + [data[i]])
-			relpath_stack.append(curr_relpath + [rel])
-	return discoverd_paths
-
-def get_paths_sm_limited(G, s, p, o, relsim_wt, weight = 10.0, maxpaths=-1, top_n_neighbors=5):
-	# "Returns all paths of length `length` starting at s and ending in o."
-	path_stack = [[s]]
-	weight_path_stack = [[0.0]]
-	relpath_stack = [[-1]]
-	discoverd_paths = []
-	print 'We\'re checking the path: ({}, {}, {})'.format(s, p, o)
-	while len(path_stack) > 0:
-		# print 'Stack: {} {}'.format(path_stack, relpath_stack)
-		curr_path = path_stack.pop()
-		curr_relpath = relpath_stack.pop()
-		node = curr_path[-1]
-		curr_path_weight = weight_path_stack.pop()
-		# print 'Node: {}'.format(node)
-		total_path_weight = np.sum(curr_path_weight)
-		if total_path_weight <= weight:
-			if int(node) == int(o):
-				print 'We have found a path!'
-				print 'The total weight of the path is: {}'.format(np.sum(curr_path_weight))
-				path = RelationalPathSM(
-					s, p, o, 0., length, curr_path, curr_relpath, curr_path_weight
-				)
-				discoverd_paths.append(path)
-				if maxpaths != -1 and len(discoverd_paths) >= maxpaths:
-					print "Exceeded number of paths!"
-					break
-				continue
-		elif total_path_weight > weight:
-			print 'Discarded path with weight'
-			continue
-		# print "Node is: {}, o is: {}, s is: {}, p is: {}".format(node, o, s, p)
-		relnbrs, data = G.get_neighbors_sm(int(node))
-		ordering = np.argsort(data)
-		relnbrs = relnbrs[:, ordering]
-		# print 'Data vector is: {}'.format(data)
-		# print(data)
-		range = relnbrs.shape[1] if relnbrs.shape[1] < top_n_neighbors else top_n_neighbors
-		for i in xrange(range):
-			rel, nbr = relnbrs[:, i]
-			# print "rel is: {}, nbr is: {}".format(rel, nbr)
-			path_stack.append(curr_path + [nbr])
-			weight_path_stack.append(curr_path_weight + [data[i]])
-			relpath_stack.append(curr_relpath + [rel])
-	return discoverd_paths
-
 ##########################################################
 # ██    ██ ████████ ██ ██      ██ ████████ ███████ ███████
 # ██    ██    ██    ██ ██      ██    ██    ██      ██
@@ -464,7 +389,7 @@ def delete_edge(G, s, p, o):
 		edge = G.csr.data[ start + np.where(check)[0][0] ]
 		if edge is not 0:
 			deletedEdges.append((s, o, p, edge))
-			G.csr.data[ start + np.where(check)[0][0] ] = 0
+			G.csr.data[ start + np.where(check)[0][0] ] = 0.0
 
 	# deleting the edge: o --> s
 	start = G.csr.indptr[o]
@@ -481,7 +406,7 @@ def delete_edge(G, s, p, o):
 		edge = G.csr.data[ start + np.where(check)[0][0] ]
 		if edge is not 0:
 			deletedEdges.append((o, s, p, edge))
-			G.csr.data[ start + np.where(check)[0][0] ] = 0
+			G.csr.data[ start + np.where(check)[0][0] ] = 0.0
 
 	return deletedEdges
 
