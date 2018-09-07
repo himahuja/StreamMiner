@@ -1,6 +1,6 @@
 """
-A few tests for testing Knowledge Linker - RELATIONAL (KL-REL), 
-the extention to PLOS ONE paper that uses line graph based 
+A few tests for testing Knowledge Linker - RELATIONAL (KL-REL),
+the extention to PLOS ONE paper that uses line graph based
 approach to compute relational similarity.
 
 * Note: The relational similarity for 'toy' graphs in these tests
@@ -87,7 +87,7 @@ def test_graph1():
 				G.csr.data = data.copy()
 				G.csr.indices = indices.copy()
 				G.csr.indptr = indptr.copy()
-	
+
 def test_graph2():
 	sym = True
 	adj = np.array([
@@ -226,7 +226,8 @@ def test_graph2():
 				G.csr.data = data.copy()
 				G.csr.indices = indices.copy()
 				G.csr.indptr = indptr.copy()
-	
+	print results
+
 if __name__ == '__main__':
 	test_graph1()
 	test_graph2()

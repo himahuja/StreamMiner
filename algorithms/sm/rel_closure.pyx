@@ -158,7 +158,7 @@ cdef cclosuress(
 	# populate the queue
 	for node in range(N):
 		if node == source:
-			cap = 1.
+			cap = 1.0
 			# value, node, predecessor, relation index
 		else:
 			cap = 0.0
