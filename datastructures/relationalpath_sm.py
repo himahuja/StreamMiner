@@ -58,6 +58,6 @@ class RelationalPathSM:
 				relation_name = str(relation)
 				if relations is not None:
 					relation_name = relations.get(relation)
-				wt = ' ({})'.format(np.round(self.weights[i+1], 2))
+				wt = ' ({})'.format(np.round(self.weights[i], 2))
 				terminal += rel_delim.format(relation_name + wt)
 		return terminal
