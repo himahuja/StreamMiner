@@ -5,6 +5,7 @@
     "distutils": {
         "depends": [
             "/Users/himanshuahuja/anaconda3/envs/pcatwd2/lib/python2.7/site-packages/numpy/core/include/numpy/arrayobject.h", 
+            "/Users/himanshuahuja/anaconda3/envs/pcatwd2/lib/python2.7/site-packages/numpy/core/include/numpy/npy_math.h", 
             "/Users/himanshuahuja/anaconda3/envs/pcatwd2/lib/python2.7/site-packages/numpy/core/include/numpy/ufuncobject.h"
         ], 
         "extra_compile_args": [
@@ -16,12 +17,12 @@
         "include_dirs": [
             "/Users/himanshuahuja/anaconda3/envs/pcatwd2/lib/python2.7/site-packages/numpy/core/include"
         ], 
-        "name": "algorithms.sm.sparse_shortest_paths", 
+        "name": "algorithms.sm.shortest_paths", 
         "sources": [
             "algorithms/sm/shortest_paths.pyx"
         ]
     }, 
-    "module_name": "algorithms.sm.sparse_shortest_paths"
+    "module_name": "algorithms.sm.shortest_paths"
 }
 END: Cython Metadata */
 
@@ -584,14 +585,15 @@ static CYTHON_INLINE float __PYX_NAN() {
   #endif
 #endif
 
-#define __PYX_HAVE__algorithms__sm__sparse_shortest_paths
-#define __PYX_HAVE_API__algorithms__sm__sparse_shortest_paths
+#define __PYX_HAVE__algorithms__sm__shortest_paths
+#define __PYX_HAVE_API__algorithms__sm__shortest_paths
 /* Early includes */
 #include <string.h>
 #include <stdio.h>
 #include "numpy/arrayobject.h"
 #include "numpy/ufuncobject.h"
 #include <stdlib.h>
+#include "numpy/npy_math.h"
 #ifdef _OPENMP
 #include <omp.h>
 #endif /* _OPENMP */
@@ -820,6 +822,7 @@ static const char *__pyx_f[] = {
   "algorithms/sm/shortest_paths.pyx",
   "__init__.pxd",
   "type.pxd",
+  "algorithms/sm/parameters.pxi",
 };
 /* BufferFormatStructs.proto */
 #define IS_UNSIGNED(type) (((type) -1) > 0)
@@ -1047,23 +1050,22 @@ typedef npy_double __pyx_t_5numpy_double_t;
  */
 typedef npy_longdouble __pyx_t_5numpy_longdouble_t;
 
-/* "algorithms/sm/shortest_paths.pyx":13
- * 
+/* "algorithms/sm/parameters.pxi":2
  * DTYPE = np.float64
  * ctypedef np.float64_t DTYPE_t             # <<<<<<<<<<<<<<
  * 
  * ITYPE = np.int32
  */
-typedef __pyx_t_5numpy_float64_t __pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t;
+typedef __pyx_t_5numpy_float64_t __pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t;
 
-/* "algorithms/sm/shortest_paths.pyx":16
+/* "algorithms/sm/parameters.pxi":5
  * 
  * ITYPE = np.int32
  * ctypedef np.int32_t ITYPE_t             # <<<<<<<<<<<<<<
  * 
- * 
+ * # Fused type for int32 and int64
  */
-typedef __pyx_t_5numpy_int32_t __pyx_t_10algorithms_2sm_21sparse_shortest_paths_ITYPE_t;
+typedef __pyx_t_5numpy_int32_t __pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t;
 /* Declarations.proto */
 #if CYTHON_CCOMPLEX
   #ifdef __cplusplus
@@ -1126,85 +1128,72 @@ typedef npy_clongdouble __pyx_t_5numpy_clongdouble_t;
  * cdef inline object PyArray_MultiIterNew1(a):
  */
 typedef npy_cdouble __pyx_t_5numpy_complex_t;
-struct __pyx_opt_args_10algorithms_2sm_21sparse_shortest_paths_floyd_warshall;
-struct __pyx_opt_args_10algorithms_2sm_21sparse_shortest_paths_dijkstra;
-struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode;
-struct __pyx_opt_args_10algorithms_2sm_21sparse_shortest_paths_initialize_node;
-struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciHeap;
+struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode;
+struct __pyx_opt_args_10algorithms_2sm_14shortest_paths_initialize_node;
+struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciHeap;
 
-/* "algorithms/sm/shortest_paths.pyx":81
- * 
- * @cython.boundscheck(False)
- * cdef np.ndarray floyd_warshall(np.ndarray[DTYPE_t, ndim=2, mode='c'] graph,             # <<<<<<<<<<<<<<
- *                               int directed=0):
- *     """
- */
-struct __pyx_opt_args_10algorithms_2sm_21sparse_shortest_paths_floyd_warshall {
-  int __pyx_n;
-  int directed;
-};
-
-/* "algorithms/sm/shortest_paths.pyx":141
- * 
- * @cython.boundscheck(False)
- * cdef np.ndarray dijkstra(dist_matrix, source, target,             # <<<<<<<<<<<<<<
- *                          np.ndarray[DTYPE_t, ndim=2] graph,
- *                          int directed=0):
- */
-struct __pyx_opt_args_10algorithms_2sm_21sparse_shortest_paths_dijkstra {
-  int __pyx_n;
-  int directed;
-};
-
-/* "algorithms/sm/shortest_paths.pyx":225
+/* "algorithms/sm/shortest_paths.pyx":334
+ * #  Fibonacci heap.
  * #
+ * cdef enum FibonacciState:             # <<<<<<<<<<<<<<
+ *     SCANNED
+ *     NOT_IN_HEAP
+ */
+enum __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciState {
+  __pyx_e_10algorithms_2sm_14shortest_paths_SCANNED,
+  __pyx_e_10algorithms_2sm_14shortest_paths_NOT_IN_HEAP,
+  __pyx_e_10algorithms_2sm_14shortest_paths_IN_HEAP
+};
+
+/* "algorithms/sm/shortest_paths.pyx":340
+ * 
  * 
  * cdef struct FibonacciNode:             # <<<<<<<<<<<<<<
  *     unsigned int index
  *     unsigned int rank
  */
-struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode {
+struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode {
   unsigned int index;
   unsigned int rank;
-  unsigned int state;
-  __pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t val;
-  struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *parent;
-  struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *left_sibling;
-  struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *right_sibling;
-  struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *children;
+  enum __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciState state;
+  __pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t val;
+  struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *parent;
+  struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *left_sibling;
+  struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *right_sibling;
+  struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *children;
 };
 
-/* "algorithms/sm/shortest_paths.pyx":236
+/* "algorithms/sm/shortest_paths.pyx":351
  * 
  * 
  * cdef void initialize_node(FibonacciNode* node,             # <<<<<<<<<<<<<<
  *                           unsigned int index,
  *                           DTYPE_t val=0):
  */
-struct __pyx_opt_args_10algorithms_2sm_21sparse_shortest_paths_initialize_node {
+struct __pyx_opt_args_10algorithms_2sm_14shortest_paths_initialize_node {
   int __pyx_n;
-  __pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t val;
+  __pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t val;
 };
 
-/* "algorithms/sm/shortest_paths.pyx":322
+/* "algorithms/sm/shortest_paths.pyx":437
  * #  routines to implement a Fibonacci heap
  * 
  * ctypedef FibonacciNode* pFibonacciNode             # <<<<<<<<<<<<<<
  * 
  * 
  */
-typedef struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_t_10algorithms_2sm_21sparse_shortest_paths_pFibonacciNode;
+typedef struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_t_10algorithms_2sm_14shortest_paths_pFibonacciNode;
 
-/* "algorithms/sm/shortest_paths.pyx":325
+/* "algorithms/sm/shortest_paths.pyx":440
  * 
  * 
  * cdef struct FibonacciHeap:             # <<<<<<<<<<<<<<
  *     FibonacciNode* min_node
  *     pFibonacciNode[100] roots_by_rank  # maximum number of nodes is ~2^100.
  */
-struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciHeap {
-  struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *min_node;
-  __pyx_t_10algorithms_2sm_21sparse_shortest_paths_pFibonacciNode roots_by_rank[0x64];
+struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciHeap {
+  struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *min_node;
+  __pyx_t_10algorithms_2sm_14shortest_paths_pFibonacciNode roots_by_rank[0x64];
 };
 
 /* --- Runtime support code (head) --- */
@@ -1281,10 +1270,6 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStr(PyObject* obj, PyObject
 /* GetBuiltinName.proto */
 static PyObject *__Pyx_GetBuiltinName(PyObject *name);
 
-/* RaiseArgTupleInvalid.proto */
-static void __Pyx_RaiseArgtupleInvalid(const char* func_name, int exact,
-    Py_ssize_t num_min, Py_ssize_t num_max, Py_ssize_t num_found);
-
 /* RaiseDoubleKeywords.proto */
 static void __Pyx_RaiseDoubleKeywordsError(const char* func_name, PyObject* kw_name);
 
@@ -1293,15 +1278,9 @@ static int __Pyx_ParseOptionalKeywords(PyObject *kwds, PyObject **argnames[],\
     PyObject *kwds2, PyObject *values[], Py_ssize_t num_pos_args,\
     const char* function_name);
 
-/* GetModuleGlobalName.proto */
-static CYTHON_INLINE PyObject *__Pyx_GetModuleGlobalName(PyObject *name);
-
-/* PyCFunctionFastCall.proto */
-#if CYTHON_FAST_PYCCALL
-static CYTHON_INLINE PyObject *__Pyx_PyCFunction_FastCall(PyObject *func, PyObject **args, Py_ssize_t nargs);
-#else
-#define __Pyx_PyCFunction_FastCall(func, args, nargs)  (assert(0), NULL)
-#endif
+/* RaiseArgTupleInvalid.proto */
+static void __Pyx_RaiseArgtupleInvalid(const char* func_name, int exact,
+    Py_ssize_t num_min, Py_ssize_t num_max, Py_ssize_t num_found);
 
 /* PyFunctionFastCall.proto */
 #if CYTHON_FAST_PYCALL
@@ -1314,12 +1293,22 @@ static PyObject *__Pyx_PyFunction_FastCallDict(PyObject *func, PyObject **args, 
 #endif
 #endif
 
+/* PyCFunctionFastCall.proto */
+#if CYTHON_FAST_PYCCALL
+static CYTHON_INLINE PyObject *__Pyx_PyCFunction_FastCall(PyObject *func, PyObject **args, Py_ssize_t nargs);
+#else
+#define __Pyx_PyCFunction_FastCall(func, args, nargs)  (assert(0), NULL)
+#endif
+
 /* PyObjectCall.proto */
 #if CYTHON_COMPILING_IN_CPYTHON
 static CYTHON_INLINE PyObject* __Pyx_PyObject_Call(PyObject *func, PyObject *arg, PyObject *kw);
 #else
 #define __Pyx_PyObject_Call(func, arg, kw) PyObject_Call(func, arg, kw)
 #endif
+
+/* GetModuleGlobalName.proto */
+static CYTHON_INLINE PyObject *__Pyx_GetModuleGlobalName(PyObject *name);
 
 /* PyObjectCallMethO.proto */
 #if CYTHON_COMPILING_IN_CPYTHON
@@ -1351,31 +1340,12 @@ static PyObject *__Pyx_GetItemInt_Generic(PyObject *o, PyObject* j);
 static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Fast(PyObject *o, Py_ssize_t i,
                                                      int is_list, int wraparound, int boundscheck);
 
-/* IncludeStringH.proto */
-#include <string.h>
-
-/* BytesEquals.proto */
-static CYTHON_INLINE int __Pyx_PyBytes_Equals(PyObject* s1, PyObject* s2, int equals);
-
-/* UnicodeEquals.proto */
-static CYTHON_INLINE int __Pyx_PyUnicode_Equals(PyObject* s1, PyObject* s2, int equals);
-
-/* StrEquals.proto */
-#if PY_MAJOR_VERSION >= 3
-#define __Pyx_PyString_Equals __Pyx_PyUnicode_Equals
+/* ObjectGetItem.proto */
+#if CYTHON_USE_TYPE_SLOTS
+static CYTHON_INLINE PyObject *__Pyx_PyObject_GetItem(PyObject *obj, PyObject* key);
 #else
-#define __Pyx_PyString_Equals __Pyx_PyBytes_Equals
+#define __Pyx_PyObject_GetItem(obj, key)  PyObject_GetItem(obj, key)
 #endif
-
-/* PyObjectCallNoArg.proto */
-#if CYTHON_COMPILING_IN_CPYTHON
-static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func);
-#else
-#define __Pyx_PyObject_CallNoArg(func) __Pyx_PyObject_Call(func, __pyx_empty_tuple, NULL)
-#endif
-
-/* ExtTypeTest.proto */
-static CYTHON_INLINE int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type);
 
 /* PyThreadStateGet.proto */
 #if CYTHON_FAST_THREAD_STATE
@@ -1416,6 +1386,16 @@ static CYTHON_INLINE void __Pyx_ErrFetchInState(PyThreadState *tstate, PyObject 
 /* RaiseException.proto */
 static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb, PyObject *cause);
 
+/* ExtTypeTest.proto */
+static CYTHON_INLINE int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type);
+
+/* PyObjectCallNoArg.proto */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func);
+#else
+#define __Pyx_PyObject_CallNoArg(func) __Pyx_PyObject_Call(func, __pyx_empty_tuple, NULL)
+#endif
+
 /* IsLittleEndian.proto */
 static CYTHON_INLINE int __Pyx_Is_Little_Endian(void);
 
@@ -1437,13 +1417,11 @@ static CYTHON_INLINE void __Pyx_SafeReleaseBuffer(Py_buffer* info);
 static Py_ssize_t __Pyx_minusones[] = { -1, -1, -1, -1, -1, -1, -1, -1 };
 static Py_ssize_t __Pyx_zeros[] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
-#define __Pyx_BufPtrCContig2d(type, buf, i0, s0, i1, s1) ((type)((char*)buf + i0 * s0) + i1)
-#define __Pyx_BufPtrCContig1d(type, buf, i0, s0) ((type)buf + i0)
-/* WriteUnraisableException.proto */
-static void __Pyx_WriteUnraisable(const char *name, int clineno,
-                                  int lineno, const char *filename,
-                                  int full_traceback, int nogil);
+/* BufferIndexError.proto */
+static void __Pyx_RaiseBufferIndexError(int axis);
 
+#define __Pyx_BufPtrCContig1d(type, buf, i0, s0) ((type)buf + i0)
+#define __Pyx_BufPtrCContig2d(type, buf, i0, s0, i1, s1) ((type)((char*)buf + i0 * s0) + i1)
 /* DictGetItem.proto */
 #if PY_MAJOR_VERSION >= 3 && !CYTHON_COMPILING_IN_PYPY
 static PyObject *__Pyx_PyDict_GetItem(PyObject *d, PyObject* key);
@@ -1497,6 +1475,82 @@ static PyObject *__Pyx_Import(PyObject *name, PyObject *from_list, int level);
 /* ImportFrom.proto */
 static PyObject* __Pyx_ImportFrom(PyObject* module, PyObject* name);
 
+/* CalculateMetaclass.proto */
+static PyObject *__Pyx_CalculateMetaclass(PyTypeObject *metaclass, PyObject *bases);
+
+/* FetchCommonType.proto */
+static PyTypeObject* __Pyx_FetchCommonType(PyTypeObject* type);
+
+/* CythonFunction.proto */
+#define __Pyx_CyFunction_USED 1
+#define __Pyx_CYFUNCTION_STATICMETHOD  0x01
+#define __Pyx_CYFUNCTION_CLASSMETHOD   0x02
+#define __Pyx_CYFUNCTION_CCLASS        0x04
+#define __Pyx_CyFunction_GetClosure(f)\
+    (((__pyx_CyFunctionObject *) (f))->func_closure)
+#define __Pyx_CyFunction_GetClassObj(f)\
+    (((__pyx_CyFunctionObject *) (f))->func_classobj)
+#define __Pyx_CyFunction_Defaults(type, f)\
+    ((type *)(((__pyx_CyFunctionObject *) (f))->defaults))
+#define __Pyx_CyFunction_SetDefaultsGetter(f, g)\
+    ((__pyx_CyFunctionObject *) (f))->defaults_getter = (g)
+typedef struct {
+    PyCFunctionObject func;
+#if PY_VERSION_HEX < 0x030500A0
+    PyObject *func_weakreflist;
+#endif
+    PyObject *func_dict;
+    PyObject *func_name;
+    PyObject *func_qualname;
+    PyObject *func_doc;
+    PyObject *func_globals;
+    PyObject *func_code;
+    PyObject *func_closure;
+    PyObject *func_classobj;
+    void *defaults;
+    int defaults_pyobjects;
+    int flags;
+    PyObject *defaults_tuple;
+    PyObject *defaults_kwdict;
+    PyObject *(*defaults_getter)(PyObject *);
+    PyObject *func_annotations;
+} __pyx_CyFunctionObject;
+static PyTypeObject *__pyx_CyFunctionType = 0;
+#define __Pyx_CyFunction_NewEx(ml, flags, qualname, self, module, globals, code)\
+    __Pyx_CyFunction_New(__pyx_CyFunctionType, ml, flags, qualname, self, module, globals, code)
+static PyObject *__Pyx_CyFunction_New(PyTypeObject *, PyMethodDef *ml,
+                                      int flags, PyObject* qualname,
+                                      PyObject *self,
+                                      PyObject *module, PyObject *globals,
+                                      PyObject* code);
+static CYTHON_INLINE void *__Pyx_CyFunction_InitDefaults(PyObject *m,
+                                                         size_t size,
+                                                         int pyobjects);
+static CYTHON_INLINE void __Pyx_CyFunction_SetDefaultsTuple(PyObject *m,
+                                                            PyObject *tuple);
+static CYTHON_INLINE void __Pyx_CyFunction_SetDefaultsKwDict(PyObject *m,
+                                                             PyObject *dict);
+static CYTHON_INLINE void __Pyx_CyFunction_SetAnnotationsDict(PyObject *m,
+                                                              PyObject *dict);
+static int __pyx_CyFunction_init(void);
+
+/* SetNameInClass.proto */
+#if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030500A1
+#define __Pyx_SetNameInClass(ns, name, value)\
+    (likely(PyDict_CheckExact(ns)) ? _PyDict_SetItem_KnownHash(ns, name, value, ((PyASCIIObject *) name)->hash) : PyObject_SetItem(ns, name, value))
+#elif CYTHON_COMPILING_IN_CPYTHON
+#define __Pyx_SetNameInClass(ns, name, value)\
+    (likely(PyDict_CheckExact(ns)) ? PyDict_SetItem(ns, name, value) : PyObject_SetItem(ns, name, value))
+#else
+#define __Pyx_SetNameInClass(ns, name, value)  PyObject_SetItem(ns, name, value)
+#endif
+
+/* Py3ClassCreate.proto */
+static PyObject *__Pyx_Py3MetaclassPrepare(PyObject *metaclass, PyObject *bases, PyObject *name, PyObject *qualname,
+                                           PyObject *mkw, PyObject *modname, PyObject *doc);
+static PyObject *__Pyx_Py3ClassCreate(PyObject *metaclass, PyObject *name, PyObject *bases, PyObject *dict,
+                                      PyObject *mkw, int calculate_metaclass, int allow_py2_metaclass);
+
 /* CLineInTraceback.proto */
 #ifdef CYTHON_CLINE_IN_TRACEBACK
 #define __Pyx_CLineForTraceback(tstate, c_line)  (((CYTHON_CLINE_IN_TRACEBACK)) ? c_line : 0)
@@ -1548,6 +1602,12 @@ typedef struct {
 
 /* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
+
+/* CIntToPy.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_unsigned_int(unsigned int value);
+
+/* CIntToPy.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_npy_int32(npy_int32 value);
 
 /* RealImag.proto */
 #if CYTHON_CCOMPLEX
@@ -1654,6 +1714,9 @@ static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_enum__NPY_TYPES(enum NPY_TYPES value);
 
 /* CIntFromPy.proto */
+static CYTHON_INLINE npy_int32 __Pyx_PyInt_As_npy_int32(PyObject *);
+
+/* CIntFromPy.proto */
 static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *);
 
 /* CIntFromPy.proto */
@@ -1725,159 +1788,218 @@ static PyTypeObject *__pyx_ptype_5numpy_broadcast = 0;
 static PyTypeObject *__pyx_ptype_5numpy_ndarray = 0;
 static PyTypeObject *__pyx_ptype_5numpy_ufunc = 0;
 static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *, char *, char *, int *); /*proto*/
-static CYTHON_INLINE int __pyx_f_5numpy_import_array(void); /*proto*/
 
 /* Module declarations from 'cython' */
 
 /* Module declarations from 'libc.stdlib' */
 
-/* Module declarations from 'algorithms.sm.sparse_shortest_paths' */
-static PyArrayObject *__pyx_f_10algorithms_2sm_21sparse_shortest_paths_floyd_warshall(PyArrayObject *, struct __pyx_opt_args_10algorithms_2sm_21sparse_shortest_paths_floyd_warshall *__pyx_optional_args); /*proto*/
-static PyArrayObject *__pyx_f_10algorithms_2sm_21sparse_shortest_paths_dijkstra(PyObject *, PyObject *, PyObject *, PyArrayObject *, struct __pyx_opt_args_10algorithms_2sm_21sparse_shortest_paths_dijkstra *__pyx_optional_args); /*proto*/
-static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_initialize_node(struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *, unsigned int, struct __pyx_opt_args_10algorithms_2sm_21sparse_shortest_paths_initialize_node *__pyx_optional_args); /*proto*/
-static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_f_10algorithms_2sm_21sparse_shortest_paths_rightmost_sibling(struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *); /*proto*/
-static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_f_10algorithms_2sm_21sparse_shortest_paths_leftmost_sibling(struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *); /*proto*/
-static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_add_child(struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *, struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *); /*proto*/
-static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_add_sibling(struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *, struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *); /*proto*/
-static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove(struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *); /*proto*/
-static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_insert_node(struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciHeap *, struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *); /*proto*/
-static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_decrease_val(struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciHeap *, struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *, __pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t); /*proto*/
-static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_link(struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciHeap *, struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *); /*proto*/
-static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove_min(struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciHeap *); /*proto*/
-static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_dijkstra_directed_one_row(unsigned int, unsigned int, PyArrayObject *, PyArrayObject *, PyArrayObject *, PyArrayObject *, struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciHeap *, struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *); /*proto*/
-static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_dijkstra_one_row(unsigned int, PyArrayObject *, PyArrayObject *, PyArrayObject *, PyArrayObject *, PyArrayObject *, PyArrayObject *, PyArrayObject *, struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciHeap *, struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *); /*proto*/
-static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t = { "DTYPE_t", NULL, sizeof(__pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t), { 0 }, 0, 'R', 0, 0 };
-static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_21sparse_shortest_paths_ITYPE_t = { "ITYPE_t", NULL, sizeof(__pyx_t_10algorithms_2sm_21sparse_shortest_paths_ITYPE_t), { 0 }, 0, IS_UNSIGNED(__pyx_t_10algorithms_2sm_21sparse_shortest_paths_ITYPE_t) ? 'U' : 'I', IS_UNSIGNED(__pyx_t_10algorithms_2sm_21sparse_shortest_paths_ITYPE_t), 0 };
-#define __Pyx_MODULE_NAME "algorithms.sm.sparse_shortest_paths"
-extern int __pyx_module_is_main_algorithms__sm__sparse_shortest_paths;
-int __pyx_module_is_main_algorithms__sm__sparse_shortest_paths = 0;
+/* Module declarations from 'numpy.math' */
 
-/* Implementation of 'algorithms.sm.sparse_shortest_paths' */
+/* Module declarations from 'algorithms.sm.shortest_paths' */
+static PyObject *__pyx_f_10algorithms_2sm_14shortest_paths__dijkstra_directed(PyArrayObject *, PyArrayObject *, PyArrayObject *, PyArrayObject *, PyArrayObject *, PyArrayObject *, __pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t, __pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t); /*proto*/
+static PyObject *__pyx_f_10algorithms_2sm_14shortest_paths__dijkstra_undirected(PyArrayObject *, PyArrayObject *, PyArrayObject *, PyArrayObject *, PyArrayObject *, PyArrayObject *, PyArrayObject *, PyArrayObject *, PyArrayObject *, __pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t); /*proto*/
+static void __pyx_f_10algorithms_2sm_14shortest_paths_initialize_node(struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *, unsigned int, struct __pyx_opt_args_10algorithms_2sm_14shortest_paths_initialize_node *__pyx_optional_args); /*proto*/
+static struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_f_10algorithms_2sm_14shortest_paths_rightmost_sibling(struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *); /*proto*/
+static struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_f_10algorithms_2sm_14shortest_paths_leftmost_sibling(struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *); /*proto*/
+static void __pyx_f_10algorithms_2sm_14shortest_paths_add_child(struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *, struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *); /*proto*/
+static void __pyx_f_10algorithms_2sm_14shortest_paths_add_sibling(struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *, struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *); /*proto*/
+static void __pyx_f_10algorithms_2sm_14shortest_paths_remove(struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *); /*proto*/
+static void __pyx_f_10algorithms_2sm_14shortest_paths_insert_node(struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciHeap *, struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *); /*proto*/
+static void __pyx_f_10algorithms_2sm_14shortest_paths_decrease_val(struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciHeap *, struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *, __pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t); /*proto*/
+static void __pyx_f_10algorithms_2sm_14shortest_paths_link(struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciHeap *, struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *); /*proto*/
+static struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_f_10algorithms_2sm_14shortest_paths_remove_min(struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciHeap *); /*proto*/
+static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t = { "ITYPE_t", NULL, sizeof(__pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t), { 0 }, 0, IS_UNSIGNED(__pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t) ? 'U' : 'I', IS_UNSIGNED(__pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t), 0 };
+static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t = { "DTYPE_t", NULL, sizeof(__pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t), { 0 }, 0, 'R', 0, 0 };
+#define __Pyx_MODULE_NAME "algorithms.sm.shortest_paths"
+extern int __pyx_module_is_main_algorithms__sm__shortest_paths;
+int __pyx_module_is_main_algorithms__sm__shortest_paths = 0;
+
+/* Implementation of 'algorithms.sm.shortest_paths' */
 static PyObject *__pyx_builtin_ValueError;
 static PyObject *__pyx_builtin_range;
 static PyObject *__pyx_builtin_RuntimeError;
 static PyObject *__pyx_builtin_ImportError;
+static const char __pyx_k_[] = "";
 static const char __pyx_k_C[] = "C";
-static const char __pyx_k_D[] = "D";
 static const char __pyx_k_N[] = "N";
 static const char __pyx_k_T[] = "T";
-static const char __pyx_k_FW[] = "FW";
-static const char __pyx_k_Nk[] = "Nk";
 static const char __pyx_k_np[] = "np";
+static const char __pyx_k_any[] = "any";
+static const char __pyx_k_doc[] = "__doc__";
 static const char __pyx_k_inf[] = "inf";
-static const char __pyx_k_auto[] = "auto";
+static const char __pyx_k_copy[] = "copy";
 static const char __pyx_k_data[] = "data";
-static const char __pyx_k_flat[] = "flat";
+static const char __pyx_k_fill[] = "fill";
+static const char __pyx_k_init[] = "__init__";
 static const char __pyx_k_main[] = "__main__";
+static const char __pyx_k_ones[] = "ones";
+static const char __pyx_k_self[] = "self";
+static const char __pyx_k_size[] = "size";
 static const char __pyx_k_test[] = "__test__";
+static const char __pyx_k_warn[] = "warn";
 static const char __pyx_k_DTYPE[] = "DTYPE";
 static const char __pyx_k_ITYPE[] = "ITYPE";
+static const char __pyx_k_array[] = "array";
 static const char __pyx_k_dtype[] = "dtype";
-static const char __pyx_k_graph[] = "graph";
+static const char __pyx_k_empty[] = "empty";
 static const char __pyx_k_int32[] = "int32";
-static const char __pyx_k_isinf[] = "isinf";
+static const char __pyx_k_limit[] = "limit";
 static const char __pyx_k_numpy[] = "numpy";
 static const char __pyx_k_order[] = "order";
 static const char __pyx_k_range[] = "range";
 static const char __pyx_k_shape[] = "shape";
 static const char __pyx_k_tocsr[] = "tocsr";
-static const char __pyx_k_where[] = "where";
 static const char __pyx_k_zeros[] = "zeros";
+static const char __pyx_k_arange[] = "arange";
 static const char __pyx_k_import[] = "__import__";
 static const char __pyx_k_indptr[] = "indptr";
-static const char __pyx_k_method[] = "method";
-static const char __pyx_k_source[] = "source";
+static const char __pyx_k_limitf[] = "limitf";
+static const char __pyx_k_module[] = "__module__";
 static const char __pyx_k_target[] = "target";
-static const char __pyx_k_asarray[] = "asarray";
+static const char __pyx_k_csgraph[] = "csgraph";
 static const char __pyx_k_float64[] = "float64";
 static const char __pyx_k_indices[] = "indices";
-static const char __pyx_k_toarray[] = "toarray";
+static const char __pyx_k_message[] = "message";
+static const char __pyx_k_prepare[] = "__prepare__";
+static const char __pyx_k_reshape[] = "reshape";
+static const char __pyx_k_csgraphT[] = "csgraphT";
+static const char __pyx_k_csr_data[] = "csr_data";
+static const char __pyx_k_dijkstra[] = "dijkstra";
 static const char __pyx_k_directed[] = "directed";
+static const char __pyx_k_qualname[] = "__qualname__";
+static const char __pyx_k_warnings[] = "warnings";
+static const char __pyx_k_csrT_data[] = "csrT_data";
+static const char __pyx_k_metaclass[] = "__metaclass__";
 static const char __pyx_k_ValueError[] = "ValueError";
+static const char __pyx_k_atleast_1d[] = "atleast_1d";
 static const char __pyx_k_csr_matrix[] = "csr_matrix";
 static const char __pyx_k_isspmatrix[] = "isspmatrix";
+static const char __pyx_k_unweighted[] = "unweighted";
 static const char __pyx_k_ImportError[] = "ImportError";
 static const char __pyx_k_dist_matrix[] = "dist_matrix";
 static const char __pyx_k_RuntimeError[] = "RuntimeError";
+static const char __pyx_k_dense_output[] = "dense_output";
+static const char __pyx_k_return_shape[] = "return_shape";
 static const char __pyx_k_scipy_sparse[] = "scipy.sparse";
+static const char __pyx_k_isspmatrix_csc[] = "isspmatrix_csc";
 static const char __pyx_k_isspmatrix_csr[] = "isspmatrix_csr";
+static const char __pyx_k_validate_graph[] = "validate_graph";
+static const char __pyx_k_limit_must_be_0[] = "limit must be >= 0";
+static const char __pyx_k_dijkstra_line_33[] = "dijkstra (line 33)";
+static const char __pyx_k_NegativeCycleError[] = "NegativeCycleError";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
-static const char __pyx_k_graph_shortest_path[] = "graph_shortest_path";
-static const char __pyx_k_unrecognized_method_s[] = "unrecognized method '%s'";
+static const char __pyx_k_predecessor_matrix[] = "predecessor_matrix";
+static const char __pyx_k_return_predecessors[] = "return_predecessors";
+static const char __pyx_k_indices_out_of_range_0_N[] = "indices out of range 0...N";
+static const char __pyx_k_NegativeCycleError___init[] = "NegativeCycleError.__init__";
 static const char __pyx_k_ndarray_is_not_C_contiguous[] = "ndarray is not C contiguous";
+static const char __pyx_k_algorithms_sm_shortest_paths[] = "algorithms.sm.shortest_paths";
+static const char __pyx_k_dijkstra_csgraph_directed_True[] = "\n    dijkstra(csgraph, directed=True, indices=None, return_predecessors=False,\n             unweighted=False, limit=np.inf)\n    Dijkstra algorithm using Fibonacci Heaps\n    .. versionadded:: 0.11.0\n    Parameters\n    ----------\n    csgraph : array, matrix, or sparse matrix, 2 dimensions\n        The N x N array of non-negative distances representing the input graph.\n    directed : bool, optional\n        If True (default), then find the shortest path on a directed graph:\n        only move from point i to point j along paths csgraph[i, j] and from\n        point j to i along paths csgraph[j, i].\n        If False, then find the shortest path on an undirected graph: the\n        algorithm can progress from point i to j or j to i along either\n        csgraph[i, j] or csgraph[j, i].\n    indices : array_like or int, optional\n        if specified, only compute the paths for the points at the given\n        indices.\n    return_predecessors : bool, optional\n        If True, return the size (N, N) predecesor matrix\n    unweighted : bool, optional\n        If True, then find unweighted distances.  That is, rather than finding\n        the path between each point such that the sum of weights is minimized,\n        find the path such that the number of edges is minimized.\n    limit : float, optional\n        The maximum distance to calculate, must be >= 0. Using a smaller limit\n        will decrease computation time by aborting calculations between pairs\n        that are separated by a distance > limit. For such pairs, the distance\n        will be equal to np.inf (i.e., not connected).\n        .. versionadded:: 0.14.0\n    Returns\n    -------\n    dist_matrix : ndarray\n        The matrix of distances between graph nodes. dist_matrix[i,j]\n        gives the shortest distance from point i to point j along the graph.\n    predecessors : ndarray\n        Returned only if return_predecessors == True.\n        The matrix of predecessors, which can be used to rec""onstruct\n        the shortest paths.  Row i of the predecessor matrix contains\n        information on the shortest paths from point i: each entry\n        predecessors[i, j] gives the index of the previous node in the\n        path from point i to point j.  If no path exists between point\n        i and j, then predecessors[i, j] = -9999\n    Notes\n    -----\n    As currently implemented, Dijkstra's algorithm does not work for\n    graphs with direction-dependent distances when directed == False.\n    i.e., if csgraph[i,j] and csgraph[j,i] are not equal and\n    both are nonzero, setting directed=False will not yield the correct\n    result.\n    Also, this routine does not work for graphs with negative\n    distances.  Negative distances can lead to infinite cycles that must\n    be handled by specialized algorithms such as Bellman-Ford's algorithm\n    or Johnson's algorithm.\n    Examples\n    --------\n    >>> from scipy.sparse import csr_matrix\n    >>> from scipy.sparse.csgraph import dijkstra\n    >>> graph = [\n    ... [0, 1 , 2, 0],\n    ... [0, 0, 0, 1],\n    ... [0, 0, 0, 3],\n    ... [0, 0, 0, 0]\n    ... ]\n    >>> graph = csr_matrix(graph)\n    >>> print(graph)\n      (0, 1)\t1\n      (0, 2)\t2\n      (1, 3)\t1\n      (2, 3)\t3\n    >>> dist_matrix, predecessors = dijkstra(csgraph=graph, directed=False, indices=0, return_predecessors=True)\n    >>> dist_matrix\n    array([ 0.,  1.,  2.,  2.])\n    >>> predecessors\n    array([-9999,     0,     0,     1], dtype=int32)\n    ";
+static const char __pyx_k_Routines_for_performing_shortes[] = "\nRoutines for performing shortest-path graph searches\nThe main interface is in the function :func:`shortest_path`.  This\ncalls cython routines that compute the shortest path using\nthe Floyd-Warshall algorithm, Dijkstra's algorithm with Fibonacci Heaps,\nthe Bellman-Ford algorithm, or Johnson's Algorithm.\n";
 static const char __pyx_k_numpy_core_multiarray_failed_to[] = "numpy.core.multiarray failed to import";
 static const char __pyx_k_unknown_dtype_code_in_numpy_pxd[] = "unknown dtype code in numpy.pxd (%d)";
 static const char __pyx_k_Format_string_allocated_too_shor[] = "Format string allocated too short, see comment in numpy.pxd";
+static const char __pyx_k_Graph_has_negative_weights_dijks[] = "Graph has negative weights: dijkstra will give inaccurate results if the graph contains negative cycles. Consider johnson or bellman_ford.";
 static const char __pyx_k_Non_native_byte_order_not_suppor[] = "Non-native byte order not supported";
 static const char __pyx_k_algorithms_sm_shortest_paths_pyx[] = "algorithms/sm/shortest_paths.pyx";
-static const char __pyx_k_algorithms_sm_sparse_shortest_pa[] = "algorithms.sm.sparse_shortest_paths";
 static const char __pyx_k_ndarray_is_not_Fortran_contiguou[] = "ndarray is not Fortran contiguous";
 static const char __pyx_k_numpy_core_umath_failed_to_impor[] = "numpy.core.umath failed to import";
+static const char __pyx_k_scipy_sparse_csgraph__validation[] = "scipy.sparse.csgraph._validation";
 static const char __pyx_k_Format_string_allocated_too_shor_2[] = "Format string allocated too short.";
+static PyObject *__pyx_kp_s_;
 static PyObject *__pyx_n_s_C;
-static PyObject *__pyx_n_s_D;
 static PyObject *__pyx_n_s_DTYPE;
-static PyObject *__pyx_n_s_FW;
 static PyObject *__pyx_kp_u_Format_string_allocated_too_shor;
 static PyObject *__pyx_kp_u_Format_string_allocated_too_shor_2;
+static PyObject *__pyx_kp_s_Graph_has_negative_weights_dijks;
 static PyObject *__pyx_n_s_ITYPE;
 static PyObject *__pyx_n_s_ImportError;
 static PyObject *__pyx_n_s_N;
-static PyObject *__pyx_n_s_Nk;
+static PyObject *__pyx_n_s_NegativeCycleError;
+static PyObject *__pyx_n_s_NegativeCycleError___init;
 static PyObject *__pyx_kp_u_Non_native_byte_order_not_suppor;
 static PyObject *__pyx_n_s_RuntimeError;
 static PyObject *__pyx_n_s_T;
 static PyObject *__pyx_n_s_ValueError;
+static PyObject *__pyx_n_s_algorithms_sm_shortest_paths;
 static PyObject *__pyx_kp_s_algorithms_sm_shortest_paths_pyx;
-static PyObject *__pyx_n_s_algorithms_sm_sparse_shortest_pa;
-static PyObject *__pyx_n_s_asarray;
-static PyObject *__pyx_n_s_auto;
+static PyObject *__pyx_n_s_any;
+static PyObject *__pyx_n_s_arange;
+static PyObject *__pyx_n_s_array;
+static PyObject *__pyx_n_s_atleast_1d;
 static PyObject *__pyx_n_s_cline_in_traceback;
+static PyObject *__pyx_n_s_copy;
+static PyObject *__pyx_n_s_csgraph;
+static PyObject *__pyx_n_s_csgraphT;
+static PyObject *__pyx_n_s_csrT_data;
+static PyObject *__pyx_n_s_csr_data;
 static PyObject *__pyx_n_s_csr_matrix;
 static PyObject *__pyx_n_s_data;
+static PyObject *__pyx_n_s_dense_output;
+static PyObject *__pyx_n_s_dijkstra;
+static PyObject *__pyx_kp_u_dijkstra_csgraph_directed_True;
+static PyObject *__pyx_kp_u_dijkstra_line_33;
 static PyObject *__pyx_n_s_directed;
 static PyObject *__pyx_n_s_dist_matrix;
+static PyObject *__pyx_n_s_doc;
 static PyObject *__pyx_n_s_dtype;
-static PyObject *__pyx_n_s_flat;
+static PyObject *__pyx_n_s_empty;
+static PyObject *__pyx_n_s_fill;
 static PyObject *__pyx_n_s_float64;
-static PyObject *__pyx_n_s_graph;
-static PyObject *__pyx_n_s_graph_shortest_path;
 static PyObject *__pyx_n_s_import;
 static PyObject *__pyx_n_s_indices;
+static PyObject *__pyx_kp_s_indices_out_of_range_0_N;
 static PyObject *__pyx_n_s_indptr;
 static PyObject *__pyx_n_s_inf;
+static PyObject *__pyx_n_s_init;
 static PyObject *__pyx_n_s_int32;
-static PyObject *__pyx_n_s_isinf;
 static PyObject *__pyx_n_s_isspmatrix;
+static PyObject *__pyx_n_s_isspmatrix_csc;
 static PyObject *__pyx_n_s_isspmatrix_csr;
+static PyObject *__pyx_n_s_limit;
+static PyObject *__pyx_kp_s_limit_must_be_0;
+static PyObject *__pyx_n_s_limitf;
 static PyObject *__pyx_n_s_main;
-static PyObject *__pyx_n_s_method;
+static PyObject *__pyx_n_s_message;
+static PyObject *__pyx_n_s_metaclass;
+static PyObject *__pyx_n_s_module;
 static PyObject *__pyx_kp_u_ndarray_is_not_C_contiguous;
 static PyObject *__pyx_kp_u_ndarray_is_not_Fortran_contiguou;
 static PyObject *__pyx_n_s_np;
 static PyObject *__pyx_n_s_numpy;
 static PyObject *__pyx_kp_s_numpy_core_multiarray_failed_to;
 static PyObject *__pyx_kp_s_numpy_core_umath_failed_to_impor;
+static PyObject *__pyx_n_s_ones;
 static PyObject *__pyx_n_s_order;
+static PyObject *__pyx_n_s_predecessor_matrix;
+static PyObject *__pyx_n_s_prepare;
+static PyObject *__pyx_n_s_qualname;
 static PyObject *__pyx_n_s_range;
+static PyObject *__pyx_n_s_reshape;
+static PyObject *__pyx_n_s_return_predecessors;
+static PyObject *__pyx_n_s_return_shape;
 static PyObject *__pyx_n_s_scipy_sparse;
+static PyObject *__pyx_n_s_scipy_sparse_csgraph__validation;
+static PyObject *__pyx_n_s_self;
 static PyObject *__pyx_n_s_shape;
-static PyObject *__pyx_n_s_source;
+static PyObject *__pyx_n_s_size;
 static PyObject *__pyx_n_s_target;
 static PyObject *__pyx_n_s_test;
-static PyObject *__pyx_n_s_toarray;
 static PyObject *__pyx_n_s_tocsr;
 static PyObject *__pyx_kp_u_unknown_dtype_code_in_numpy_pxd;
-static PyObject *__pyx_kp_s_unrecognized_method_s;
-static PyObject *__pyx_n_s_where;
+static PyObject *__pyx_n_s_unweighted;
+static PyObject *__pyx_n_s_validate_graph;
+static PyObject *__pyx_n_s_warn;
+static PyObject *__pyx_n_s_warnings;
 static PyObject *__pyx_n_s_zeros;
-static PyObject *__pyx_pf_10algorithms_2sm_21sparse_shortest_paths_graph_shortest_path(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_dist_matrix, PyObject *__pyx_v_source, PyObject *__pyx_v_target, PyObject *__pyx_v_directed, PyObject *__pyx_v_method); /* proto */
+static PyObject *__pyx_pf_10algorithms_2sm_14shortest_paths_18NegativeCycleError___init__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_message); /* proto */
+static PyObject *__pyx_pf_10algorithms_2sm_14shortest_paths_dijkstra(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_csgraph, PyObject *__pyx_v_directed, PyObject *__pyx_v_indices, PyObject *__pyx_v_return_predecessors, PyObject *__pyx_v_unweighted, PyObject *__pyx_v_limit, PyObject *__pyx_v_target); /* proto */
 static int __pyx_pf_5numpy_7ndarray___getbuffer__(PyArrayObject *__pyx_v_self, Py_buffer *__pyx_v_info, int __pyx_v_flags); /* proto */
 static void __pyx_pf_5numpy_7ndarray_2__releasebuffer__(PyArrayObject *__pyx_v_self, Py_buffer *__pyx_v_info); /* proto */
 static PyObject *__pyx_int_0;
-static PyObject *__pyx_int_4;
-static PyObject *__pyx_tuple_;
-static PyObject *__pyx_tuple__2;
+static PyObject *__pyx_int_neg_1;
+static PyObject *__pyx_int_neg_9999;
+static PyObject *__pyx_k__2;
 static PyObject *__pyx_tuple__3;
 static PyObject *__pyx_tuple__4;
 static PyObject *__pyx_tuple__5;
@@ -1886,39 +2008,239 @@ static PyObject *__pyx_tuple__7;
 static PyObject *__pyx_tuple__8;
 static PyObject *__pyx_tuple__9;
 static PyObject *__pyx_tuple__10;
-static PyObject *__pyx_codeobj__11;
+static PyObject *__pyx_tuple__11;
+static PyObject *__pyx_tuple__12;
+static PyObject *__pyx_tuple__13;
+static PyObject *__pyx_tuple__14;
+static PyObject *__pyx_tuple__15;
+static PyObject *__pyx_tuple__16;
+static PyObject *__pyx_tuple__17;
+static PyObject *__pyx_tuple__19;
+static PyObject *__pyx_tuple__20;
+static PyObject *__pyx_codeobj__18;
+static PyObject *__pyx_codeobj__21;
 /* Late includes */
 
-/* "algorithms/sm/shortest_paths.pyx":19
+/* "algorithms/sm/shortest_paths.pyx":30
  * 
+ * class NegativeCycleError(Exception):
+ *     def __init__(self, message=''):             # <<<<<<<<<<<<<<
+ *         Exception.__init__(self, message)
  * 
- * def graph_shortest_path(dist_matrix, source, target, directed=True, method='auto'):             # <<<<<<<<<<<<<<
- *     """
- *     Perform a shortest-path graph search on a positive directed or
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10algorithms_2sm_21sparse_shortest_paths_1graph_shortest_path(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_10algorithms_2sm_21sparse_shortest_paths_graph_shortest_path[] = "\n    Perform a shortest-path graph search on a positive directed or\n    undirected graph.\n    Parameters\n    ----------\n    dist_matrix : arraylike or sparse matrix, shape = (N,N)\n        Array of positive distances.\n        If vertex i is connected to vertex j, then dist_matrix[i,j] gives\n        the distance between the vertices.\n        If vertex i is not connected to vertex j, then dist_matrix[i,j] = 0\n    directed : boolean\n        if True, then find the shortest path on a directed graph: only\n        progress from a point to its neighbors, not the other way around.\n        if False, then find the shortest path on an undirected graph: the\n        algorithm can progress from a point to its neighbors and vice versa.\n    method : string ['auto'|'FW'|'D']\n        method to use.  Options are\n        'auto' : attempt to choose the best method for the current problem\n        'FW' : Floyd-Warshall algorithm.  O[N^3]\n        'D' : Dijkstra's algorithm with Fibonacci stacks.  O[(k+log(N))N^2]\n    Returns\n    -------\n    G : np.ndarray, float, shape = [N,N]\n        G[i,j] gives the shortest distance from point i to point j\n        along the graph.\n    Notes\n    -----\n    As currently implemented, Dijkstra's algorithm does not work for\n    graphs with direction-dependent distances when directed == False.\n    i.e., if dist_matrix[i,j] and dist_matrix[j,i] are not equal and\n    both are nonzero, method='D' will not necessarily yield the correct\n    result.\n    Also, these routines have not been tested for graphs with negative\n    distances.  Negative distances can lead to infinite cycles that must\n    be handled by specialized algorithms.\n    ";
-static PyMethodDef __pyx_mdef_10algorithms_2sm_21sparse_shortest_paths_1graph_shortest_path = {"graph_shortest_path", (PyCFunction)__pyx_pw_10algorithms_2sm_21sparse_shortest_paths_1graph_shortest_path, METH_VARARGS|METH_KEYWORDS, __pyx_doc_10algorithms_2sm_21sparse_shortest_paths_graph_shortest_path};
-static PyObject *__pyx_pw_10algorithms_2sm_21sparse_shortest_paths_1graph_shortest_path(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  PyObject *__pyx_v_dist_matrix = 0;
-  PyObject *__pyx_v_source = 0;
-  PyObject *__pyx_v_target = 0;
-  PyObject *__pyx_v_directed = 0;
-  PyObject *__pyx_v_method = 0;
+static PyObject *__pyx_pw_10algorithms_2sm_14shortest_paths_18NegativeCycleError_1__init__(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_10algorithms_2sm_14shortest_paths_18NegativeCycleError_1__init__ = {"__init__", (PyCFunction)__pyx_pw_10algorithms_2sm_14shortest_paths_18NegativeCycleError_1__init__, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_10algorithms_2sm_14shortest_paths_18NegativeCycleError_1__init__(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_self = 0;
+  PyObject *__pyx_v_message = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("graph_shortest_path (wrapper)", 0);
+  __Pyx_RefNannySetupContext("__init__ (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_dist_matrix,&__pyx_n_s_source,&__pyx_n_s_target,&__pyx_n_s_directed,&__pyx_n_s_method,0};
-    PyObject* values[5] = {0,0,0,0,0};
-    values[3] = ((PyObject *)Py_True);
-    values[4] = ((PyObject *)__pyx_n_s_auto);
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_self,&__pyx_n_s_message,0};
+    PyObject* values[2] = {0,0};
+    values[1] = ((PyObject *)((PyObject*)__pyx_kp_s_));
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
       const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
       switch (pos_args) {
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_self)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (kw_args > 0) {
+          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_message);
+          if (value) { values[1] = value; kw_args--; }
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 30, __pyx_L3_error)
+      }
+    } else {
+      switch (PyTuple_GET_SIZE(__pyx_args)) {
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+    }
+    __pyx_v_self = values[0];
+    __pyx_v_message = values[1];
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("__init__", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 30, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("algorithms.sm.shortest_paths.NegativeCycleError.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_10algorithms_2sm_14shortest_paths_18NegativeCycleError___init__(__pyx_self, __pyx_v_self, __pyx_v_message);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_10algorithms_2sm_14shortest_paths_18NegativeCycleError___init__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_message) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  int __pyx_t_4;
+  PyObject *__pyx_t_5 = NULL;
+  __Pyx_RefNannySetupContext("__init__", 0);
+
+  /* "algorithms/sm/shortest_paths.pyx":31
+ * class NegativeCycleError(Exception):
+ *     def __init__(self, message=''):
+ *         Exception.__init__(self, message)             # <<<<<<<<<<<<<<
+ * 
+ * def dijkstra(csgraph, directed=True, indices=None,
+ */
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_n_s_init); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 31, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = NULL;
+  __pyx_t_4 = 0;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_3)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_3);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+      __pyx_t_4 = 1;
+    }
+  }
+  #if CYTHON_FAST_PYCALL
+  if (PyFunction_Check(__pyx_t_2)) {
+    PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_self, __pyx_v_message};
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 31, __pyx_L1_error)
+    __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_GOTREF(__pyx_t_1);
+  } else
+  #endif
+  #if CYTHON_FAST_PYCCALL
+  if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
+    PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_self, __pyx_v_message};
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_4, 2+__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 31, __pyx_L1_error)
+    __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_GOTREF(__pyx_t_1);
+  } else
+  #endif
+  {
+    __pyx_t_5 = PyTuple_New(2+__pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 31, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    if (__pyx_t_3) {
+      __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_3); __pyx_t_3 = NULL;
+    }
+    __Pyx_INCREF(__pyx_v_self);
+    __Pyx_GIVEREF(__pyx_v_self);
+    PyTuple_SET_ITEM(__pyx_t_5, 0+__pyx_t_4, __pyx_v_self);
+    __Pyx_INCREF(__pyx_v_message);
+    __Pyx_GIVEREF(__pyx_v_message);
+    PyTuple_SET_ITEM(__pyx_t_5, 1+__pyx_t_4, __pyx_v_message);
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 31, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  }
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "algorithms/sm/shortest_paths.pyx":30
+ * 
+ * class NegativeCycleError(Exception):
+ *     def __init__(self, message=''):             # <<<<<<<<<<<<<<
+ *         Exception.__init__(self, message)
+ * 
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_AddTraceback("algorithms.sm.shortest_paths.NegativeCycleError.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "algorithms/sm/shortest_paths.pyx":33
+ *         Exception.__init__(self, message)
+ * 
+ * def dijkstra(csgraph, directed=True, indices=None,             # <<<<<<<<<<<<<<
+ *              return_predecessors=False,
+ *              unweighted=False, limit=np.inf, target=None):
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_10algorithms_2sm_14shortest_paths_1dijkstra(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static char __pyx_doc_10algorithms_2sm_14shortest_paths_dijkstra[] = "\n    dijkstra(csgraph, directed=True, indices=None, return_predecessors=False,\n             unweighted=False, limit=np.inf)\n    Dijkstra algorithm using Fibonacci Heaps\n    .. versionadded:: 0.11.0\n    Parameters\n    ----------\n    csgraph : array, matrix, or sparse matrix, 2 dimensions\n        The N x N array of non-negative distances representing the input graph.\n    directed : bool, optional\n        If True (default), then find the shortest path on a directed graph:\n        only move from point i to point j along paths csgraph[i, j] and from\n        point j to i along paths csgraph[j, i].\n        If False, then find the shortest path on an undirected graph: the\n        algorithm can progress from point i to j or j to i along either\n        csgraph[i, j] or csgraph[j, i].\n    indices : array_like or int, optional\n        if specified, only compute the paths for the points at the given\n        indices.\n    return_predecessors : bool, optional\n        If True, return the size (N, N) predecesor matrix\n    unweighted : bool, optional\n        If True, then find unweighted distances.  That is, rather than finding\n        the path between each point such that the sum of weights is minimized,\n        find the path such that the number of edges is minimized.\n    limit : float, optional\n        The maximum distance to calculate, must be >= 0. Using a smaller limit\n        will decrease computation time by aborting calculations between pairs\n        that are separated by a distance > limit. For such pairs, the distance\n        will be equal to np.inf (i.e., not connected).\n        .. versionadded:: 0.14.0\n    Returns\n    -------\n    dist_matrix : ndarray\n        The matrix of distances between graph nodes. dist_matrix[i,j]\n        gives the shortest distance from point i to point j along the graph.\n    predecessors : ndarray\n        Returned only if return_predecessors == True.\n        The matrix of predecessors, which can be used to rec""onstruct\n        the shortest paths.  Row i of the predecessor matrix contains\n        information on the shortest paths from point i: each entry\n        predecessors[i, j] gives the index of the previous node in the\n        path from point i to point j.  If no path exists between point\n        i and j, then predecessors[i, j] = -9999\n    Notes\n    -----\n    As currently implemented, Dijkstra's algorithm does not work for\n    graphs with direction-dependent distances when directed == False.\n    i.e., if csgraph[i,j] and csgraph[j,i] are not equal and\n    both are nonzero, setting directed=False will not yield the correct\n    result.\n    Also, this routine does not work for graphs with negative\n    distances.  Negative distances can lead to infinite cycles that must\n    be handled by specialized algorithms such as Bellman-Ford's algorithm\n    or Johnson's algorithm.\n    Examples\n    --------\n    >>> from scipy.sparse import csr_matrix\n    >>> from scipy.sparse.csgraph import dijkstra\n    >>> graph = [\n    ... [0, 1 , 2, 0],\n    ... [0, 0, 0, 1],\n    ... [0, 0, 0, 3],\n    ... [0, 0, 0, 0]\n    ... ]\n    >>> graph = csr_matrix(graph)\n    >>> print(graph)\n      (0, 1)\t1\n      (0, 2)\t2\n      (1, 3)\t1\n      (2, 3)\t3\n    >>> dist_matrix, predecessors = dijkstra(csgraph=graph, directed=False, indices=0, return_predecessors=True)\n    >>> dist_matrix\n    array([ 0.,  1.,  2.,  2.])\n    >>> predecessors\n    array([-9999,     0,     0,     1], dtype=int32)\n    ";
+static PyMethodDef __pyx_mdef_10algorithms_2sm_14shortest_paths_1dijkstra = {"dijkstra", (PyCFunction)__pyx_pw_10algorithms_2sm_14shortest_paths_1dijkstra, METH_VARARGS|METH_KEYWORDS, __pyx_doc_10algorithms_2sm_14shortest_paths_dijkstra};
+static PyObject *__pyx_pw_10algorithms_2sm_14shortest_paths_1dijkstra(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_csgraph = 0;
+  PyObject *__pyx_v_directed = 0;
+  PyObject *__pyx_v_indices = 0;
+  PyObject *__pyx_v_return_predecessors = 0;
+  PyObject *__pyx_v_unweighted = 0;
+  PyObject *__pyx_v_limit = 0;
+  PyObject *__pyx_v_target = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("dijkstra (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_csgraph,&__pyx_n_s_directed,&__pyx_n_s_indices,&__pyx_n_s_return_predecessors,&__pyx_n_s_unweighted,&__pyx_n_s_limit,&__pyx_n_s_target,0};
+    PyObject* values[7] = {0,0,0,0,0,0,0};
+    values[1] = ((PyObject *)Py_True);
+    values[2] = ((PyObject *)Py_None);
+
+    /* "algorithms/sm/shortest_paths.pyx":34
+ * 
+ * def dijkstra(csgraph, directed=True, indices=None,
+ *              return_predecessors=False,             # <<<<<<<<<<<<<<
+ *              unweighted=False, limit=np.inf, target=None):
+ *     """
+ */
+    values[3] = ((PyObject *)Py_False);
+
+    /* "algorithms/sm/shortest_paths.pyx":35
+ * def dijkstra(csgraph, directed=True, indices=None,
+ *              return_predecessors=False,
+ *              unweighted=False, limit=np.inf, target=None):             # <<<<<<<<<<<<<<
+ *     """
+ *     dijkstra(csgraph, directed=True, indices=None, return_predecessors=False,
+ */
+    values[4] = ((PyObject *)Py_False);
+    values[5] = __pyx_k__2;
+    values[6] = ((PyObject *)Py_None);
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  7: values[6] = PyTuple_GET_ITEM(__pyx_args, 6);
+        CYTHON_FALLTHROUGH;
+        case  6: values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
+        CYTHON_FALLTHROUGH;
         case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
         CYTHON_FALLTHROUGH;
         case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
@@ -1935,1679 +2257,1496 @@ static PyObject *__pyx_pw_10algorithms_2sm_21sparse_shortest_paths_1graph_shorte
       kw_args = PyDict_Size(__pyx_kwds);
       switch (pos_args) {
         case  0:
-        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_dist_matrix)) != 0)) kw_args--;
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_csgraph)) != 0)) kw_args--;
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
-        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_source)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("graph_shortest_path", 0, 3, 5, 1); __PYX_ERR(0, 19, __pyx_L3_error)
+        if (kw_args > 0) {
+          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_directed);
+          if (value) { values[1] = value; kw_args--; }
         }
         CYTHON_FALLTHROUGH;
         case  2:
-        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_target)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("graph_shortest_path", 0, 3, 5, 2); __PYX_ERR(0, 19, __pyx_L3_error)
+        if (kw_args > 0) {
+          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_indices);
+          if (value) { values[2] = value; kw_args--; }
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (kw_args > 0) {
-          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_directed);
+          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_return_predecessors);
           if (value) { values[3] = value; kw_args--; }
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (kw_args > 0) {
-          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_method);
+          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_unweighted);
           if (value) { values[4] = value; kw_args--; }
+        }
+        CYTHON_FALLTHROUGH;
+        case  5:
+        if (kw_args > 0) {
+          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_limit);
+          if (value) { values[5] = value; kw_args--; }
+        }
+        CYTHON_FALLTHROUGH;
+        case  6:
+        if (kw_args > 0) {
+          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_target);
+          if (value) { values[6] = value; kw_args--; }
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "graph_shortest_path") < 0)) __PYX_ERR(0, 19, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "dijkstra") < 0)) __PYX_ERR(0, 33, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
+        case  7: values[6] = PyTuple_GET_ITEM(__pyx_args, 6);
+        CYTHON_FALLTHROUGH;
+        case  6: values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
+        CYTHON_FALLTHROUGH;
         case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
         CYTHON_FALLTHROUGH;
         case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
         CYTHON_FALLTHROUGH;
         case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
-        values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-        values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
         break;
         default: goto __pyx_L5_argtuple_error;
       }
     }
-    __pyx_v_dist_matrix = values[0];
-    __pyx_v_source = values[1];
-    __pyx_v_target = values[2];
-    __pyx_v_directed = values[3];
-    __pyx_v_method = values[4];
+    __pyx_v_csgraph = values[0];
+    __pyx_v_directed = values[1];
+    __pyx_v_indices = values[2];
+    __pyx_v_return_predecessors = values[3];
+    __pyx_v_unweighted = values[4];
+    __pyx_v_limit = values[5];
+    __pyx_v_target = values[6];
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("graph_shortest_path", 0, 3, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 19, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("dijkstra", 0, 1, 7, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 33, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("algorithms.sm.sparse_shortest_paths.graph_shortest_path", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("algorithms.sm.shortest_paths.dijkstra", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_10algorithms_2sm_21sparse_shortest_paths_graph_shortest_path(__pyx_self, __pyx_v_dist_matrix, __pyx_v_source, __pyx_v_target, __pyx_v_directed, __pyx_v_method);
+  __pyx_r = __pyx_pf_10algorithms_2sm_14shortest_paths_dijkstra(__pyx_self, __pyx_v_csgraph, __pyx_v_directed, __pyx_v_indices, __pyx_v_return_predecessors, __pyx_v_unweighted, __pyx_v_limit, __pyx_v_target);
+
+  /* "algorithms/sm/shortest_paths.pyx":33
+ *         Exception.__init__(self, message)
+ * 
+ * def dijkstra(csgraph, directed=True, indices=None,             # <<<<<<<<<<<<<<
+ *              return_predecessors=False,
+ *              unweighted=False, limit=np.inf, target=None):
+ */
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10algorithms_2sm_21sparse_shortest_paths_graph_shortest_path(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_dist_matrix, PyObject *__pyx_v_source, PyObject *__pyx_v_target, PyObject *__pyx_v_directed, PyObject *__pyx_v_method) {
+static PyObject *__pyx_pf_10algorithms_2sm_14shortest_paths_dijkstra(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_csgraph, PyObject *__pyx_v_directed, PyObject *__pyx_v_indices, PyObject *__pyx_v_return_predecessors, PyObject *__pyx_v_unweighted, PyObject *__pyx_v_limit, PyObject *__pyx_v_target) {
   PyObject *__pyx_v_N = NULL;
-  Py_ssize_t __pyx_v_Nk;
-  PyObject *__pyx_v_graph = NULL;
+  PyObject *__pyx_v_return_shape = NULL;
+  __pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t __pyx_v_limitf;
+  PyObject *__pyx_v_dist_matrix = NULL;
+  PyObject *__pyx_v_predecessor_matrix = NULL;
+  PyObject *__pyx_v_csr_data = NULL;
+  PyObject *__pyx_v_csgraphT = NULL;
+  PyObject *__pyx_v_csrT_data = NULL;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   PyObject *__pyx_t_2 = NULL;
   PyObject *__pyx_t_3 = NULL;
   PyObject *__pyx_t_4 = NULL;
-  int __pyx_t_5;
+  PyObject *__pyx_t_5 = NULL;
   int __pyx_t_6;
-  Py_ssize_t __pyx_t_7;
-  int __pyx_t_8;
-  struct __pyx_opt_args_10algorithms_2sm_21sparse_shortest_paths_floyd_warshall __pyx_t_9;
-  struct __pyx_opt_args_10algorithms_2sm_21sparse_shortest_paths_dijkstra __pyx_t_10;
-  __Pyx_RefNannySetupContext("graph_shortest_path", 0);
-  __Pyx_INCREF(__pyx_v_dist_matrix);
-  __Pyx_INCREF(__pyx_v_method);
+  int __pyx_t_7;
+  __pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t __pyx_t_8;
+  Py_ssize_t __pyx_t_9;
+  __pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t __pyx_t_10;
+  __Pyx_RefNannySetupContext("dijkstra", 0);
+  __Pyx_INCREF(__pyx_v_csgraph);
+  __Pyx_INCREF(__pyx_v_indices);
 
-  /* "algorithms/sm/shortest_paths.pyx":56
- *     be handled by specialized algorithms.
- *     """
- *     if not isspmatrix_csr(dist_matrix):             # <<<<<<<<<<<<<<
- *         dist_matrix = csr_matrix(dist_matrix)
+  /* "algorithms/sm/shortest_paths.pyx":115
+ *     #------------------------------
+ *     # validate csgraph and convert to csr matrix
+ *     csgraph = validate_graph(csgraph, directed, DTYPE,             # <<<<<<<<<<<<<<
+ *                              dense_output=False)
  * 
  */
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_isspmatrix_csr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 56, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_validate_graph); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 115, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_DTYPE); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 115, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_3)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_3);
+  __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 115, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_INCREF(__pyx_v_csgraph);
+  __Pyx_GIVEREF(__pyx_v_csgraph);
+  PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_v_csgraph);
+  __Pyx_INCREF(__pyx_v_directed);
+  __Pyx_GIVEREF(__pyx_v_directed);
+  PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_v_directed);
+  __Pyx_GIVEREF(__pyx_t_2);
+  PyTuple_SET_ITEM(__pyx_t_3, 2, __pyx_t_2);
+  __pyx_t_2 = 0;
+
+  /* "algorithms/sm/shortest_paths.pyx":116
+ *     # validate csgraph and convert to csr matrix
+ *     csgraph = validate_graph(csgraph, directed, DTYPE,
+ *                              dense_output=False)             # <<<<<<<<<<<<<<
+ * 
+ *     if np.any(csgraph.data < 0):
+ */
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 116, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dense_output, Py_False) < 0) __PYX_ERR(0, 116, __pyx_L1_error)
+
+  /* "algorithms/sm/shortest_paths.pyx":115
+ *     #------------------------------
+ *     # validate csgraph and convert to csr matrix
+ *     csgraph = validate_graph(csgraph, directed, DTYPE,             # <<<<<<<<<<<<<<
+ *                              dense_output=False)
+ * 
+ */
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_3, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 115, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF_SET(__pyx_v_csgraph, __pyx_t_4);
+  __pyx_t_4 = 0;
+
+  /* "algorithms/sm/shortest_paths.pyx":118
+ *                              dense_output=False)
+ * 
+ *     if np.any(csgraph.data < 0):             # <<<<<<<<<<<<<<
+ *         warnings.warn("Graph has negative weights: dijkstra will give "
+ *                       "inaccurate results if the graph contains negative "
+ */
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 118, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_any); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 118, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_csgraph, __pyx_n_s_data); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 118, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_1 = PyObject_RichCompare(__pyx_t_2, __pyx_int_0, Py_LT); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 118, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = NULL;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
+    __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
+    if (likely(__pyx_t_2)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+      __Pyx_INCREF(__pyx_t_2);
       __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
+      __Pyx_DECREF_SET(__pyx_t_3, function);
     }
   }
-  if (!__pyx_t_3) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_dist_matrix); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 56, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
+  if (!__pyx_t_2) {
+    __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 118, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __Pyx_GOTREF(__pyx_t_4);
   } else {
     #if CYTHON_FAST_PYCALL
-    if (PyFunction_Check(__pyx_t_2)) {
-      PyObject *__pyx_temp[2] = {__pyx_t_3, __pyx_v_dist_matrix};
-      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 56, __pyx_L1_error)
-      __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __Pyx_GOTREF(__pyx_t_1);
+    if (PyFunction_Check(__pyx_t_3)) {
+      PyObject *__pyx_temp[2] = {__pyx_t_2, __pyx_t_1};
+      __pyx_t_4 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 118, __pyx_L1_error)
+      __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+      __Pyx_GOTREF(__pyx_t_4);
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     } else
     #endif
     #if CYTHON_FAST_PYCCALL
-    if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
-      PyObject *__pyx_temp[2] = {__pyx_t_3, __pyx_v_dist_matrix};
-      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 56, __pyx_L1_error)
-      __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __Pyx_GOTREF(__pyx_t_1);
+    if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
+      PyObject *__pyx_temp[2] = {__pyx_t_2, __pyx_t_1};
+      __pyx_t_4 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 118, __pyx_L1_error)
+      __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+      __Pyx_GOTREF(__pyx_t_4);
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     } else
     #endif
     {
-      __pyx_t_4 = PyTuple_New(1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 56, __pyx_L1_error)
+      __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 118, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      __Pyx_GIVEREF(__pyx_t_2); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_2); __pyx_t_2 = NULL;
+      __Pyx_GIVEREF(__pyx_t_1);
+      PyTuple_SET_ITEM(__pyx_t_5, 0+1, __pyx_t_1);
+      __pyx_t_1 = 0;
+      __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_5, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 118, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_3); __pyx_t_3 = NULL;
-      __Pyx_INCREF(__pyx_v_dist_matrix);
-      __Pyx_GIVEREF(__pyx_v_dist_matrix);
-      PyTuple_SET_ITEM(__pyx_t_4, 0+1, __pyx_v_dist_matrix);
-      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 56, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     }
   }
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 56, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_6 = ((!__pyx_t_5) != 0);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 118, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   if (__pyx_t_6) {
 
-    /* "algorithms/sm/shortest_paths.pyx":57
- *     """
- *     if not isspmatrix_csr(dist_matrix):
- *         dist_matrix = csr_matrix(dist_matrix)             # <<<<<<<<<<<<<<
+    /* "algorithms/sm/shortest_paths.pyx":119
  * 
- *     N = dist_matrix.shape[0]
+ *     if np.any(csgraph.data < 0):
+ *         warnings.warn("Graph has negative weights: dijkstra will give "             # <<<<<<<<<<<<<<
+ *                       "inaccurate results if the graph contains negative "
+ *                       "cycles. Consider johnson or bellman_ford.")
  */
-    __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_csr_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 57, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_warnings); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 119, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_warn); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 119, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_tuple__3, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 119, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+
+    /* "algorithms/sm/shortest_paths.pyx":118
+ *                              dense_output=False)
+ * 
+ *     if np.any(csgraph.data < 0):             # <<<<<<<<<<<<<<
+ *         warnings.warn("Graph has negative weights: dijkstra will give "
+ *                       "inaccurate results if the graph contains negative "
+ */
+  }
+
+  /* "algorithms/sm/shortest_paths.pyx":123
+ *                       "cycles. Consider johnson or bellman_ford.")
+ * 
+ *     N = csgraph.shape[0]             # <<<<<<<<<<<<<<
+ * 
+ *     #------------------------------
+ */
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_csgraph, __pyx_n_s_shape); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 123, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_3 = __Pyx_GetItemInt(__pyx_t_4, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 123, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_v_N = __pyx_t_3;
+  __pyx_t_3 = 0;
+
+  /* "algorithms/sm/shortest_paths.pyx":127
+ *     #------------------------------
+ *     # initialize/validate indices
+ *     if indices is None:             # <<<<<<<<<<<<<<
+ *         indices = np.arange(N, dtype=ITYPE)
+ *         return_shape = indices.shape + (N,)
+ */
+  __pyx_t_6 = (__pyx_v_indices == Py_None);
+  __pyx_t_7 = (__pyx_t_6 != 0);
+  if (__pyx_t_7) {
+
+    /* "algorithms/sm/shortest_paths.pyx":128
+ *     # initialize/validate indices
+ *     if indices is None:
+ *         indices = np.arange(N, dtype=ITYPE)             # <<<<<<<<<<<<<<
+ *         return_shape = indices.shape + (N,)
+ *     else:
+ */
+    __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 128, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_arange); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 128, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 128, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_INCREF(__pyx_v_N);
+    __Pyx_GIVEREF(__pyx_v_N);
+    PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_v_N);
+    __pyx_t_5 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 128, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_ITYPE); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 128, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    if (PyDict_SetItem(__pyx_t_5, __pyx_n_s_dtype, __pyx_t_1) < 0) __PYX_ERR(0, 128, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_3, __pyx_t_5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 128, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF_SET(__pyx_v_indices, __pyx_t_1);
+    __pyx_t_1 = 0;
+
+    /* "algorithms/sm/shortest_paths.pyx":129
+ *     if indices is None:
+ *         indices = np.arange(N, dtype=ITYPE)
+ *         return_shape = indices.shape + (N,)             # <<<<<<<<<<<<<<
+ *     else:
+ *         indices = np.array(indices, order='C', dtype=ITYPE, copy=True)
+ */
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_indices, __pyx_n_s_shape); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 129, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 129, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __Pyx_INCREF(__pyx_v_N);
+    __Pyx_GIVEREF(__pyx_v_N);
+    PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_v_N);
+    __pyx_t_3 = PyNumber_Add(__pyx_t_1, __pyx_t_5); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 129, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __pyx_v_return_shape = __pyx_t_3;
+    __pyx_t_3 = 0;
+
+    /* "algorithms/sm/shortest_paths.pyx":127
+ *     #------------------------------
+ *     # initialize/validate indices
+ *     if indices is None:             # <<<<<<<<<<<<<<
+ *         indices = np.arange(N, dtype=ITYPE)
+ *         return_shape = indices.shape + (N,)
+ */
+    goto __pyx_L4;
+  }
+
+  /* "algorithms/sm/shortest_paths.pyx":131
+ *         return_shape = indices.shape + (N,)
+ *     else:
+ *         indices = np.array(indices, order='C', dtype=ITYPE, copy=True)             # <<<<<<<<<<<<<<
+ *         return_shape = indices.shape + (N,)
+ *         indices = np.atleast_1d(indices).reshape(-1)
+ */
+  /*else*/ {
+    __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 131, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_array); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 131, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 131, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_INCREF(__pyx_v_indices);
+    __Pyx_GIVEREF(__pyx_v_indices);
+    PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_v_indices);
+    __pyx_t_1 = __Pyx_PyDict_NewPresized(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 131, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_order, __pyx_n_s_C) < 0) __PYX_ERR(0, 131, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_ITYPE); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 131, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_4) < 0) __PYX_ERR(0, 131, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_copy, Py_True) < 0) __PYX_ERR(0, 131, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 131, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __Pyx_DECREF_SET(__pyx_v_indices, __pyx_t_4);
+    __pyx_t_4 = 0;
+
+    /* "algorithms/sm/shortest_paths.pyx":132
+ *     else:
+ *         indices = np.array(indices, order='C', dtype=ITYPE, copy=True)
+ *         return_shape = indices.shape + (N,)             # <<<<<<<<<<<<<<
+ *         indices = np.atleast_1d(indices).reshape(-1)
+ *         indices[indices < 0] += N
+ */
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_indices, __pyx_n_s_shape); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 132, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 132, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_INCREF(__pyx_v_N);
+    __Pyx_GIVEREF(__pyx_v_N);
+    PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_v_N);
+    __pyx_t_3 = PyNumber_Add(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 132, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_v_return_shape = __pyx_t_3;
+    __pyx_t_3 = 0;
+
+    /* "algorithms/sm/shortest_paths.pyx":133
+ *         indices = np.array(indices, order='C', dtype=ITYPE, copy=True)
+ *         return_shape = indices.shape + (N,)
+ *         indices = np.atleast_1d(indices).reshape(-1)             # <<<<<<<<<<<<<<
+ *         indices[indices < 0] += N
+ *         if np.any(indices < 0) or np.any(indices >= N):
+ */
+    __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 133, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_atleast_1d); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 133, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_t_1 = NULL;
+    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
+      __pyx_t_1 = PyMethod_GET_SELF(__pyx_t_4);
+      if (likely(__pyx_t_1)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
+        __Pyx_INCREF(__pyx_t_1);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_4, function);
+      }
+    }
+    if (!__pyx_t_1) {
+      __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_v_indices); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 133, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+    } else {
+      #if CYTHON_FAST_PYCALL
+      if (PyFunction_Check(__pyx_t_4)) {
+        PyObject *__pyx_temp[2] = {__pyx_t_1, __pyx_v_indices};
+        __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_4, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 133, __pyx_L1_error)
+        __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
+        __Pyx_GOTREF(__pyx_t_3);
+      } else
+      #endif
+      #if CYTHON_FAST_PYCCALL
+      if (__Pyx_PyFastCFunction_Check(__pyx_t_4)) {
+        PyObject *__pyx_temp[2] = {__pyx_t_1, __pyx_v_indices};
+        __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_4, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 133, __pyx_L1_error)
+        __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
+        __Pyx_GOTREF(__pyx_t_3);
+      } else
+      #endif
+      {
+        __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 133, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_5);
+        __Pyx_GIVEREF(__pyx_t_1); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_1); __pyx_t_1 = NULL;
+        __Pyx_INCREF(__pyx_v_indices);
+        __Pyx_GIVEREF(__pyx_v_indices);
+        PyTuple_SET_ITEM(__pyx_t_5, 0+1, __pyx_v_indices);
+        __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_5, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 133, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_3);
+        __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      }
+    }
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_reshape); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 133, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_tuple__4, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 133, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __Pyx_DECREF_SET(__pyx_v_indices, __pyx_t_3);
+    __pyx_t_3 = 0;
+
+    /* "algorithms/sm/shortest_paths.pyx":134
+ *         return_shape = indices.shape + (N,)
+ *         indices = np.atleast_1d(indices).reshape(-1)
+ *         indices[indices < 0] += N             # <<<<<<<<<<<<<<
+ *         if np.any(indices < 0) or np.any(indices >= N):
+ *             raise ValueError("indices out of range 0...N")
+ */
+    __pyx_t_3 = PyObject_RichCompare(__pyx_v_indices, __pyx_int_0, Py_LT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 134, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetItem(__pyx_v_indices, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 134, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __pyx_t_5 = PyNumber_InPlaceAdd(__pyx_t_4, __pyx_v_N); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 134, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    if (unlikely(PyObject_SetItem(__pyx_v_indices, __pyx_t_3, __pyx_t_5) < 0)) __PYX_ERR(0, 134, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+    /* "algorithms/sm/shortest_paths.pyx":135
+ *         indices = np.atleast_1d(indices).reshape(-1)
+ *         indices[indices < 0] += N
+ *         if np.any(indices < 0) or np.any(indices >= N):             # <<<<<<<<<<<<<<
+ *             raise ValueError("indices out of range 0...N")
+ * 
+ */
+    __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 135, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_any); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 135, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __pyx_t_5 = PyObject_RichCompare(__pyx_v_indices, __pyx_int_0, Py_LT); __Pyx_XGOTREF(__pyx_t_5); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 135, __pyx_L1_error)
+    __pyx_t_1 = NULL;
+    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
+      __pyx_t_1 = PyMethod_GET_SELF(__pyx_t_4);
+      if (likely(__pyx_t_1)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
+        __Pyx_INCREF(__pyx_t_1);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_4, function);
+      }
+    }
+    if (!__pyx_t_1) {
+      __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 135, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __Pyx_GOTREF(__pyx_t_3);
+    } else {
+      #if CYTHON_FAST_PYCALL
+      if (PyFunction_Check(__pyx_t_4)) {
+        PyObject *__pyx_temp[2] = {__pyx_t_1, __pyx_t_5};
+        __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_4, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 135, __pyx_L1_error)
+        __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
+        __Pyx_GOTREF(__pyx_t_3);
+        __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      } else
+      #endif
+      #if CYTHON_FAST_PYCCALL
+      if (__Pyx_PyFastCFunction_Check(__pyx_t_4)) {
+        PyObject *__pyx_temp[2] = {__pyx_t_1, __pyx_t_5};
+        __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_4, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 135, __pyx_L1_error)
+        __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
+        __Pyx_GOTREF(__pyx_t_3);
+        __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      } else
+      #endif
+      {
+        __pyx_t_2 = PyTuple_New(1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 135, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        __Pyx_GIVEREF(__pyx_t_1); PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1); __pyx_t_1 = NULL;
+        __Pyx_GIVEREF(__pyx_t_5);
+        PyTuple_SET_ITEM(__pyx_t_2, 0+1, __pyx_t_5);
+        __pyx_t_5 = 0;
+        __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_2, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 135, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_3);
+        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+      }
+    }
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 135, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    if (!__pyx_t_6) {
+    } else {
+      __pyx_t_7 = __pyx_t_6;
+      goto __pyx_L6_bool_binop_done;
+    }
+    __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 135, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_any); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 135, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = NULL;
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __pyx_t_4 = PyObject_RichCompare(__pyx_v_indices, __pyx_v_N, Py_GE); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 135, __pyx_L1_error)
+    __pyx_t_5 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
-      __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_2);
-      if (likely(__pyx_t_4)) {
+      __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_2);
+      if (likely(__pyx_t_5)) {
         PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-        __Pyx_INCREF(__pyx_t_4);
+        __Pyx_INCREF(__pyx_t_5);
         __Pyx_INCREF(function);
         __Pyx_DECREF_SET(__pyx_t_2, function);
       }
     }
-    if (!__pyx_t_4) {
-      __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_dist_matrix); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 57, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
+    if (!__pyx_t_5) {
+      __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 135, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+      __Pyx_GOTREF(__pyx_t_3);
     } else {
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_2)) {
-        PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_v_dist_matrix};
-        __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 57, __pyx_L1_error)
-        __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-        __Pyx_GOTREF(__pyx_t_1);
+        PyObject *__pyx_temp[2] = {__pyx_t_5, __pyx_t_4};
+        __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 135, __pyx_L1_error)
+        __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+        __Pyx_GOTREF(__pyx_t_3);
+        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       } else
       #endif
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
-        PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_v_dist_matrix};
-        __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 57, __pyx_L1_error)
-        __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-        __Pyx_GOTREF(__pyx_t_1);
+        PyObject *__pyx_temp[2] = {__pyx_t_5, __pyx_t_4};
+        __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 135, __pyx_L1_error)
+        __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+        __Pyx_GOTREF(__pyx_t_3);
+        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       } else
       #endif
       {
-        __pyx_t_3 = PyTuple_New(1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 57, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_3);
-        __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_4); __pyx_t_4 = NULL;
-        __Pyx_INCREF(__pyx_v_dist_matrix);
-        __Pyx_GIVEREF(__pyx_v_dist_matrix);
-        PyTuple_SET_ITEM(__pyx_t_3, 0+1, __pyx_v_dist_matrix);
-        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 57, __pyx_L1_error)
+        __pyx_t_1 = PyTuple_New(1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 135, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+        __Pyx_GIVEREF(__pyx_t_5); PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_5); __pyx_t_5 = NULL;
+        __Pyx_GIVEREF(__pyx_t_4);
+        PyTuple_SET_ITEM(__pyx_t_1, 0+1, __pyx_t_4);
+        __pyx_t_4 = 0;
+        __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_1, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 135, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_3);
+        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       }
     }
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_DECREF_SET(__pyx_v_dist_matrix, __pyx_t_1);
-    __pyx_t_1 = 0;
+    __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 135, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __pyx_t_7 = __pyx_t_6;
+    __pyx_L6_bool_binop_done:;
+    if (unlikely(__pyx_t_7)) {
 
-    /* "algorithms/sm/shortest_paths.pyx":56
- *     be handled by specialized algorithms.
- *     """
- *     if not isspmatrix_csr(dist_matrix):             # <<<<<<<<<<<<<<
- *         dist_matrix = csr_matrix(dist_matrix)
+      /* "algorithms/sm/shortest_paths.pyx":136
+ *         indices[indices < 0] += N
+ *         if np.any(indices < 0) or np.any(indices >= N):
+ *             raise ValueError("indices out of range 0...N")             # <<<<<<<<<<<<<<
+ * 
+ *     cdef DTYPE_t limitf = limit
+ */
+      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 136, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __Pyx_Raise(__pyx_t_3, 0, 0, 0);
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __PYX_ERR(0, 136, __pyx_L1_error)
+
+      /* "algorithms/sm/shortest_paths.pyx":135
+ *         indices = np.atleast_1d(indices).reshape(-1)
+ *         indices[indices < 0] += N
+ *         if np.any(indices < 0) or np.any(indices >= N):             # <<<<<<<<<<<<<<
+ *             raise ValueError("indices out of range 0...N")
+ * 
+ */
+    }
+  }
+  __pyx_L4:;
+
+  /* "algorithms/sm/shortest_paths.pyx":138
+ *             raise ValueError("indices out of range 0...N")
+ * 
+ *     cdef DTYPE_t limitf = limit             # <<<<<<<<<<<<<<
+ *     if limitf < 0:
+ *         raise ValueError('limit must be >= 0')
+ */
+  __pyx_t_8 = __pyx_PyFloat_AsDouble(__pyx_v_limit); if (unlikely((__pyx_t_8 == ((npy_float64)-1)) && PyErr_Occurred())) __PYX_ERR(0, 138, __pyx_L1_error)
+  __pyx_v_limitf = __pyx_t_8;
+
+  /* "algorithms/sm/shortest_paths.pyx":139
+ * 
+ *     cdef DTYPE_t limitf = limit
+ *     if limitf < 0:             # <<<<<<<<<<<<<<
+ *         raise ValueError('limit must be >= 0')
+ * 
+ */
+  __pyx_t_7 = ((__pyx_v_limitf < 0.0) != 0);
+  if (unlikely(__pyx_t_7)) {
+
+    /* "algorithms/sm/shortest_paths.pyx":140
+ *     cdef DTYPE_t limitf = limit
+ *     if limitf < 0:
+ *         raise ValueError('limit must be >= 0')             # <<<<<<<<<<<<<<
+ * 
+ *     #------------------------------
+ */
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 140, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_Raise(__pyx_t_3, 0, 0, 0);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __PYX_ERR(0, 140, __pyx_L1_error)
+
+    /* "algorithms/sm/shortest_paths.pyx":139
+ * 
+ *     cdef DTYPE_t limitf = limit
+ *     if limitf < 0:             # <<<<<<<<<<<<<<
+ *         raise ValueError('limit must be >= 0')
  * 
  */
   }
 
-  /* "algorithms/sm/shortest_paths.pyx":59
- *         dist_matrix = csr_matrix(dist_matrix)
- * 
- *     N = dist_matrix.shape[0]             # <<<<<<<<<<<<<<
- *     Nk = len(dist_matrix.data)
- * 
+  /* "algorithms/sm/shortest_paths.pyx":144
+ *     #------------------------------
+ *     # initialize dist_matrix for output
+ *     dist_matrix = np.zeros((len(indices), N), dtype=DTYPE)             # <<<<<<<<<<<<<<
+ *     dist_matrix.fill(np.inf)
+ *     dist_matrix[np.arange(len(indices)), indices] = 0
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_dist_matrix, __pyx_n_s_shape); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 59, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 144, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 144, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_9 = PyObject_Length(__pyx_v_indices); if (unlikely(__pyx_t_9 == ((Py_ssize_t)-1))) __PYX_ERR(0, 144, __pyx_L1_error)
+  __pyx_t_3 = PyInt_FromSsize_t(__pyx_t_9); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 144, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 144, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_1, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 59, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_v_N = __pyx_t_2;
-  __pyx_t_2 = 0;
-
-  /* "algorithms/sm/shortest_paths.pyx":60
- * 
- *     N = dist_matrix.shape[0]
- *     Nk = len(dist_matrix.data)             # <<<<<<<<<<<<<<
- * 
- *     if method == 'auto':
- */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_dist_matrix, __pyx_n_s_data); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 60, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_7 = PyObject_Length(__pyx_t_2); if (unlikely(__pyx_t_7 == ((Py_ssize_t)-1))) __PYX_ERR(0, 60, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_v_Nk = __pyx_t_7;
-
-  /* "algorithms/sm/shortest_paths.pyx":62
- *     Nk = len(dist_matrix.data)
- * 
- *     if method == 'auto':             # <<<<<<<<<<<<<<
- *         if Nk < N * N / 4:
- *             method = 'D'
- */
-  __pyx_t_6 = (__Pyx_PyString_Equals(__pyx_v_method, __pyx_n_s_auto, Py_EQ)); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 62, __pyx_L1_error)
-  if (__pyx_t_6) {
-
-    /* "algorithms/sm/shortest_paths.pyx":63
- * 
- *     if method == 'auto':
- *         if Nk < N * N / 4:             # <<<<<<<<<<<<<<
- *             method = 'D'
- *         else:
- */
-    __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_Nk); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 63, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_1 = PyNumber_Multiply(__pyx_v_N, __pyx_v_N); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 63, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_3 = __Pyx_PyNumber_Divide(__pyx_t_1, __pyx_int_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 63, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = PyObject_RichCompare(__pyx_t_2, __pyx_t_3, Py_LT); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 63, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 63, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (__pyx_t_6) {
-
-      /* "algorithms/sm/shortest_paths.pyx":64
- *     if method == 'auto':
- *         if Nk < N * N / 4:
- *             method = 'D'             # <<<<<<<<<<<<<<
- *         else:
- *             method = 'FW'
- */
-      __Pyx_INCREF(__pyx_n_s_D);
-      __Pyx_DECREF_SET(__pyx_v_method, __pyx_n_s_D);
-
-      /* "algorithms/sm/shortest_paths.pyx":63
- * 
- *     if method == 'auto':
- *         if Nk < N * N / 4:             # <<<<<<<<<<<<<<
- *             method = 'D'
- *         else:
- */
-      goto __pyx_L5;
-    }
-
-    /* "algorithms/sm/shortest_paths.pyx":66
- *             method = 'D'
- *         else:
- *             method = 'FW'             # <<<<<<<<<<<<<<
- * 
- *     if method == 'FW':
- */
-    /*else*/ {
-      __Pyx_INCREF(__pyx_n_s_FW);
-      __Pyx_DECREF_SET(__pyx_v_method, __pyx_n_s_FW);
-    }
-    __pyx_L5:;
-
-    /* "algorithms/sm/shortest_paths.pyx":62
- *     Nk = len(dist_matrix.data)
- * 
- *     if method == 'auto':             # <<<<<<<<<<<<<<
- *         if Nk < N * N / 4:
- *             method = 'D'
- */
-  }
-
-  /* "algorithms/sm/shortest_paths.pyx":68
- *             method = 'FW'
- * 
- *     if method == 'FW':             # <<<<<<<<<<<<<<
- *         graph = np.asarray(dist_matrix.toarray(), dtype=DTYPE, order='C')
- *         floyd_warshall(graph, directed)
- */
-  __pyx_t_6 = (__Pyx_PyString_Equals(__pyx_v_method, __pyx_n_s_FW, Py_EQ)); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 68, __pyx_L1_error)
-  if (__pyx_t_6) {
-
-    /* "algorithms/sm/shortest_paths.pyx":69
- * 
- *     if method == 'FW':
- *         graph = np.asarray(dist_matrix.toarray(), dtype=DTYPE, order='C')             # <<<<<<<<<<<<<<
- *         floyd_warshall(graph, directed)
- *     elif method == 'D':
- */
-    __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 69, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_asarray); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 69, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_dist_matrix, __pyx_n_s_toarray); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 69, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
-      __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_2);
-      if (likely(__pyx_t_4)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-        __Pyx_INCREF(__pyx_t_4);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_2, function);
-      }
-    }
-    if (__pyx_t_4) {
-      __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 69, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    } else {
-      __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 69, __pyx_L1_error)
-    }
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 69, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_GIVEREF(__pyx_t_1);
-    PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
-    __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 69, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_DTYPE); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 69, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_4) < 0) __PYX_ERR(0, 69, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_order, __pyx_n_s_C) < 0) __PYX_ERR(0, 69, __pyx_L1_error)
-    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 69, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_v_graph = __pyx_t_4;
-    __pyx_t_4 = 0;
-
-    /* "algorithms/sm/shortest_paths.pyx":70
- *     if method == 'FW':
- *         graph = np.asarray(dist_matrix.toarray(), dtype=DTYPE, order='C')
- *         floyd_warshall(graph, directed)             # <<<<<<<<<<<<<<
- *     elif method == 'D':
- *         graph = np.zeros((N, N), dtype=DTYPE, order='C')
- */
-    if (!(likely(((__pyx_v_graph) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_graph, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 70, __pyx_L1_error)
-    __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_v_directed); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 70, __pyx_L1_error)
-    __pyx_t_9.__pyx_n = 1;
-    __pyx_t_9.directed = __pyx_t_8;
-    __pyx_t_4 = ((PyObject *)__pyx_f_10algorithms_2sm_21sparse_shortest_paths_floyd_warshall(((PyArrayObject *)__pyx_v_graph), &__pyx_t_9)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 70, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-
-    /* "algorithms/sm/shortest_paths.pyx":68
- *             method = 'FW'
- * 
- *     if method == 'FW':             # <<<<<<<<<<<<<<
- *         graph = np.asarray(dist_matrix.toarray(), dtype=DTYPE, order='C')
- *         floyd_warshall(graph, directed)
- */
-    goto __pyx_L6;
-  }
-
-  /* "algorithms/sm/shortest_paths.pyx":71
- *         graph = np.asarray(dist_matrix.toarray(), dtype=DTYPE, order='C')
- *         floyd_warshall(graph, directed)
- *     elif method == 'D':             # <<<<<<<<<<<<<<
- *         graph = np.zeros((N, N), dtype=DTYPE, order='C')
- *         dijkstra(dist_matrix, source, target, graph, directed)
- */
-  __pyx_t_6 = (__Pyx_PyString_Equals(__pyx_v_method, __pyx_n_s_D, Py_EQ)); if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 71, __pyx_L1_error)
-  if (likely(__pyx_t_6)) {
-
-    /* "algorithms/sm/shortest_paths.pyx":72
- *         floyd_warshall(graph, directed)
- *     elif method == 'D':
- *         graph = np.zeros((N, N), dtype=DTYPE, order='C')             # <<<<<<<<<<<<<<
- *         dijkstra(dist_matrix, source, target, graph, directed)
- *     else:
- */
-    __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 72, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_zeros); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 72, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 72, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_INCREF(__pyx_v_N);
-    __Pyx_GIVEREF(__pyx_v_N);
-    PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_v_N);
-    __Pyx_INCREF(__pyx_v_N);
-    __Pyx_GIVEREF(__pyx_v_N);
-    PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_v_N);
-    __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 72, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_GIVEREF(__pyx_t_4);
-    PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_4);
-    __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 72, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_DTYPE); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 72, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_dtype, __pyx_t_3) < 0) __PYX_ERR(0, 72, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_order, __pyx_n_s_C) < 0) __PYX_ERR(0, 72, __pyx_L1_error)
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 72, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_v_graph = __pyx_t_3;
-    __pyx_t_3 = 0;
-
-    /* "algorithms/sm/shortest_paths.pyx":73
- *     elif method == 'D':
- *         graph = np.zeros((N, N), dtype=DTYPE, order='C')
- *         dijkstra(dist_matrix, source, target, graph, directed)             # <<<<<<<<<<<<<<
- *     else:
- *         raise ValueError("unrecognized method '%s'" % method)
- */
-    if (!(likely(((__pyx_v_graph) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_graph, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 73, __pyx_L1_error)
-    __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_v_directed); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 73, __pyx_L1_error)
-    __pyx_t_10.__pyx_n = 1;
-    __pyx_t_10.directed = __pyx_t_8;
-    __pyx_t_3 = ((PyObject *)__pyx_f_10algorithms_2sm_21sparse_shortest_paths_dijkstra(__pyx_v_dist_matrix, __pyx_v_source, __pyx_v_target, ((PyArrayObject *)__pyx_v_graph), &__pyx_t_10)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 73, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-
-    /* "algorithms/sm/shortest_paths.pyx":71
- *         graph = np.asarray(dist_matrix.toarray(), dtype=DTYPE, order='C')
- *         floyd_warshall(graph, directed)
- *     elif method == 'D':             # <<<<<<<<<<<<<<
- *         graph = np.zeros((N, N), dtype=DTYPE, order='C')
- *         dijkstra(dist_matrix, source, target, graph, directed)
- */
-    goto __pyx_L6;
-  }
-
-  /* "algorithms/sm/shortest_paths.pyx":75
- *         dijkstra(dist_matrix, source, target, graph, directed)
- *     else:
- *         raise ValueError("unrecognized method '%s'" % method)             # <<<<<<<<<<<<<<
- * 
- *     return graph
- */
-  /*else*/ {
-    __pyx_t_3 = __Pyx_PyString_Format(__pyx_kp_s_unrecognized_method_s, __pyx_v_method); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 75, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_builtin_ValueError, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 75, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __Pyx_Raise(__pyx_t_4, 0, 0, 0);
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __PYX_ERR(0, 75, __pyx_L1_error)
-  }
-  __pyx_L6:;
-
-  /* "algorithms/sm/shortest_paths.pyx":77
- *         raise ValueError("unrecognized method '%s'" % method)
- * 
- *     return graph             # <<<<<<<<<<<<<<
- * 
- * 
- */
-  __Pyx_XDECREF(__pyx_r);
-  __Pyx_INCREF(__pyx_v_graph);
-  __pyx_r = __pyx_v_graph;
-  goto __pyx_L0;
-
-  /* "algorithms/sm/shortest_paths.pyx":19
- * 
- * 
- * def graph_shortest_path(dist_matrix, source, target, directed=True, method='auto'):             # <<<<<<<<<<<<<<
- *     """
- *     Perform a shortest-path graph search on a positive directed or
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_AddTraceback("algorithms.sm.sparse_shortest_paths.graph_shortest_path", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XDECREF(__pyx_v_N);
-  __Pyx_XDECREF(__pyx_v_graph);
-  __Pyx_XDECREF(__pyx_v_dist_matrix);
-  __Pyx_XDECREF(__pyx_v_method);
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "algorithms/sm/shortest_paths.pyx":81
- * 
- * @cython.boundscheck(False)
- * cdef np.ndarray floyd_warshall(np.ndarray[DTYPE_t, ndim=2, mode='c'] graph,             # <<<<<<<<<<<<<<
- *                               int directed=0):
- *     """
- */
-
-static PyArrayObject *__pyx_f_10algorithms_2sm_21sparse_shortest_paths_floyd_warshall(PyArrayObject *__pyx_v_graph, struct __pyx_opt_args_10algorithms_2sm_21sparse_shortest_paths_floyd_warshall *__pyx_optional_args) {
-  int __pyx_v_directed = ((int)0);
-  int __pyx_v_N;
-  unsigned int __pyx_v_i;
-  unsigned int __pyx_v_j;
-  unsigned int __pyx_v_k;
-  __pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t __pyx_v_infinity;
-  __pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t __pyx_v_sum_ijk;
-  __Pyx_LocalBuf_ND __pyx_pybuffernd_graph;
-  __Pyx_Buffer __pyx_pybuffer_graph;
-  PyArrayObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  __pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t __pyx_t_3;
-  PyObject *__pyx_t_4 = NULL;
-  PyObject *__pyx_t_5 = NULL;
-  PyObject *__pyx_t_6 = NULL;
-  PyObject *__pyx_t_7 = NULL;
-  int __pyx_t_8;
-  int __pyx_t_9;
-  int __pyx_t_10;
-  size_t __pyx_t_11;
-  size_t __pyx_t_12;
-  size_t __pyx_t_13;
-  size_t __pyx_t_14;
-  size_t __pyx_t_15;
-  size_t __pyx_t_16;
-  size_t __pyx_t_17;
-  size_t __pyx_t_18;
-  size_t __pyx_t_19;
-  size_t __pyx_t_20;
-  size_t __pyx_t_21;
-  size_t __pyx_t_22;
-  size_t __pyx_t_23;
-  size_t __pyx_t_24;
-  int __pyx_t_25;
-  size_t __pyx_t_26;
-  size_t __pyx_t_27;
-  size_t __pyx_t_28;
-  size_t __pyx_t_29;
-  size_t __pyx_t_30;
-  size_t __pyx_t_31;
-  size_t __pyx_t_32;
-  size_t __pyx_t_33;
-  __Pyx_RefNannySetupContext("floyd_warshall", 0);
-  if (__pyx_optional_args) {
-    if (__pyx_optional_args->__pyx_n > 0) {
-      __pyx_v_directed = __pyx_optional_args->directed;
-    }
-  }
-  __pyx_pybuffer_graph.pybuffer.buf = NULL;
-  __pyx_pybuffer_graph.refcount = 0;
-  __pyx_pybuffernd_graph.data = NULL;
-  __pyx_pybuffernd_graph.rcbuffer = &__pyx_pybuffer_graph;
-  {
-    __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_graph.rcbuffer->pybuffer, (PyObject*)__pyx_v_graph, &__Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS| PyBUF_WRITABLE, 2, 0, __pyx_stack) == -1)) __PYX_ERR(0, 81, __pyx_L1_error)
-  }
-  __pyx_pybuffernd_graph.diminfo[0].strides = __pyx_pybuffernd_graph.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_graph.diminfo[0].shape = __pyx_pybuffernd_graph.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_graph.diminfo[1].strides = __pyx_pybuffernd_graph.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_graph.diminfo[1].shape = __pyx_pybuffernd_graph.rcbuffer->pybuffer.shape[1];
-
-  /* "algorithms/sm/shortest_paths.pyx":102
- *         If no path exists, the path length is zero
- *     """
- *     cdef int N = graph.shape[0]             # <<<<<<<<<<<<<<
- *     assert graph.shape[1] == N
- * 
- */
-  __pyx_v_N = (__pyx_v_graph->dimensions[0]);
-
-  /* "algorithms/sm/shortest_paths.pyx":103
- *     """
- *     cdef int N = graph.shape[0]
- *     assert graph.shape[1] == N             # <<<<<<<<<<<<<<
- * 
- *     cdef unsigned int i, j, k, m
- */
-  #ifndef CYTHON_WITHOUT_ASSERTIONS
-  if (unlikely(!Py_OptimizeFlag)) {
-    if (unlikely(!(((__pyx_v_graph->dimensions[1]) == __pyx_v_N) != 0))) {
-      PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 103, __pyx_L1_error)
-    }
-  }
-  #endif
-
-  /* "algorithms/sm/shortest_paths.pyx":107
- *     cdef unsigned int i, j, k, m
- * 
- *     cdef DTYPE_t infinity = np.inf             # <<<<<<<<<<<<<<
- *     cdef DTYPE_t sum_ijk
- * 
- */
-  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 107, __pyx_L1_error)
+  __Pyx_GIVEREF(__pyx_t_3);
+  PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_3);
+  __Pyx_INCREF(__pyx_v_N);
+  __Pyx_GIVEREF(__pyx_v_N);
+  PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_v_N);
+  __pyx_t_3 = 0;
+  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 144, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_GIVEREF(__pyx_t_1);
+  PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1);
+  __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 144, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_inf); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 107, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_3 == ((npy_float64)-1)) && PyErr_Occurred())) __PYX_ERR(0, 107, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_v_infinity = __pyx_t_3;
-
-  /* "algorithms/sm/shortest_paths.pyx":111
- * 
- *     #initialize all distances to infinity
- *     graph[np.where(graph == 0)] = infinity             # <<<<<<<<<<<<<<
- * 
- *     #graph[i,i] should be zero
- */
-  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_infinity); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 111, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 111, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_DTYPE); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 144, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_where); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 111, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_4) < 0) __PYX_ERR(0, 144, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyObject_RichCompare(((PyObject *)__pyx_v_graph), __pyx_int_0, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 111, __pyx_L1_error)
-  __pyx_t_6 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_5))) {
-    __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_5);
-    if (likely(__pyx_t_6)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
-      __Pyx_INCREF(__pyx_t_6);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_5, function);
-    }
-  }
-  if (!__pyx_t_6) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 111, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __Pyx_GOTREF(__pyx_t_1);
-  } else {
-    #if CYTHON_FAST_PYCALL
-    if (PyFunction_Check(__pyx_t_5)) {
-      PyObject *__pyx_temp[2] = {__pyx_t_6, __pyx_t_4};
-      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 111, __pyx_L1_error)
-      __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __Pyx_GOTREF(__pyx_t_1);
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    } else
-    #endif
-    #if CYTHON_FAST_PYCCALL
-    if (__Pyx_PyFastCFunction_Check(__pyx_t_5)) {
-      PyObject *__pyx_temp[2] = {__pyx_t_6, __pyx_t_4};
-      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 111, __pyx_L1_error)
-      __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __Pyx_GOTREF(__pyx_t_1);
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    } else
-    #endif
-    {
-      __pyx_t_7 = PyTuple_New(1+1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 111, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_7);
-      __Pyx_GIVEREF(__pyx_t_6); PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_6); __pyx_t_6 = NULL;
-      __Pyx_GIVEREF(__pyx_t_4);
-      PyTuple_SET_ITEM(__pyx_t_7, 0+1, __pyx_t_4);
-      __pyx_t_4 = 0;
-      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_7, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 111, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    }
-  }
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (unlikely(PyObject_SetItem(((PyObject *)__pyx_v_graph), __pyx_t_1, __pyx_t_2) < 0)) __PYX_ERR(0, 111, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-
-  /* "algorithms/sm/shortest_paths.pyx":114
- * 
- *     #graph[i,i] should be zero
- *     graph.flat[::N + 1] = 0             # <<<<<<<<<<<<<<
- * 
- *     # for a non-directed graph, we need to symmetrize the distances
- */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_graph), __pyx_n_s_flat); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 114, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_PyInt_From_long((__pyx_v_N + 1)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 114, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_5 = PySlice_New(Py_None, Py_None, __pyx_t_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 114, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (unlikely(PyObject_SetItem(__pyx_t_2, __pyx_t_5, __pyx_int_0) < 0)) __PYX_ERR(0, 114, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-
-  /* "algorithms/sm/shortest_paths.pyx":117
- * 
- *     # for a non-directed graph, we need to symmetrize the distances
- *     if not directed:             # <<<<<<<<<<<<<<
- *         for i from 0 <= i < N:
- *             for j from i + 1 <= j < N:
- */
-  __pyx_t_8 = ((!(__pyx_v_directed != 0)) != 0);
-  if (__pyx_t_8) {
-
-    /* "algorithms/sm/shortest_paths.pyx":118
- *     # for a non-directed graph, we need to symmetrize the distances
- *     if not directed:
- *         for i from 0 <= i < N:             # <<<<<<<<<<<<<<
- *             for j from i + 1 <= j < N:
- *                 if graph[j, i] <= graph[i, j]:
- */
-    __pyx_t_9 = __pyx_v_N;
-    for (__pyx_v_i = 0; __pyx_v_i < __pyx_t_9; __pyx_v_i++) {
-
-      /* "algorithms/sm/shortest_paths.pyx":119
- *     if not directed:
- *         for i from 0 <= i < N:
- *             for j from i + 1 <= j < N:             # <<<<<<<<<<<<<<
- *                 if graph[j, i] <= graph[i, j]:
- *                     graph[i, j] = graph[j, i]
- */
-      __pyx_t_10 = __pyx_v_N;
-      for (__pyx_v_j = (__pyx_v_i + 1); __pyx_v_j < __pyx_t_10; __pyx_v_j++) {
-
-        /* "algorithms/sm/shortest_paths.pyx":120
- *         for i from 0 <= i < N:
- *             for j from i + 1 <= j < N:
- *                 if graph[j, i] <= graph[i, j]:             # <<<<<<<<<<<<<<
- *                     graph[i, j] = graph[j, i]
- *                 else:
- */
-        __pyx_t_11 = __pyx_v_j;
-        __pyx_t_12 = __pyx_v_i;
-        __pyx_t_13 = __pyx_v_i;
-        __pyx_t_14 = __pyx_v_j;
-        __pyx_t_8 = (((*__Pyx_BufPtrCContig2d(__pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t *, __pyx_pybuffernd_graph.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_graph.diminfo[0].strides, __pyx_t_12, __pyx_pybuffernd_graph.diminfo[1].strides)) <= (*__Pyx_BufPtrCContig2d(__pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t *, __pyx_pybuffernd_graph.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_graph.diminfo[0].strides, __pyx_t_14, __pyx_pybuffernd_graph.diminfo[1].strides))) != 0);
-        if (__pyx_t_8) {
-
-          /* "algorithms/sm/shortest_paths.pyx":121
- *             for j from i + 1 <= j < N:
- *                 if graph[j, i] <= graph[i, j]:
- *                     graph[i, j] = graph[j, i]             # <<<<<<<<<<<<<<
- *                 else:
- *                     graph[j, i] = graph[i, j]
- */
-          __pyx_t_15 = __pyx_v_j;
-          __pyx_t_16 = __pyx_v_i;
-          __pyx_t_17 = __pyx_v_i;
-          __pyx_t_18 = __pyx_v_j;
-          *__Pyx_BufPtrCContig2d(__pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t *, __pyx_pybuffernd_graph.rcbuffer->pybuffer.buf, __pyx_t_17, __pyx_pybuffernd_graph.diminfo[0].strides, __pyx_t_18, __pyx_pybuffernd_graph.diminfo[1].strides) = (*__Pyx_BufPtrCContig2d(__pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t *, __pyx_pybuffernd_graph.rcbuffer->pybuffer.buf, __pyx_t_15, __pyx_pybuffernd_graph.diminfo[0].strides, __pyx_t_16, __pyx_pybuffernd_graph.diminfo[1].strides));
-
-          /* "algorithms/sm/shortest_paths.pyx":120
- *         for i from 0 <= i < N:
- *             for j from i + 1 <= j < N:
- *                 if graph[j, i] <= graph[i, j]:             # <<<<<<<<<<<<<<
- *                     graph[i, j] = graph[j, i]
- *                 else:
- */
-          goto __pyx_L8;
-        }
-
-        /* "algorithms/sm/shortest_paths.pyx":123
- *                     graph[i, j] = graph[j, i]
- *                 else:
- *                     graph[j, i] = graph[i, j]             # <<<<<<<<<<<<<<
- * 
- *     #now perform the Floyd-Warshall algorithm
- */
-        /*else*/ {
-          __pyx_t_19 = __pyx_v_i;
-          __pyx_t_20 = __pyx_v_j;
-          __pyx_t_21 = __pyx_v_j;
-          __pyx_t_22 = __pyx_v_i;
-          *__Pyx_BufPtrCContig2d(__pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t *, __pyx_pybuffernd_graph.rcbuffer->pybuffer.buf, __pyx_t_21, __pyx_pybuffernd_graph.diminfo[0].strides, __pyx_t_22, __pyx_pybuffernd_graph.diminfo[1].strides) = (*__Pyx_BufPtrCContig2d(__pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t *, __pyx_pybuffernd_graph.rcbuffer->pybuffer.buf, __pyx_t_19, __pyx_pybuffernd_graph.diminfo[0].strides, __pyx_t_20, __pyx_pybuffernd_graph.diminfo[1].strides));
-        }
-        __pyx_L8:;
-      }
-    }
-
-    /* "algorithms/sm/shortest_paths.pyx":117
- * 
- *     # for a non-directed graph, we need to symmetrize the distances
- *     if not directed:             # <<<<<<<<<<<<<<
- *         for i from 0 <= i < N:
- *             for j from i + 1 <= j < N:
- */
-  }
-
-  /* "algorithms/sm/shortest_paths.pyx":126
- * 
- *     #now perform the Floyd-Warshall algorithm
- *     for k from 0 <= k < N:             # <<<<<<<<<<<<<<
- *         for i from 0 <= i < N:
- *             if graph[i, k] == infinity:
- */
-  __pyx_t_9 = __pyx_v_N;
-  for (__pyx_v_k = 0; __pyx_v_k < __pyx_t_9; __pyx_v_k++) {
-
-    /* "algorithms/sm/shortest_paths.pyx":127
- *     #now perform the Floyd-Warshall algorithm
- *     for k from 0 <= k < N:
- *         for i from 0 <= i < N:             # <<<<<<<<<<<<<<
- *             if graph[i, k] == infinity:
- *                 continue
- */
-    __pyx_t_10 = __pyx_v_N;
-    for (__pyx_v_i = 0; __pyx_v_i < __pyx_t_10; __pyx_v_i++) {
-
-      /* "algorithms/sm/shortest_paths.pyx":128
- *     for k from 0 <= k < N:
- *         for i from 0 <= i < N:
- *             if graph[i, k] == infinity:             # <<<<<<<<<<<<<<
- *                 continue
- *             for j from 0 <= j < N:
- */
-      __pyx_t_23 = __pyx_v_i;
-      __pyx_t_24 = __pyx_v_k;
-      __pyx_t_8 = (((*__Pyx_BufPtrCContig2d(__pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t *, __pyx_pybuffernd_graph.rcbuffer->pybuffer.buf, __pyx_t_23, __pyx_pybuffernd_graph.diminfo[0].strides, __pyx_t_24, __pyx_pybuffernd_graph.diminfo[1].strides)) == __pyx_v_infinity) != 0);
-      if (__pyx_t_8) {
-
-        /* "algorithms/sm/shortest_paths.pyx":129
- *         for i from 0 <= i < N:
- *             if graph[i, k] == infinity:
- *                 continue             # <<<<<<<<<<<<<<
- *             for j from 0 <= j < N:
- *                 sum_ijk = graph[i, k] + graph[k, j]
- */
-        goto __pyx_L11_continue;
-
-        /* "algorithms/sm/shortest_paths.pyx":128
- *     for k from 0 <= k < N:
- *         for i from 0 <= i < N:
- *             if graph[i, k] == infinity:             # <<<<<<<<<<<<<<
- *                 continue
- *             for j from 0 <= j < N:
- */
-      }
-
-      /* "algorithms/sm/shortest_paths.pyx":130
- *             if graph[i, k] == infinity:
- *                 continue
- *             for j from 0 <= j < N:             # <<<<<<<<<<<<<<
- *                 sum_ijk = graph[i, k] + graph[k, j]
- *                 if sum_ijk < graph[i, j]:
- */
-      __pyx_t_25 = __pyx_v_N;
-      for (__pyx_v_j = 0; __pyx_v_j < __pyx_t_25; __pyx_v_j++) {
-
-        /* "algorithms/sm/shortest_paths.pyx":131
- *                 continue
- *             for j from 0 <= j < N:
- *                 sum_ijk = graph[i, k] + graph[k, j]             # <<<<<<<<<<<<<<
- *                 if sum_ijk < graph[i, j]:
- *                     graph[i, j] = sum_ijk
- */
-        __pyx_t_26 = __pyx_v_i;
-        __pyx_t_27 = __pyx_v_k;
-        __pyx_t_28 = __pyx_v_k;
-        __pyx_t_29 = __pyx_v_j;
-        __pyx_v_sum_ijk = ((*__Pyx_BufPtrCContig2d(__pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t *, __pyx_pybuffernd_graph.rcbuffer->pybuffer.buf, __pyx_t_26, __pyx_pybuffernd_graph.diminfo[0].strides, __pyx_t_27, __pyx_pybuffernd_graph.diminfo[1].strides)) + (*__Pyx_BufPtrCContig2d(__pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t *, __pyx_pybuffernd_graph.rcbuffer->pybuffer.buf, __pyx_t_28, __pyx_pybuffernd_graph.diminfo[0].strides, __pyx_t_29, __pyx_pybuffernd_graph.diminfo[1].strides)));
-
-        /* "algorithms/sm/shortest_paths.pyx":132
- *             for j from 0 <= j < N:
- *                 sum_ijk = graph[i, k] + graph[k, j]
- *                 if sum_ijk < graph[i, j]:             # <<<<<<<<<<<<<<
- *                     graph[i, j] = sum_ijk
- * 
- */
-        __pyx_t_30 = __pyx_v_i;
-        __pyx_t_31 = __pyx_v_j;
-        __pyx_t_8 = ((__pyx_v_sum_ijk < (*__Pyx_BufPtrCContig2d(__pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t *, __pyx_pybuffernd_graph.rcbuffer->pybuffer.buf, __pyx_t_30, __pyx_pybuffernd_graph.diminfo[0].strides, __pyx_t_31, __pyx_pybuffernd_graph.diminfo[1].strides))) != 0);
-        if (__pyx_t_8) {
-
-          /* "algorithms/sm/shortest_paths.pyx":133
- *                 sum_ijk = graph[i, k] + graph[k, j]
- *                 if sum_ijk < graph[i, j]:
- *                     graph[i, j] = sum_ijk             # <<<<<<<<<<<<<<
- * 
- *     graph[np.where(np.isinf(graph))] = 0
- */
-          __pyx_t_32 = __pyx_v_i;
-          __pyx_t_33 = __pyx_v_j;
-          *__Pyx_BufPtrCContig2d(__pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t *, __pyx_pybuffernd_graph.rcbuffer->pybuffer.buf, __pyx_t_32, __pyx_pybuffernd_graph.diminfo[0].strides, __pyx_t_33, __pyx_pybuffernd_graph.diminfo[1].strides) = __pyx_v_sum_ijk;
-
-          /* "algorithms/sm/shortest_paths.pyx":132
- *             for j from 0 <= j < N:
- *                 sum_ijk = graph[i, k] + graph[k, j]
- *                 if sum_ijk < graph[i, j]:             # <<<<<<<<<<<<<<
- *                     graph[i, j] = sum_ijk
- * 
- */
-        }
-      }
-      __pyx_L11_continue:;
-    }
-  }
-
-  /* "algorithms/sm/shortest_paths.pyx":135
- *                     graph[i, j] = sum_ijk
- * 
- *     graph[np.where(np.isinf(graph))] = 0             # <<<<<<<<<<<<<<
- * 
- *     return graph
- */
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 135, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_where); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 135, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_7 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 135, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_isinf); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 135, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 144, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_7 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
-    __pyx_t_7 = PyMethod_GET_SELF(__pyx_t_4);
-    if (likely(__pyx_t_7)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-      __Pyx_INCREF(__pyx_t_7);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_4, function);
-    }
-  }
-  if (!__pyx_t_7) {
-    __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_4, ((PyObject *)__pyx_v_graph)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 135, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-  } else {
-    #if CYTHON_FAST_PYCALL
-    if (PyFunction_Check(__pyx_t_4)) {
-      PyObject *__pyx_temp[2] = {__pyx_t_7, ((PyObject *)__pyx_v_graph)};
-      __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_4, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 135, __pyx_L1_error)
-      __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-      __Pyx_GOTREF(__pyx_t_2);
-    } else
-    #endif
-    #if CYTHON_FAST_PYCCALL
-    if (__Pyx_PyFastCFunction_Check(__pyx_t_4)) {
-      PyObject *__pyx_temp[2] = {__pyx_t_7, ((PyObject *)__pyx_v_graph)};
-      __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_4, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 135, __pyx_L1_error)
-      __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-      __Pyx_GOTREF(__pyx_t_2);
-    } else
-    #endif
-    {
-      __pyx_t_6 = PyTuple_New(1+1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 135, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __Pyx_GIVEREF(__pyx_t_7); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_7); __pyx_t_7 = NULL;
-      __Pyx_INCREF(((PyObject *)__pyx_v_graph));
-      __Pyx_GIVEREF(((PyObject *)__pyx_v_graph));
-      PyTuple_SET_ITEM(__pyx_t_6, 0+1, ((PyObject *)__pyx_v_graph));
-      __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 135, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_2);
-      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    }
-  }
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_1))) {
-    __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_1);
-    if (likely(__pyx_t_4)) {
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_dist_matrix = __pyx_t_4;
+  __pyx_t_4 = 0;
+
+  /* "algorithms/sm/shortest_paths.pyx":145
+ *     # initialize dist_matrix for output
+ *     dist_matrix = np.zeros((len(indices), N), dtype=DTYPE)
+ *     dist_matrix.fill(np.inf)             # <<<<<<<<<<<<<<
+ *     dist_matrix[np.arange(len(indices)), indices] = 0
+ * 
+ */
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_dist_matrix, __pyx_n_s_fill); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 145, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 145, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_inf); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 145, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_3 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_1))) {
+    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_1);
+    if (likely(__pyx_t_3)) {
       PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_1);
-      __Pyx_INCREF(__pyx_t_4);
+      __Pyx_INCREF(__pyx_t_3);
       __Pyx_INCREF(function);
       __Pyx_DECREF_SET(__pyx_t_1, function);
     }
   }
-  if (!__pyx_t_4) {
-    __pyx_t_5 = __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 135, __pyx_L1_error)
+  if (!__pyx_t_3) {
+    __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 145, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_GOTREF(__pyx_t_5);
+    __Pyx_GOTREF(__pyx_t_4);
   } else {
     #if CYTHON_FAST_PYCALL
     if (PyFunction_Check(__pyx_t_1)) {
-      PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_t_2};
-      __pyx_t_5 = __Pyx_PyFunction_FastCall(__pyx_t_1, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 135, __pyx_L1_error)
-      __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __Pyx_GOTREF(__pyx_t_5);
+      PyObject *__pyx_temp[2] = {__pyx_t_3, __pyx_t_2};
+      __pyx_t_4 = __Pyx_PyFunction_FastCall(__pyx_t_1, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 145, __pyx_L1_error)
+      __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     } else
     #endif
     #if CYTHON_FAST_PYCCALL
     if (__Pyx_PyFastCFunction_Check(__pyx_t_1)) {
-      PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_t_2};
-      __pyx_t_5 = __Pyx_PyCFunction_FastCall(__pyx_t_1, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 135, __pyx_L1_error)
-      __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __Pyx_GOTREF(__pyx_t_5);
+      PyObject *__pyx_temp[2] = {__pyx_t_3, __pyx_t_2};
+      __pyx_t_4 = __Pyx_PyCFunction_FastCall(__pyx_t_1, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 145, __pyx_L1_error)
+      __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     } else
     #endif
     {
-      __pyx_t_6 = PyTuple_New(1+1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 135, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_4); __pyx_t_4 = NULL;
-      __Pyx_GIVEREF(__pyx_t_2);
-      PyTuple_SET_ITEM(__pyx_t_6, 0+1, __pyx_t_2);
-      __pyx_t_2 = 0;
-      __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_6, NULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 135, __pyx_L1_error)
+      __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 145, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+      __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_3); __pyx_t_3 = NULL;
+      __Pyx_GIVEREF(__pyx_t_2);
+      PyTuple_SET_ITEM(__pyx_t_5, 0+1, __pyx_t_2);
+      __pyx_t_2 = 0;
+      __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_5, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 145, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     }
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (unlikely(PyObject_SetItem(((PyObject *)__pyx_v_graph), __pyx_t_5, __pyx_int_0) < 0)) __PYX_ERR(0, 135, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "algorithms/sm/shortest_paths.pyx":137
- *     graph[np.where(np.isinf(graph))] = 0
+  /* "algorithms/sm/shortest_paths.pyx":146
+ *     dist_matrix = np.zeros((len(indices), N), dtype=DTYPE)
+ *     dist_matrix.fill(np.inf)
+ *     dist_matrix[np.arange(len(indices)), indices] = 0             # <<<<<<<<<<<<<<
  * 
- *     return graph             # <<<<<<<<<<<<<<
- * 
- * 
+ *     #------------------------------
  */
-  __Pyx_XDECREF(((PyObject *)__pyx_r));
-  __Pyx_INCREF(((PyObject *)__pyx_v_graph));
-  __pyx_r = ((PyArrayObject *)__pyx_v_graph);
-  goto __pyx_L0;
-
-  /* "algorithms/sm/shortest_paths.pyx":81
- * 
- * @cython.boundscheck(False)
- * cdef np.ndarray floyd_warshall(np.ndarray[DTYPE_t, ndim=2, mode='c'] graph,             # <<<<<<<<<<<<<<
- *                               int directed=0):
- *     """
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_XDECREF(__pyx_t_7);
-  { PyObject *__pyx_type, *__pyx_value, *__pyx_tb;
-    __Pyx_PyThreadState_declare
-    __Pyx_PyThreadState_assign
-    __Pyx_ErrFetch(&__pyx_type, &__pyx_value, &__pyx_tb);
-    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_graph.rcbuffer->pybuffer);
-  __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("algorithms.sm.sparse_shortest_paths.floyd_warshall", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = 0;
-  goto __pyx_L2;
-  __pyx_L0:;
-  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_graph.rcbuffer->pybuffer);
-  __pyx_L2:;
-  __Pyx_XGIVEREF((PyObject *)__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "algorithms/sm/shortest_paths.pyx":141
- * 
- * @cython.boundscheck(False)
- * cdef np.ndarray dijkstra(dist_matrix, source, target,             # <<<<<<<<<<<<<<
- *                          np.ndarray[DTYPE_t, ndim=2] graph,
- *                          int directed=0):
- */
-
-static PyArrayObject *__pyx_f_10algorithms_2sm_21sparse_shortest_paths_dijkstra(PyObject *__pyx_v_dist_matrix, PyObject *__pyx_v_source, PyObject *__pyx_v_target, PyArrayObject *__pyx_v_graph, struct __pyx_opt_args_10algorithms_2sm_21sparse_shortest_paths_dijkstra *__pyx_optional_args) {
-  int __pyx_v_directed = ((int)0);
-  unsigned int __pyx_v_N;
-  unsigned int __pyx_v_i;
-  struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciHeap __pyx_v_heap;
-  struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_v_nodes;
-  PyArrayObject *__pyx_v_distances = 0;
-  PyArrayObject *__pyx_v_neighbors = 0;
-  PyArrayObject *__pyx_v_indptr = 0;
-  PyArrayObject *__pyx_v_distances2 = 0;
-  PyArrayObject *__pyx_v_neighbors2 = 0;
-  PyArrayObject *__pyx_v_indptr2 = 0;
-  PyObject *__pyx_v_dist_matrix_T = NULL;
-  __Pyx_LocalBuf_ND __pyx_pybuffernd_graph;
-  __Pyx_Buffer __pyx_pybuffer_graph;
-  PyArrayObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  PyObject *__pyx_t_4 = NULL;
-  int __pyx_t_5;
-  int __pyx_t_6;
-  unsigned int __pyx_t_7;
-  unsigned int __pyx_t_8;
-  __Pyx_RefNannySetupContext("dijkstra", 0);
-  if (__pyx_optional_args) {
-    if (__pyx_optional_args->__pyx_n > 0) {
-      __pyx_v_directed = __pyx_optional_args->directed;
-    }
-  }
-  __Pyx_INCREF(__pyx_v_dist_matrix);
-  __pyx_pybuffer_graph.pybuffer.buf = NULL;
-  __pyx_pybuffer_graph.refcount = 0;
-  __pyx_pybuffernd_graph.data = NULL;
-  __pyx_pybuffernd_graph.rcbuffer = &__pyx_pybuffer_graph;
-  {
-    __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_graph.rcbuffer->pybuffer, (PyObject*)__pyx_v_graph, &__Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t, PyBUF_FORMAT| PyBUF_STRIDES, 2, 0, __pyx_stack) == -1)) __PYX_ERR(0, 141, __pyx_L1_error)
-  }
-  __pyx_pybuffernd_graph.diminfo[0].strides = __pyx_pybuffernd_graph.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_graph.diminfo[0].shape = __pyx_pybuffernd_graph.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_graph.diminfo[1].strides = __pyx_pybuffernd_graph.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_graph.diminfo[1].shape = __pyx_pybuffernd_graph.rcbuffer->pybuffer.shape[1];
-
-  /* "algorithms/sm/shortest_paths.pyx":170
- *         If no path exists, the path length is zero
- *     """
- *     cdef unsigned int N = graph.shape[0]             # <<<<<<<<<<<<<<
- *     cdef unsigned int i
- * 
- */
-  __pyx_v_N = (__pyx_v_graph->dimensions[0]);
-
-  /* "algorithms/sm/shortest_paths.pyx":175
- *     cdef FibonacciHeap heap
- * 
- *     cdef FibonacciNode* nodes = <FibonacciNode*> malloc(N *             # <<<<<<<<<<<<<<
- *                                                         sizeof(FibonacciNode))
- * 
- */
-  __pyx_v_nodes = ((struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *)malloc((__pyx_v_N * (sizeof(struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode)))));
-
-  /* "algorithms/sm/shortest_paths.pyx":181
- *     cdef np.ndarray distances2, neighbors2, indptr2
- * 
- *     if not isspmatrix_csr(dist_matrix):             # <<<<<<<<<<<<<<
- *         dist_matrix = csr_matrix(dist_matrix)
- * 
- */
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_isspmatrix_csr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 181, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_3)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_3);
+  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 146, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_arange); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 146, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_9 = PyObject_Length(__pyx_v_indices); if (unlikely(__pyx_t_9 == ((Py_ssize_t)-1))) __PYX_ERR(0, 146, __pyx_L1_error)
+  __pyx_t_1 = PyInt_FromSsize_t(__pyx_t_9); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 146, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = NULL;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_5))) {
+    __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_5);
+    if (likely(__pyx_t_2)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
+      __Pyx_INCREF(__pyx_t_2);
       __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
+      __Pyx_DECREF_SET(__pyx_t_5, function);
     }
   }
-  if (!__pyx_t_3) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_dist_matrix); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 181, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
+  if (!__pyx_t_2) {
+    __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 146, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __Pyx_GOTREF(__pyx_t_4);
   } else {
     #if CYTHON_FAST_PYCALL
-    if (PyFunction_Check(__pyx_t_2)) {
-      PyObject *__pyx_temp[2] = {__pyx_t_3, __pyx_v_dist_matrix};
-      __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 181, __pyx_L1_error)
-      __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __Pyx_GOTREF(__pyx_t_1);
+    if (PyFunction_Check(__pyx_t_5)) {
+      PyObject *__pyx_temp[2] = {__pyx_t_2, __pyx_t_1};
+      __pyx_t_4 = __Pyx_PyFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 146, __pyx_L1_error)
+      __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+      __Pyx_GOTREF(__pyx_t_4);
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     } else
     #endif
     #if CYTHON_FAST_PYCCALL
-    if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
-      PyObject *__pyx_temp[2] = {__pyx_t_3, __pyx_v_dist_matrix};
-      __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 181, __pyx_L1_error)
-      __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __Pyx_GOTREF(__pyx_t_1);
+    if (__Pyx_PyFastCFunction_Check(__pyx_t_5)) {
+      PyObject *__pyx_temp[2] = {__pyx_t_2, __pyx_t_1};
+      __pyx_t_4 = __Pyx_PyCFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 146, __pyx_L1_error)
+      __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+      __Pyx_GOTREF(__pyx_t_4);
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     } else
     #endif
     {
-      __pyx_t_4 = PyTuple_New(1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 181, __pyx_L1_error)
+      __pyx_t_3 = PyTuple_New(1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 146, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __Pyx_GIVEREF(__pyx_t_2); PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_2); __pyx_t_2 = NULL;
+      __Pyx_GIVEREF(__pyx_t_1);
+      PyTuple_SET_ITEM(__pyx_t_3, 0+1, __pyx_t_1);
+      __pyx_t_1 = 0;
+      __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_3, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 146, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_3); __pyx_t_3 = NULL;
-      __Pyx_INCREF(__pyx_v_dist_matrix);
-      __Pyx_GIVEREF(__pyx_v_dist_matrix);
-      PyTuple_SET_ITEM(__pyx_t_4, 0+1, __pyx_v_dist_matrix);
-      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 181, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     }
   }
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 181, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_6 = ((!__pyx_t_5) != 0);
-  if (__pyx_t_6) {
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_5 = PyTuple_New(2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 146, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_GIVEREF(__pyx_t_4);
+  PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_4);
+  __Pyx_INCREF(__pyx_v_indices);
+  __Pyx_GIVEREF(__pyx_v_indices);
+  PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_v_indices);
+  __pyx_t_4 = 0;
+  if (unlikely(PyObject_SetItem(__pyx_v_dist_matrix, __pyx_t_5, __pyx_int_0) < 0)) __PYX_ERR(0, 146, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-    /* "algorithms/sm/shortest_paths.pyx":182
- * 
- *     if not isspmatrix_csr(dist_matrix):
- *         dist_matrix = csr_matrix(dist_matrix)             # <<<<<<<<<<<<<<
- * 
- *     distances = np.asarray(dist_matrix.data, dtype=DTYPE, order='C')
+  /* "algorithms/sm/shortest_paths.pyx":150
+ *     #------------------------------
+ *     # initialize predecessors for output
+ *     if return_predecessors:             # <<<<<<<<<<<<<<
+ *         predecessor_matrix = np.empty((len(indices), N), dtype=ITYPE)
+ *         predecessor_matrix.fill(NULL_IDX)
  */
-    __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_csr_matrix); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 182, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = NULL;
-    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
-      __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_2);
-      if (likely(__pyx_t_4)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-        __Pyx_INCREF(__pyx_t_4);
+  __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_return_predecessors); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 150, __pyx_L1_error)
+  if (__pyx_t_7) {
+
+    /* "algorithms/sm/shortest_paths.pyx":151
+ *     # initialize predecessors for output
+ *     if return_predecessors:
+ *         predecessor_matrix = np.empty((len(indices), N), dtype=ITYPE)             # <<<<<<<<<<<<<<
+ *         predecessor_matrix.fill(NULL_IDX)
+ *     else:
+ */
+    __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 151, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_empty); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 151, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __pyx_t_9 = PyObject_Length(__pyx_v_indices); if (unlikely(__pyx_t_9 == ((Py_ssize_t)-1))) __PYX_ERR(0, 151, __pyx_L1_error)
+    __pyx_t_5 = PyInt_FromSsize_t(__pyx_t_9); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 151, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 151, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_GIVEREF(__pyx_t_5);
+    PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_5);
+    __Pyx_INCREF(__pyx_v_N);
+    __Pyx_GIVEREF(__pyx_v_N);
+    PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_v_N);
+    __pyx_t_5 = 0;
+    __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 151, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __Pyx_GIVEREF(__pyx_t_3);
+    PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_3);
+    __pyx_t_3 = 0;
+    __pyx_t_3 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 151, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_ITYPE); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 151, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_dtype, __pyx_t_1) < 0) __PYX_ERR(0, 151, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_5, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 151, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __pyx_v_predecessor_matrix = __pyx_t_1;
+    __pyx_t_1 = 0;
+
+    /* "algorithms/sm/shortest_paths.pyx":152
+ *     if return_predecessors:
+ *         predecessor_matrix = np.empty((len(indices), N), dtype=ITYPE)
+ *         predecessor_matrix.fill(NULL_IDX)             # <<<<<<<<<<<<<<
+ *     else:
+ *         predecessor_matrix = np.empty((0, N), dtype=ITYPE)
+ */
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_predecessor_matrix, __pyx_n_s_fill); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 152, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_tuple__7, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 152, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+    /* "algorithms/sm/shortest_paths.pyx":150
+ *     #------------------------------
+ *     # initialize predecessors for output
+ *     if return_predecessors:             # <<<<<<<<<<<<<<
+ *         predecessor_matrix = np.empty((len(indices), N), dtype=ITYPE)
+ *         predecessor_matrix.fill(NULL_IDX)
+ */
+    goto __pyx_L9;
+  }
+
+  /* "algorithms/sm/shortest_paths.pyx":154
+ *         predecessor_matrix.fill(NULL_IDX)
+ *     else:
+ *         predecessor_matrix = np.empty((0, N), dtype=ITYPE)             # <<<<<<<<<<<<<<
+ * 
+ *     if unweighted:
+ */
+  /*else*/ {
+    __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 154, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_empty); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 154, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 154, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_INCREF(__pyx_int_0);
+    __Pyx_GIVEREF(__pyx_int_0);
+    PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_int_0);
+    __Pyx_INCREF(__pyx_v_N);
+    __Pyx_GIVEREF(__pyx_v_N);
+    PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_v_N);
+    __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 154, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __Pyx_GIVEREF(__pyx_t_3);
+    PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_3);
+    __pyx_t_3 = 0;
+    __pyx_t_3 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 154, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_ITYPE); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 154, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_dtype, __pyx_t_4) < 0) __PYX_ERR(0, 154, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_5, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 154, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __pyx_v_predecessor_matrix = __pyx_t_4;
+    __pyx_t_4 = 0;
+  }
+  __pyx_L9:;
+
+  /* "algorithms/sm/shortest_paths.pyx":156
+ *         predecessor_matrix = np.empty((0, N), dtype=ITYPE)
+ * 
+ *     if unweighted:             # <<<<<<<<<<<<<<
+ *         csr_data = np.ones(csgraph.data.shape)
+ *     else:
+ */
+  __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_unweighted); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 156, __pyx_L1_error)
+  if (__pyx_t_7) {
+
+    /* "algorithms/sm/shortest_paths.pyx":157
+ * 
+ *     if unweighted:
+ *         csr_data = np.ones(csgraph.data.shape)             # <<<<<<<<<<<<<<
+ *     else:
+ *         csr_data = csgraph.data
+ */
+    __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 157, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_ones); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 157, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_csgraph, __pyx_n_s_data); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 157, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_shape); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 157, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __pyx_t_3 = NULL;
+    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_5))) {
+      __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_5);
+      if (likely(__pyx_t_3)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
+        __Pyx_INCREF(__pyx_t_3);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_2, function);
+        __Pyx_DECREF_SET(__pyx_t_5, function);
       }
     }
-    if (!__pyx_t_4) {
-      __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_dist_matrix); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 182, __pyx_L1_error)
+    if (!__pyx_t_3) {
+      __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 157, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+      __Pyx_GOTREF(__pyx_t_4);
+    } else {
+      #if CYTHON_FAST_PYCALL
+      if (PyFunction_Check(__pyx_t_5)) {
+        PyObject *__pyx_temp[2] = {__pyx_t_3, __pyx_t_1};
+        __pyx_t_4 = __Pyx_PyFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 157, __pyx_L1_error)
+        __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+        __Pyx_GOTREF(__pyx_t_4);
+        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+      } else
+      #endif
+      #if CYTHON_FAST_PYCCALL
+      if (__Pyx_PyFastCFunction_Check(__pyx_t_5)) {
+        PyObject *__pyx_temp[2] = {__pyx_t_3, __pyx_t_1};
+        __pyx_t_4 = __Pyx_PyCFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 157, __pyx_L1_error)
+        __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+        __Pyx_GOTREF(__pyx_t_4);
+        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+      } else
+      #endif
+      {
+        __pyx_t_2 = PyTuple_New(1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 157, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_3); __pyx_t_3 = NULL;
+        __Pyx_GIVEREF(__pyx_t_1);
+        PyTuple_SET_ITEM(__pyx_t_2, 0+1, __pyx_t_1);
+        __pyx_t_1 = 0;
+        __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_2, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 157, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_4);
+        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+      }
+    }
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __pyx_v_csr_data = __pyx_t_4;
+    __pyx_t_4 = 0;
+
+    /* "algorithms/sm/shortest_paths.pyx":156
+ *         predecessor_matrix = np.empty((0, N), dtype=ITYPE)
+ * 
+ *     if unweighted:             # <<<<<<<<<<<<<<
+ *         csr_data = np.ones(csgraph.data.shape)
+ *     else:
+ */
+    goto __pyx_L10;
+  }
+
+  /* "algorithms/sm/shortest_paths.pyx":159
+ *         csr_data = np.ones(csgraph.data.shape)
+ *     else:
+ *         csr_data = csgraph.data             # <<<<<<<<<<<<<<
+ * 
+ *     if directed:
+ */
+  /*else*/ {
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_csgraph, __pyx_n_s_data); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 159, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __pyx_v_csr_data = __pyx_t_4;
+    __pyx_t_4 = 0;
+  }
+  __pyx_L10:;
+
+  /* "algorithms/sm/shortest_paths.pyx":161
+ *         csr_data = csgraph.data
+ * 
+ *     if directed:             # <<<<<<<<<<<<<<
+ *         _dijkstra_directed(indices,
+ *                            csr_data, csgraph.indices, csgraph.indptr,
+ */
+  __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_directed); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 161, __pyx_L1_error)
+  if (__pyx_t_7) {
+
+    /* "algorithms/sm/shortest_paths.pyx":162
+ * 
+ *     if directed:
+ *         _dijkstra_directed(indices,             # <<<<<<<<<<<<<<
+ *                            csr_data, csgraph.indices, csgraph.indptr,
+ *                            dist_matrix, predecessor_matrix, limitf, target)
+ */
+    if (!(likely(((__pyx_v_indices) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_indices, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 162, __pyx_L1_error)
+
+    /* "algorithms/sm/shortest_paths.pyx":163
+ *     if directed:
+ *         _dijkstra_directed(indices,
+ *                            csr_data, csgraph.indices, csgraph.indptr,             # <<<<<<<<<<<<<<
+ *                            dist_matrix, predecessor_matrix, limitf, target)
+ *     else:
+ */
+    if (!(likely(((__pyx_v_csr_data) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_csr_data, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 163, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_csgraph, __pyx_n_s_indices); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 163, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    if (!(likely(((__pyx_t_4) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_4, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 163, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_csgraph, __pyx_n_s_indptr); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 163, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    if (!(likely(((__pyx_t_5) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_5, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 163, __pyx_L1_error)
+
+    /* "algorithms/sm/shortest_paths.pyx":164
+ *         _dijkstra_directed(indices,
+ *                            csr_data, csgraph.indices, csgraph.indptr,
+ *                            dist_matrix, predecessor_matrix, limitf, target)             # <<<<<<<<<<<<<<
+ *     else:
+ *         csgraphT = csgraph.T.tocsr()
+ */
+    if (!(likely(((__pyx_v_dist_matrix) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_dist_matrix, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 164, __pyx_L1_error)
+    if (!(likely(((__pyx_v_predecessor_matrix) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_predecessor_matrix, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 164, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyInt_As_npy_int32(__pyx_v_target); if (unlikely((__pyx_t_10 == ((npy_int32)-1)) && PyErr_Occurred())) __PYX_ERR(0, 164, __pyx_L1_error)
+
+    /* "algorithms/sm/shortest_paths.pyx":162
+ * 
+ *     if directed:
+ *         _dijkstra_directed(indices,             # <<<<<<<<<<<<<<
+ *                            csr_data, csgraph.indices, csgraph.indptr,
+ *                            dist_matrix, predecessor_matrix, limitf, target)
+ */
+    __pyx_t_2 = __pyx_f_10algorithms_2sm_14shortest_paths__dijkstra_directed(((PyArrayObject *)__pyx_v_indices), ((PyArrayObject *)__pyx_v_csr_data), ((PyArrayObject *)__pyx_t_4), ((PyArrayObject *)__pyx_t_5), ((PyArrayObject *)__pyx_v_dist_matrix), ((PyArrayObject *)__pyx_v_predecessor_matrix), __pyx_v_limitf, __pyx_t_10); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 162, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+    /* "algorithms/sm/shortest_paths.pyx":161
+ *         csr_data = csgraph.data
+ * 
+ *     if directed:             # <<<<<<<<<<<<<<
+ *         _dijkstra_directed(indices,
+ *                            csr_data, csgraph.indices, csgraph.indptr,
+ */
+    goto __pyx_L11;
+  }
+
+  /* "algorithms/sm/shortest_paths.pyx":166
+ *                            dist_matrix, predecessor_matrix, limitf, target)
+ *     else:
+ *         csgraphT = csgraph.T.tocsr()             # <<<<<<<<<<<<<<
+ *         if unweighted:
+ *             csrT_data = csr_data
+ */
+  /*else*/ {
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_csgraph, __pyx_n_s_T); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 166, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_tocsr); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 166, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __pyx_t_5 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
+      __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_4);
+      if (likely(__pyx_t_5)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
+        __Pyx_INCREF(__pyx_t_5);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_4, function);
+      }
+    }
+    if (__pyx_t_5) {
+      __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 166, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    } else {
+      __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 166, __pyx_L1_error)
+    }
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __pyx_v_csgraphT = __pyx_t_2;
+    __pyx_t_2 = 0;
+
+    /* "algorithms/sm/shortest_paths.pyx":167
+ *     else:
+ *         csgraphT = csgraph.T.tocsr()
+ *         if unweighted:             # <<<<<<<<<<<<<<
+ *             csrT_data = csr_data
+ *         else:
+ */
+    __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_unweighted); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 167, __pyx_L1_error)
+    if (__pyx_t_7) {
+
+      /* "algorithms/sm/shortest_paths.pyx":168
+ *         csgraphT = csgraph.T.tocsr()
+ *         if unweighted:
+ *             csrT_data = csr_data             # <<<<<<<<<<<<<<
+ *         else:
+ *             csrT_data = csgraphT.data
+ */
+      __Pyx_INCREF(__pyx_v_csr_data);
+      __pyx_v_csrT_data = __pyx_v_csr_data;
+
+      /* "algorithms/sm/shortest_paths.pyx":167
+ *     else:
+ *         csgraphT = csgraph.T.tocsr()
+ *         if unweighted:             # <<<<<<<<<<<<<<
+ *             csrT_data = csr_data
+ *         else:
+ */
+      goto __pyx_L12;
+    }
+
+    /* "algorithms/sm/shortest_paths.pyx":170
+ *             csrT_data = csr_data
+ *         else:
+ *             csrT_data = csgraphT.data             # <<<<<<<<<<<<<<
+ *         _dijkstra_undirected(indices,
+ *                              csr_data, csgraph.indices, csgraph.indptr,
+ */
+    /*else*/ {
+      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_csgraphT, __pyx_n_s_data); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 170, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_2);
+      __pyx_v_csrT_data = __pyx_t_2;
+      __pyx_t_2 = 0;
+    }
+    __pyx_L12:;
+
+    /* "algorithms/sm/shortest_paths.pyx":171
+ *         else:
+ *             csrT_data = csgraphT.data
+ *         _dijkstra_undirected(indices,             # <<<<<<<<<<<<<<
+ *                              csr_data, csgraph.indices, csgraph.indptr,
+ *                              csrT_data, csgraphT.indices, csgraphT.indptr,
+ */
+    if (!(likely(((__pyx_v_indices) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_indices, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 171, __pyx_L1_error)
+
+    /* "algorithms/sm/shortest_paths.pyx":172
+ *             csrT_data = csgraphT.data
+ *         _dijkstra_undirected(indices,
+ *                              csr_data, csgraph.indices, csgraph.indptr,             # <<<<<<<<<<<<<<
+ *                              csrT_data, csgraphT.indices, csgraphT.indptr,
+ *                              dist_matrix, predecessor_matrix, limitf)
+ */
+    if (!(likely(((__pyx_v_csr_data) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_csr_data, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 172, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_csgraph, __pyx_n_s_indices); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 172, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    if (!(likely(((__pyx_t_2) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_2, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 172, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_csgraph, __pyx_n_s_indptr); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 172, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    if (!(likely(((__pyx_t_4) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_4, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 172, __pyx_L1_error)
+
+    /* "algorithms/sm/shortest_paths.pyx":173
+ *         _dijkstra_undirected(indices,
+ *                              csr_data, csgraph.indices, csgraph.indptr,
+ *                              csrT_data, csgraphT.indices, csgraphT.indptr,             # <<<<<<<<<<<<<<
+ *                              dist_matrix, predecessor_matrix, limitf)
+ * 
+ */
+    if (!(likely(((__pyx_v_csrT_data) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_csrT_data, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 173, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_csgraphT, __pyx_n_s_indices); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 173, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    if (!(likely(((__pyx_t_5) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_5, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 173, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_csgraphT, __pyx_n_s_indptr); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 173, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 173, __pyx_L1_error)
+
+    /* "algorithms/sm/shortest_paths.pyx":174
+ *                              csr_data, csgraph.indices, csgraph.indptr,
+ *                              csrT_data, csgraphT.indices, csgraphT.indptr,
+ *                              dist_matrix, predecessor_matrix, limitf)             # <<<<<<<<<<<<<<
+ * 
+ *     if return_predecessors:
+ */
+    if (!(likely(((__pyx_v_dist_matrix) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_dist_matrix, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 174, __pyx_L1_error)
+    if (!(likely(((__pyx_v_predecessor_matrix) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_predecessor_matrix, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 174, __pyx_L1_error)
+
+    /* "algorithms/sm/shortest_paths.pyx":171
+ *         else:
+ *             csrT_data = csgraphT.data
+ *         _dijkstra_undirected(indices,             # <<<<<<<<<<<<<<
+ *                              csr_data, csgraph.indices, csgraph.indptr,
+ *                              csrT_data, csgraphT.indices, csgraphT.indptr,
+ */
+    __pyx_t_3 = __pyx_f_10algorithms_2sm_14shortest_paths__dijkstra_undirected(((PyArrayObject *)__pyx_v_indices), ((PyArrayObject *)__pyx_v_csr_data), ((PyArrayObject *)__pyx_t_2), ((PyArrayObject *)__pyx_t_4), ((PyArrayObject *)__pyx_v_csrT_data), ((PyArrayObject *)__pyx_t_5), ((PyArrayObject *)__pyx_t_1), ((PyArrayObject *)__pyx_v_dist_matrix), ((PyArrayObject *)__pyx_v_predecessor_matrix), __pyx_v_limitf); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 171, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  }
+  __pyx_L11:;
+
+  /* "algorithms/sm/shortest_paths.pyx":176
+ *                              dist_matrix, predecessor_matrix, limitf)
+ * 
+ *     if return_predecessors:             # <<<<<<<<<<<<<<
+ *         return (dist_matrix.reshape(return_shape),
+ *                 predecessor_matrix.reshape(return_shape))
+ */
+  __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_return_predecessors); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 176, __pyx_L1_error)
+  if (__pyx_t_7) {
+
+    /* "algorithms/sm/shortest_paths.pyx":177
+ * 
+ *     if return_predecessors:
+ *         return (dist_matrix.reshape(return_shape),             # <<<<<<<<<<<<<<
+ *                 predecessor_matrix.reshape(return_shape))
+ *     else:
+ */
+    __Pyx_XDECREF(__pyx_r);
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_dist_matrix, __pyx_n_s_reshape); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 177, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_5 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_1))) {
+      __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_1);
+      if (likely(__pyx_t_5)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_1);
+        __Pyx_INCREF(__pyx_t_5);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_1, function);
+      }
+    }
+    if (!__pyx_t_5) {
+      __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_v_return_shape); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 177, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+    } else {
+      #if CYTHON_FAST_PYCALL
+      if (PyFunction_Check(__pyx_t_1)) {
+        PyObject *__pyx_temp[2] = {__pyx_t_5, __pyx_v_return_shape};
+        __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_1, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 177, __pyx_L1_error)
+        __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+        __Pyx_GOTREF(__pyx_t_3);
+      } else
+      #endif
+      #if CYTHON_FAST_PYCCALL
+      if (__Pyx_PyFastCFunction_Check(__pyx_t_1)) {
+        PyObject *__pyx_temp[2] = {__pyx_t_5, __pyx_v_return_shape};
+        __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_1, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 177, __pyx_L1_error)
+        __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+        __Pyx_GOTREF(__pyx_t_3);
+      } else
+      #endif
+      {
+        __pyx_t_4 = PyTuple_New(1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 177, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_4);
+        __Pyx_GIVEREF(__pyx_t_5); PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_5); __pyx_t_5 = NULL;
+        __Pyx_INCREF(__pyx_v_return_shape);
+        __Pyx_GIVEREF(__pyx_v_return_shape);
+        PyTuple_SET_ITEM(__pyx_t_4, 0+1, __pyx_v_return_shape);
+        __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_4, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 177, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_3);
+        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+      }
+    }
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+    /* "algorithms/sm/shortest_paths.pyx":178
+ *     if return_predecessors:
+ *         return (dist_matrix.reshape(return_shape),
+ *                 predecessor_matrix.reshape(return_shape))             # <<<<<<<<<<<<<<
+ *     else:
+ *         return dist_matrix.reshape(return_shape)
+ */
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_predecessor_matrix, __pyx_n_s_reshape); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 178, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __pyx_t_5 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
+      __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_4);
+      if (likely(__pyx_t_5)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
+        __Pyx_INCREF(__pyx_t_5);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_4, function);
+      }
+    }
+    if (!__pyx_t_5) {
+      __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_v_return_shape); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 178, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
     } else {
       #if CYTHON_FAST_PYCALL
-      if (PyFunction_Check(__pyx_t_2)) {
-        PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_v_dist_matrix};
-        __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 182, __pyx_L1_error)
-        __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+      if (PyFunction_Check(__pyx_t_4)) {
+        PyObject *__pyx_temp[2] = {__pyx_t_5, __pyx_v_return_shape};
+        __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_4, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 178, __pyx_L1_error)
+        __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
         __Pyx_GOTREF(__pyx_t_1);
       } else
       #endif
       #if CYTHON_FAST_PYCCALL
-      if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
-        PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_v_dist_matrix};
-        __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 182, __pyx_L1_error)
-        __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+      if (__Pyx_PyFastCFunction_Check(__pyx_t_4)) {
+        PyObject *__pyx_temp[2] = {__pyx_t_5, __pyx_v_return_shape};
+        __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_4, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 178, __pyx_L1_error)
+        __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
         __Pyx_GOTREF(__pyx_t_1);
       } else
       #endif
       {
-        __pyx_t_3 = PyTuple_New(1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 182, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_3);
-        __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_4); __pyx_t_4 = NULL;
-        __Pyx_INCREF(__pyx_v_dist_matrix);
-        __Pyx_GIVEREF(__pyx_v_dist_matrix);
-        PyTuple_SET_ITEM(__pyx_t_3, 0+1, __pyx_v_dist_matrix);
-        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 182, __pyx_L1_error)
+        __pyx_t_2 = PyTuple_New(1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 178, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        __Pyx_GIVEREF(__pyx_t_5); PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_5); __pyx_t_5 = NULL;
+        __Pyx_INCREF(__pyx_v_return_shape);
+        __Pyx_GIVEREF(__pyx_v_return_shape);
+        PyTuple_SET_ITEM(__pyx_t_2, 0+1, __pyx_v_return_shape);
+        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 178, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       }
     }
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_DECREF_SET(__pyx_v_dist_matrix, __pyx_t_1);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+
+    /* "algorithms/sm/shortest_paths.pyx":177
+ * 
+ *     if return_predecessors:
+ *         return (dist_matrix.reshape(return_shape),             # <<<<<<<<<<<<<<
+ *                 predecessor_matrix.reshape(return_shape))
+ *     else:
+ */
+    __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 177, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_GIVEREF(__pyx_t_3);
+    PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_3);
+    __Pyx_GIVEREF(__pyx_t_1);
+    PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_t_1);
+    __pyx_t_3 = 0;
     __pyx_t_1 = 0;
+    __pyx_r = __pyx_t_4;
+    __pyx_t_4 = 0;
+    goto __pyx_L0;
 
-    /* "algorithms/sm/shortest_paths.pyx":181
- *     cdef np.ndarray distances2, neighbors2, indptr2
+    /* "algorithms/sm/shortest_paths.pyx":176
+ *                              dist_matrix, predecessor_matrix, limitf)
  * 
- *     if not isspmatrix_csr(dist_matrix):             # <<<<<<<<<<<<<<
- *         dist_matrix = csr_matrix(dist_matrix)
- * 
+ *     if return_predecessors:             # <<<<<<<<<<<<<<
+ *         return (dist_matrix.reshape(return_shape),
+ *                 predecessor_matrix.reshape(return_shape))
  */
   }
 
-  /* "algorithms/sm/shortest_paths.pyx":184
- *         dist_matrix = csr_matrix(dist_matrix)
- * 
- *     distances = np.asarray(dist_matrix.data, dtype=DTYPE, order='C')             # <<<<<<<<<<<<<<
- *     neighbors = np.asarray(dist_matrix.indices, dtype=ITYPE, order='C')
- *     indptr = np.asarray(dist_matrix.indptr, dtype=ITYPE, order='C')
- */
-  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 184, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_asarray); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 184, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_dist_matrix, __pyx_n_s_data); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 184, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 184, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GIVEREF(__pyx_t_1);
-  PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1);
-  __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 184, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_DTYPE); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 184, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_4) < 0) __PYX_ERR(0, 184, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_order, __pyx_n_s_C) < 0) __PYX_ERR(0, 184, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 184, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (!(likely(((__pyx_t_4) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_4, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 184, __pyx_L1_error)
-  __pyx_v_distances = ((PyArrayObject *)__pyx_t_4);
-  __pyx_t_4 = 0;
-
-  /* "algorithms/sm/shortest_paths.pyx":185
- * 
- *     distances = np.asarray(dist_matrix.data, dtype=DTYPE, order='C')
- *     neighbors = np.asarray(dist_matrix.indices, dtype=ITYPE, order='C')             # <<<<<<<<<<<<<<
- *     indptr = np.asarray(dist_matrix.indptr, dtype=ITYPE, order='C')
- * 
- */
-  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 185, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_asarray); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 185, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_dist_matrix, __pyx_n_s_indices); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 185, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 185, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GIVEREF(__pyx_t_4);
-  PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_4);
-  __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 185, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_ITYPE); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 185, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_dtype, __pyx_t_2) < 0) __PYX_ERR(0, 185, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_order, __pyx_n_s_C) < 0) __PYX_ERR(0, 185, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 185, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (!(likely(((__pyx_t_2) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_2, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 185, __pyx_L1_error)
-  __pyx_v_neighbors = ((PyArrayObject *)__pyx_t_2);
-  __pyx_t_2 = 0;
-
-  /* "algorithms/sm/shortest_paths.pyx":186
- *     distances = np.asarray(dist_matrix.data, dtype=DTYPE, order='C')
- *     neighbors = np.asarray(dist_matrix.indices, dtype=ITYPE, order='C')
- *     indptr = np.asarray(dist_matrix.indptr, dtype=ITYPE, order='C')             # <<<<<<<<<<<<<<
- * 
- *     for i from 0 <= i < N:
- */
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 186, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_asarray); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 186, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_dist_matrix, __pyx_n_s_indptr); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 186, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 186, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GIVEREF(__pyx_t_2);
-  PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_2);
-  __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 186, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_ITYPE); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 186, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, __pyx_t_1) < 0) __PYX_ERR(0, 186, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_order, __pyx_n_s_C) < 0) __PYX_ERR(0, 186, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_3, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 186, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 186, __pyx_L1_error)
-  __pyx_v_indptr = ((PyArrayObject *)__pyx_t_1);
-  __pyx_t_1 = 0;
-
-  /* "algorithms/sm/shortest_paths.pyx":188
- *     indptr = np.asarray(dist_matrix.indptr, dtype=ITYPE, order='C')
- * 
- *     for i from 0 <= i < N:             # <<<<<<<<<<<<<<
- *         initialize_node(&nodes[i], i)
- * 
- */
-  __pyx_t_7 = __pyx_v_N;
-  for (__pyx_v_i = 0; __pyx_v_i < __pyx_t_7; __pyx_v_i++) {
-
-    /* "algorithms/sm/shortest_paths.pyx":189
- * 
- *     for i from 0 <= i < N:
- *         initialize_node(&nodes[i], i)             # <<<<<<<<<<<<<<
- * 
- *     heap.min_node = NULL
- */
-    __pyx_f_10algorithms_2sm_21sparse_shortest_paths_initialize_node((&(__pyx_v_nodes[__pyx_v_i])), __pyx_v_i, NULL);
-  }
-
-  /* "algorithms/sm/shortest_paths.pyx":191
- *         initialize_node(&nodes[i], i)
- * 
- *     heap.min_node = NULL             # <<<<<<<<<<<<<<
- * 
- *     if directed:
- */
-  __pyx_v_heap.min_node = NULL;
-
-  /* "algorithms/sm/shortest_paths.pyx":193
- *     heap.min_node = NULL
- * 
- *     if directed:             # <<<<<<<<<<<<<<
- *         # for i from 0 <= i < N:
- *         dijkstra_directed_one_row(source, target, neighbors, distances, indptr,
- */
-  __pyx_t_6 = (__pyx_v_directed != 0);
-  if (__pyx_t_6) {
-
-    /* "algorithms/sm/shortest_paths.pyx":195
- *     if directed:
- *         # for i from 0 <= i < N:
- *         dijkstra_directed_one_row(source, target, neighbors, distances, indptr,             # <<<<<<<<<<<<<<
- *                                   graph, &heap, nodes)
+  /* "algorithms/sm/shortest_paths.pyx":180
+ *                 predecessor_matrix.reshape(return_shape))
  *     else:
- */
-    __pyx_t_7 = __Pyx_PyInt_As_unsigned_int(__pyx_v_source); if (unlikely((__pyx_t_7 == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(0, 195, __pyx_L1_error)
-    __pyx_t_8 = __Pyx_PyInt_As_unsigned_int(__pyx_v_target); if (unlikely((__pyx_t_8 == (unsigned int)-1) && PyErr_Occurred())) __PYX_ERR(0, 195, __pyx_L1_error)
-
-    /* "algorithms/sm/shortest_paths.pyx":196
- *         # for i from 0 <= i < N:
- *         dijkstra_directed_one_row(source, target, neighbors, distances, indptr,
- *                                   graph, &heap, nodes)             # <<<<<<<<<<<<<<
- *     else:
- *         #use the csr -> csc sparse matrix conversion to quickly get
- */
-    __pyx_f_10algorithms_2sm_21sparse_shortest_paths_dijkstra_directed_one_row(__pyx_t_7, __pyx_t_8, ((PyArrayObject *)__pyx_v_neighbors), ((PyArrayObject *)__pyx_v_distances), ((PyArrayObject *)__pyx_v_indptr), ((PyArrayObject *)__pyx_v_graph), (&__pyx_v_heap), __pyx_v_nodes);
-
-    /* "algorithms/sm/shortest_paths.pyx":193
- *     heap.min_node = NULL
+ *         return dist_matrix.reshape(return_shape)             # <<<<<<<<<<<<<<
  * 
- *     if directed:             # <<<<<<<<<<<<<<
- *         # for i from 0 <= i < N:
- *         dijkstra_directed_one_row(source, target, neighbors, distances, indptr,
- */
-    goto __pyx_L6;
-  }
-
-  /* "algorithms/sm/shortest_paths.pyx":200
- *         #use the csr -> csc sparse matrix conversion to quickly get
- *         # both directions of neigbors
- *         dist_matrix_T = dist_matrix.T.tocsr()             # <<<<<<<<<<<<<<
  * 
- *         distances2 = np.asarray(dist_matrix_T.data,
  */
   /*else*/ {
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_dist_matrix, __pyx_n_s_T); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 200, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_tocsr); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 200, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
-      __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_3);
-      if (likely(__pyx_t_2)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-        __Pyx_INCREF(__pyx_t_2);
+    __Pyx_XDECREF(__pyx_r);
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_dist_matrix, __pyx_n_s_reshape); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 180, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_3 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_1))) {
+      __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_1);
+      if (likely(__pyx_t_3)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_1);
+        __Pyx_INCREF(__pyx_t_3);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_3, function);
+        __Pyx_DECREF_SET(__pyx_t_1, function);
       }
     }
-    if (__pyx_t_2) {
-      __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 200, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    if (!__pyx_t_3) {
+      __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_v_return_shape); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 180, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
     } else {
-      __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 200, __pyx_L1_error)
+      #if CYTHON_FAST_PYCALL
+      if (PyFunction_Check(__pyx_t_1)) {
+        PyObject *__pyx_temp[2] = {__pyx_t_3, __pyx_v_return_shape};
+        __pyx_t_4 = __Pyx_PyFunction_FastCall(__pyx_t_1, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 180, __pyx_L1_error)
+        __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+        __Pyx_GOTREF(__pyx_t_4);
+      } else
+      #endif
+      #if CYTHON_FAST_PYCCALL
+      if (__Pyx_PyFastCFunction_Check(__pyx_t_1)) {
+        PyObject *__pyx_temp[2] = {__pyx_t_3, __pyx_v_return_shape};
+        __pyx_t_4 = __Pyx_PyCFunction_FastCall(__pyx_t_1, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 180, __pyx_L1_error)
+        __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+        __Pyx_GOTREF(__pyx_t_4);
+      } else
+      #endif
+      {
+        __pyx_t_2 = PyTuple_New(1+1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 180, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_3); __pyx_t_3 = NULL;
+        __Pyx_INCREF(__pyx_v_return_shape);
+        __Pyx_GIVEREF(__pyx_v_return_shape);
+        PyTuple_SET_ITEM(__pyx_t_2, 0+1, __pyx_v_return_shape);
+        __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_2, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 180, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_4);
+        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+      }
     }
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_v_dist_matrix_T = __pyx_t_1;
-    __pyx_t_1 = 0;
-
-    /* "algorithms/sm/shortest_paths.pyx":202
- *         dist_matrix_T = dist_matrix.T.tocsr()
- * 
- *         distances2 = np.asarray(dist_matrix_T.data,             # <<<<<<<<<<<<<<
- *                                 dtype=DTYPE, order='C')
- *         neighbors2 = np.asarray(dist_matrix_T.indices,
- */
-    __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 202, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_asarray); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 202, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_dist_matrix_T, __pyx_n_s_data); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 202, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 202, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_GIVEREF(__pyx_t_1);
-    PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
-    __pyx_t_1 = 0;
-
-    /* "algorithms/sm/shortest_paths.pyx":203
- * 
- *         distances2 = np.asarray(dist_matrix_T.data,
- *                                 dtype=DTYPE, order='C')             # <<<<<<<<<<<<<<
- *         neighbors2 = np.asarray(dist_matrix_T.indices,
- *                                 dtype=ITYPE, order='C')
- */
-    __pyx_t_1 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 203, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_DTYPE); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 203, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_4) < 0) __PYX_ERR(0, 203, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_order, __pyx_n_s_C) < 0) __PYX_ERR(0, 203, __pyx_L1_error)
-
-    /* "algorithms/sm/shortest_paths.pyx":202
- *         dist_matrix_T = dist_matrix.T.tocsr()
- * 
- *         distances2 = np.asarray(dist_matrix_T.data,             # <<<<<<<<<<<<<<
- *                                 dtype=DTYPE, order='C')
- *         neighbors2 = np.asarray(dist_matrix_T.indices,
- */
-    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 202, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (!(likely(((__pyx_t_4) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_4, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 202, __pyx_L1_error)
-    __pyx_v_distances2 = ((PyArrayObject *)__pyx_t_4);
+    __pyx_r = __pyx_t_4;
     __pyx_t_4 = 0;
-
-    /* "algorithms/sm/shortest_paths.pyx":204
- *         distances2 = np.asarray(dist_matrix_T.data,
- *                                 dtype=DTYPE, order='C')
- *         neighbors2 = np.asarray(dist_matrix_T.indices,             # <<<<<<<<<<<<<<
- *                                 dtype=ITYPE, order='C')
- *         indptr2 = np.asarray(dist_matrix_T.indptr,
- */
-    __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 204, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_asarray); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 204, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_dist_matrix_T, __pyx_n_s_indices); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 204, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 204, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_GIVEREF(__pyx_t_4);
-    PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_4);
-    __pyx_t_4 = 0;
-
-    /* "algorithms/sm/shortest_paths.pyx":205
- *                                 dtype=DTYPE, order='C')
- *         neighbors2 = np.asarray(dist_matrix_T.indices,
- *                                 dtype=ITYPE, order='C')             # <<<<<<<<<<<<<<
- *         indptr2 = np.asarray(dist_matrix_T.indptr,
- *                              dtype=ITYPE, order='C')
- */
-    __pyx_t_4 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 205, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_ITYPE); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 205, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_dtype, __pyx_t_3) < 0) __PYX_ERR(0, 205, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_order, __pyx_n_s_C) < 0) __PYX_ERR(0, 205, __pyx_L1_error)
-
-    /* "algorithms/sm/shortest_paths.pyx":204
- *         distances2 = np.asarray(dist_matrix_T.data,
- *                                 dtype=DTYPE, order='C')
- *         neighbors2 = np.asarray(dist_matrix_T.indices,             # <<<<<<<<<<<<<<
- *                                 dtype=ITYPE, order='C')
- *         indptr2 = np.asarray(dist_matrix_T.indptr,
- */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 204, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (!(likely(((__pyx_t_3) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_3, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 204, __pyx_L1_error)
-    __pyx_v_neighbors2 = ((PyArrayObject *)__pyx_t_3);
-    __pyx_t_3 = 0;
-
-    /* "algorithms/sm/shortest_paths.pyx":206
- *         neighbors2 = np.asarray(dist_matrix_T.indices,
- *                                 dtype=ITYPE, order='C')
- *         indptr2 = np.asarray(dist_matrix_T.indptr,             # <<<<<<<<<<<<<<
- *                              dtype=ITYPE, order='C')
- * 
- */
-    __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 206, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_asarray); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 206, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_dist_matrix_T, __pyx_n_s_indptr); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 206, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 206, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_GIVEREF(__pyx_t_3);
-    PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_3);
-    __pyx_t_3 = 0;
-
-    /* "algorithms/sm/shortest_paths.pyx":207
- *                                 dtype=ITYPE, order='C')
- *         indptr2 = np.asarray(dist_matrix_T.indptr,
- *                              dtype=ITYPE, order='C')             # <<<<<<<<<<<<<<
- * 
- *         for i from 0 <= i < N:
- */
-    __pyx_t_3 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 207, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_ITYPE); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 207, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_dtype, __pyx_t_1) < 0) __PYX_ERR(0, 207, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_order, __pyx_n_s_C) < 0) __PYX_ERR(0, 207, __pyx_L1_error)
-
-    /* "algorithms/sm/shortest_paths.pyx":206
- *         neighbors2 = np.asarray(dist_matrix_T.indices,
- *                                 dtype=ITYPE, order='C')
- *         indptr2 = np.asarray(dist_matrix_T.indptr,             # <<<<<<<<<<<<<<
- *                              dtype=ITYPE, order='C')
- * 
- */
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 206, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 206, __pyx_L1_error)
-    __pyx_v_indptr2 = ((PyArrayObject *)__pyx_t_1);
-    __pyx_t_1 = 0;
-
-    /* "algorithms/sm/shortest_paths.pyx":209
- *                              dtype=ITYPE, order='C')
- * 
- *         for i from 0 <= i < N:             # <<<<<<<<<<<<<<
- *             dijkstra_one_row(i, neighbors, distances, indptr,
- *                              neighbors2, distances2, indptr2,
- */
-    __pyx_t_8 = __pyx_v_N;
-    for (__pyx_v_i = 0; __pyx_v_i < __pyx_t_8; __pyx_v_i++) {
-
-      /* "algorithms/sm/shortest_paths.pyx":210
- * 
- *         for i from 0 <= i < N:
- *             dijkstra_one_row(i, neighbors, distances, indptr,             # <<<<<<<<<<<<<<
- *                              neighbors2, distances2, indptr2,
- *                              graph, &heap, nodes)
- */
-      __pyx_f_10algorithms_2sm_21sparse_shortest_paths_dijkstra_one_row(__pyx_v_i, ((PyArrayObject *)__pyx_v_neighbors), ((PyArrayObject *)__pyx_v_distances), ((PyArrayObject *)__pyx_v_indptr), ((PyArrayObject *)__pyx_v_neighbors2), ((PyArrayObject *)__pyx_v_distances2), ((PyArrayObject *)__pyx_v_indptr2), ((PyArrayObject *)__pyx_v_graph), (&__pyx_v_heap), __pyx_v_nodes);
-    }
+    goto __pyx_L0;
   }
-  __pyx_L6:;
 
-  /* "algorithms/sm/shortest_paths.pyx":214
- *                              graph, &heap, nodes)
+  /* "algorithms/sm/shortest_paths.pyx":33
+ *         Exception.__init__(self, message)
  * 
- *     free(nodes)             # <<<<<<<<<<<<<<
- * 
- *     return graph
- */
-  free(__pyx_v_nodes);
-
-  /* "algorithms/sm/shortest_paths.pyx":216
- *     free(nodes)
- * 
- *     return graph             # <<<<<<<<<<<<<<
- * 
- * 
- */
-  __Pyx_XDECREF(((PyObject *)__pyx_r));
-  __Pyx_INCREF(((PyObject *)__pyx_v_graph));
-  __pyx_r = ((PyArrayObject *)__pyx_v_graph);
-  goto __pyx_L0;
-
-  /* "algorithms/sm/shortest_paths.pyx":141
- * 
- * @cython.boundscheck(False)
- * cdef np.ndarray dijkstra(dist_matrix, source, target,             # <<<<<<<<<<<<<<
- *                          np.ndarray[DTYPE_t, ndim=2] graph,
- *                          int directed=0):
+ * def dijkstra(csgraph, directed=True, indices=None,             # <<<<<<<<<<<<<<
+ *              return_predecessors=False,
+ *              unweighted=False, limit=np.inf, target=None):
  */
 
   /* function exit code */
@@ -3616,32 +3755,1617 @@ static PyArrayObject *__pyx_f_10algorithms_2sm_21sparse_shortest_paths_dijkstra(
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
-  { PyObject *__pyx_type, *__pyx_value, *__pyx_tb;
-    __Pyx_PyThreadState_declare
-    __Pyx_PyThreadState_assign
-    __Pyx_ErrFetch(&__pyx_type, &__pyx_value, &__pyx_tb);
-    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_graph.rcbuffer->pybuffer);
-  __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("algorithms.sm.sparse_shortest_paths.dijkstra", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = 0;
-  goto __pyx_L2;
+  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_AddTraceback("algorithms.sm.shortest_paths.dijkstra", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
   __pyx_L0:;
-  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_graph.rcbuffer->pybuffer);
-  __pyx_L2:;
-  __Pyx_XDECREF((PyObject *)__pyx_v_distances);
-  __Pyx_XDECREF((PyObject *)__pyx_v_neighbors);
-  __Pyx_XDECREF((PyObject *)__pyx_v_indptr);
-  __Pyx_XDECREF((PyObject *)__pyx_v_distances2);
-  __Pyx_XDECREF((PyObject *)__pyx_v_neighbors2);
-  __Pyx_XDECREF((PyObject *)__pyx_v_indptr2);
-  __Pyx_XDECREF(__pyx_v_dist_matrix_T);
+  __Pyx_XDECREF(__pyx_v_N);
+  __Pyx_XDECREF(__pyx_v_return_shape);
   __Pyx_XDECREF(__pyx_v_dist_matrix);
-  __Pyx_XGIVEREF((PyObject *)__pyx_r);
+  __Pyx_XDECREF(__pyx_v_predecessor_matrix);
+  __Pyx_XDECREF(__pyx_v_csr_data);
+  __Pyx_XDECREF(__pyx_v_csgraphT);
+  __Pyx_XDECREF(__pyx_v_csrT_data);
+  __Pyx_XDECREF(__pyx_v_csgraph);
+  __Pyx_XDECREF(__pyx_v_indices);
+  __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "algorithms/sm/shortest_paths.pyx":236
+/* "algorithms/sm/shortest_paths.pyx":183
+ * 
+ * 
+ * cdef _dijkstra_directed(             # <<<<<<<<<<<<<<
+ *             np.ndarray[ITYPE_t, ndim=1, mode='c'] source_indices,
+ *             np.ndarray[DTYPE_t, ndim=1, mode='c'] csr_weights,
+ */
+
+static PyObject *__pyx_f_10algorithms_2sm_14shortest_paths__dijkstra_directed(PyArrayObject *__pyx_v_source_indices, PyArrayObject *__pyx_v_csr_weights, PyArrayObject *__pyx_v_csr_indices, PyArrayObject *__pyx_v_csr_indptr, PyArrayObject *__pyx_v_dist_matrix, PyArrayObject *__pyx_v_pred, __pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t __pyx_v_limit, __pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t __pyx_v_target) {
+  unsigned int __pyx_v_Nind;
+  unsigned int __pyx_v_N;
+  unsigned int __pyx_v_i;
+  unsigned int __pyx_v_k;
+  unsigned int __pyx_v_j_source;
+  unsigned int __pyx_v_j_current;
+  __pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t __pyx_v_j;
+  __pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t __pyx_v_next_val;
+  int __pyx_v_return_pred;
+  struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciHeap __pyx_v_heap;
+  struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_v_v;
+  struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_v_current_node;
+  struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_v_nodes;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_csr_indices;
+  __Pyx_Buffer __pyx_pybuffer_csr_indices;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_csr_indptr;
+  __Pyx_Buffer __pyx_pybuffer_csr_indptr;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_csr_weights;
+  __Pyx_Buffer __pyx_pybuffer_csr_weights;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_dist_matrix;
+  __Pyx_Buffer __pyx_pybuffer_dist_matrix;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_pred;
+  __Pyx_Buffer __pyx_pybuffer_pred;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_source_indices;
+  __Pyx_Buffer __pyx_pybuffer_source_indices;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  int __pyx_t_3;
+  unsigned int __pyx_t_4;
+  unsigned int __pyx_t_5;
+  unsigned int __pyx_t_6;
+  size_t __pyx_t_7;
+  unsigned int __pyx_t_8;
+  unsigned int __pyx_t_9;
+  unsigned int __pyx_t_10;
+  size_t __pyx_t_11;
+  size_t __pyx_t_12;
+  int __pyx_t_13;
+  __pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t __pyx_t_14;
+  size_t __pyx_t_15;
+  size_t __pyx_t_16;
+  Py_ssize_t __pyx_t_17;
+  __pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t __pyx_t_18;
+  size_t __pyx_t_19;
+  __pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t __pyx_t_20;
+  __pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t __pyx_t_21;
+  Py_ssize_t __pyx_t_22;
+  Py_ssize_t __pyx_t_23;
+  size_t __pyx_t_24;
+  size_t __pyx_t_25;
+  size_t __pyx_t_26;
+  size_t __pyx_t_27;
+  size_t __pyx_t_28;
+  size_t __pyx_t_29;
+  __Pyx_RefNannySetupContext("_dijkstra_directed", 0);
+  __pyx_pybuffer_source_indices.pybuffer.buf = NULL;
+  __pyx_pybuffer_source_indices.refcount = 0;
+  __pyx_pybuffernd_source_indices.data = NULL;
+  __pyx_pybuffernd_source_indices.rcbuffer = &__pyx_pybuffer_source_indices;
+  __pyx_pybuffer_csr_weights.pybuffer.buf = NULL;
+  __pyx_pybuffer_csr_weights.refcount = 0;
+  __pyx_pybuffernd_csr_weights.data = NULL;
+  __pyx_pybuffernd_csr_weights.rcbuffer = &__pyx_pybuffer_csr_weights;
+  __pyx_pybuffer_csr_indices.pybuffer.buf = NULL;
+  __pyx_pybuffer_csr_indices.refcount = 0;
+  __pyx_pybuffernd_csr_indices.data = NULL;
+  __pyx_pybuffernd_csr_indices.rcbuffer = &__pyx_pybuffer_csr_indices;
+  __pyx_pybuffer_csr_indptr.pybuffer.buf = NULL;
+  __pyx_pybuffer_csr_indptr.refcount = 0;
+  __pyx_pybuffernd_csr_indptr.data = NULL;
+  __pyx_pybuffernd_csr_indptr.rcbuffer = &__pyx_pybuffer_csr_indptr;
+  __pyx_pybuffer_dist_matrix.pybuffer.buf = NULL;
+  __pyx_pybuffer_dist_matrix.refcount = 0;
+  __pyx_pybuffernd_dist_matrix.data = NULL;
+  __pyx_pybuffernd_dist_matrix.rcbuffer = &__pyx_pybuffer_dist_matrix;
+  __pyx_pybuffer_pred.pybuffer.buf = NULL;
+  __pyx_pybuffer_pred.refcount = 0;
+  __pyx_pybuffernd_pred.data = NULL;
+  __pyx_pybuffernd_pred.rcbuffer = &__pyx_pybuffer_pred;
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_source_indices.rcbuffer->pybuffer, (PyObject*)__pyx_v_source_indices, &__Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 183, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_source_indices.diminfo[0].strides = __pyx_pybuffernd_source_indices.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_source_indices.diminfo[0].shape = __pyx_pybuffernd_source_indices.rcbuffer->pybuffer.shape[0];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_csr_weights.rcbuffer->pybuffer, (PyObject*)__pyx_v_csr_weights, &__Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 183, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_csr_weights.diminfo[0].strides = __pyx_pybuffernd_csr_weights.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_csr_weights.diminfo[0].shape = __pyx_pybuffernd_csr_weights.rcbuffer->pybuffer.shape[0];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_csr_indices.rcbuffer->pybuffer, (PyObject*)__pyx_v_csr_indices, &__Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 183, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_csr_indices.diminfo[0].strides = __pyx_pybuffernd_csr_indices.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_csr_indices.diminfo[0].shape = __pyx_pybuffernd_csr_indices.rcbuffer->pybuffer.shape[0];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_csr_indptr.rcbuffer->pybuffer, (PyObject*)__pyx_v_csr_indptr, &__Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 183, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_csr_indptr.diminfo[0].strides = __pyx_pybuffernd_csr_indptr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_csr_indptr.diminfo[0].shape = __pyx_pybuffernd_csr_indptr.rcbuffer->pybuffer.shape[0];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_dist_matrix.rcbuffer->pybuffer, (PyObject*)__pyx_v_dist_matrix, &__Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS| PyBUF_WRITABLE, 2, 0, __pyx_stack) == -1)) __PYX_ERR(0, 183, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_dist_matrix.diminfo[0].strides = __pyx_pybuffernd_dist_matrix.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_dist_matrix.diminfo[0].shape = __pyx_pybuffernd_dist_matrix.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_dist_matrix.diminfo[1].strides = __pyx_pybuffernd_dist_matrix.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_dist_matrix.diminfo[1].shape = __pyx_pybuffernd_dist_matrix.rcbuffer->pybuffer.shape[1];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_pred.rcbuffer->pybuffer, (PyObject*)__pyx_v_pred, &__Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS| PyBUF_WRITABLE, 2, 0, __pyx_stack) == -1)) __PYX_ERR(0, 183, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_pred.diminfo[0].strides = __pyx_pybuffernd_pred.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_pred.diminfo[0].shape = __pyx_pybuffernd_pred.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_pred.diminfo[1].strides = __pyx_pybuffernd_pred.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_pred.diminfo[1].shape = __pyx_pybuffernd_pred.rcbuffer->pybuffer.shape[1];
+
+  /* "algorithms/sm/shortest_paths.pyx":192
+ *             DTYPE_t limit,
+ *             ITYPE_t target):
+ *     cdef unsigned int Nind = dist_matrix.shape[0]             # <<<<<<<<<<<<<<
+ *     cdef unsigned int N = dist_matrix.shape[1]
+ *     cdef unsigned int i, k, j_source, j_current
+ */
+  __pyx_v_Nind = (__pyx_v_dist_matrix->dimensions[0]);
+
+  /* "algorithms/sm/shortest_paths.pyx":193
+ *             ITYPE_t target):
+ *     cdef unsigned int Nind = dist_matrix.shape[0]
+ *     cdef unsigned int N = dist_matrix.shape[1]             # <<<<<<<<<<<<<<
+ *     cdef unsigned int i, k, j_source, j_current
+ *     cdef ITYPE_t j
+ */
+  __pyx_v_N = (__pyx_v_dist_matrix->dimensions[1]);
+
+  /* "algorithms/sm/shortest_paths.pyx":199
+ *     cdef DTYPE_t next_val
+ * 
+ *     cdef int return_pred = (pred.size > 0)             # <<<<<<<<<<<<<<
+ * 
+ *     cdef FibonacciHeap heap
+ */
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_pred), __pyx_n_s_size); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 199, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyObject_RichCompare(__pyx_t_1, __pyx_int_0, Py_GT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 199, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 199, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_return_pred = __pyx_t_3;
+
+  /* "algorithms/sm/shortest_paths.pyx":204
+ *     cdef FibonacciNode *v
+ *     cdef FibonacciNode *current_node
+ *     cdef FibonacciNode* nodes = <FibonacciNode*> malloc(N *             # <<<<<<<<<<<<<<
+ *                                                         sizeof(FibonacciNode))
+ * 
+ */
+  __pyx_v_nodes = ((struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *)malloc((__pyx_v_N * (sizeof(struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode)))));
+
+  /* "algorithms/sm/shortest_paths.pyx":207
+ *                                                         sizeof(FibonacciNode))
+ * 
+ *     for i in range(Nind):             # <<<<<<<<<<<<<<
+ *         j_source = source_indices[i]
+ * 
+ */
+  __pyx_t_4 = __pyx_v_Nind;
+  __pyx_t_5 = __pyx_t_4;
+  for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
+    __pyx_v_i = __pyx_t_6;
+
+    /* "algorithms/sm/shortest_paths.pyx":208
+ * 
+ *     for i in range(Nind):
+ *         j_source = source_indices[i]             # <<<<<<<<<<<<<<
+ * 
+ *         for k in range(N):
+ */
+    __pyx_t_7 = __pyx_v_i;
+    __pyx_t_3 = -1;
+    if (unlikely(__pyx_t_7 >= (size_t)__pyx_pybuffernd_source_indices.diminfo[0].shape)) __pyx_t_3 = 0;
+    if (unlikely(__pyx_t_3 != -1)) {
+      __Pyx_RaiseBufferIndexError(__pyx_t_3);
+      __PYX_ERR(0, 208, __pyx_L1_error)
+    }
+    __pyx_v_j_source = (*__Pyx_BufPtrCContig1d(__pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t *, __pyx_pybuffernd_source_indices.rcbuffer->pybuffer.buf, __pyx_t_7, __pyx_pybuffernd_source_indices.diminfo[0].strides));
+
+    /* "algorithms/sm/shortest_paths.pyx":210
+ *         j_source = source_indices[i]
+ * 
+ *         for k in range(N):             # <<<<<<<<<<<<<<
+ *             initialize_node(&nodes[k], k)
+ * 
+ */
+    __pyx_t_8 = __pyx_v_N;
+    __pyx_t_9 = __pyx_t_8;
+    for (__pyx_t_10 = 0; __pyx_t_10 < __pyx_t_9; __pyx_t_10+=1) {
+      __pyx_v_k = __pyx_t_10;
+
+      /* "algorithms/sm/shortest_paths.pyx":211
+ * 
+ *         for k in range(N):
+ *             initialize_node(&nodes[k], k)             # <<<<<<<<<<<<<<
+ * 
+ *         dist_matrix[i, j_source] = 0
+ */
+      __pyx_f_10algorithms_2sm_14shortest_paths_initialize_node((&(__pyx_v_nodes[__pyx_v_k])), __pyx_v_k, NULL);
+    }
+
+    /* "algorithms/sm/shortest_paths.pyx":213
+ *             initialize_node(&nodes[k], k)
+ * 
+ *         dist_matrix[i, j_source] = 0             # <<<<<<<<<<<<<<
+ *         heap.min_node = NULL
+ *         insert_node(&heap, &nodes[j_source])
+ */
+    __pyx_t_11 = __pyx_v_i;
+    __pyx_t_12 = __pyx_v_j_source;
+    __pyx_t_3 = -1;
+    if (unlikely(__pyx_t_11 >= (size_t)__pyx_pybuffernd_dist_matrix.diminfo[0].shape)) __pyx_t_3 = 0;
+    if (unlikely(__pyx_t_12 >= (size_t)__pyx_pybuffernd_dist_matrix.diminfo[1].shape)) __pyx_t_3 = 1;
+    if (unlikely(__pyx_t_3 != -1)) {
+      __Pyx_RaiseBufferIndexError(__pyx_t_3);
+      __PYX_ERR(0, 213, __pyx_L1_error)
+    }
+    *__Pyx_BufPtrCContig2d(__pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t *, __pyx_pybuffernd_dist_matrix.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_dist_matrix.diminfo[0].strides, __pyx_t_12, __pyx_pybuffernd_dist_matrix.diminfo[1].strides) = 0.0;
+
+    /* "algorithms/sm/shortest_paths.pyx":214
+ * 
+ *         dist_matrix[i, j_source] = 0
+ *         heap.min_node = NULL             # <<<<<<<<<<<<<<
+ *         insert_node(&heap, &nodes[j_source])
+ * 
+ */
+    __pyx_v_heap.min_node = NULL;
+
+    /* "algorithms/sm/shortest_paths.pyx":215
+ *         dist_matrix[i, j_source] = 0
+ *         heap.min_node = NULL
+ *         insert_node(&heap, &nodes[j_source])             # <<<<<<<<<<<<<<
+ * 
+ *         while heap.min_node:
+ */
+    __pyx_f_10algorithms_2sm_14shortest_paths_insert_node((&__pyx_v_heap), (&(__pyx_v_nodes[__pyx_v_j_source])));
+
+    /* "algorithms/sm/shortest_paths.pyx":217
+ *         insert_node(&heap, &nodes[j_source])
+ * 
+ *         while heap.min_node:             # <<<<<<<<<<<<<<
+ *             v = remove_min(&heap)
+ *             v.state = SCANNED
+ */
+    while (1) {
+      __pyx_t_13 = (__pyx_v_heap.min_node != 0);
+      if (!__pyx_t_13) break;
+
+      /* "algorithms/sm/shortest_paths.pyx":218
+ * 
+ *         while heap.min_node:
+ *             v = remove_min(&heap)             # <<<<<<<<<<<<<<
+ *             v.state = SCANNED
+ *             # Early stop on reaching target
+ */
+      __pyx_v_v = __pyx_f_10algorithms_2sm_14shortest_paths_remove_min((&__pyx_v_heap));
+
+      /* "algorithms/sm/shortest_paths.pyx":219
+ *         while heap.min_node:
+ *             v = remove_min(&heap)
+ *             v.state = SCANNED             # <<<<<<<<<<<<<<
+ *             # Early stop on reaching target
+ *             if v.index == target:
+ */
+      __pyx_v_v->state = __pyx_e_10algorithms_2sm_14shortest_paths_SCANNED;
+
+      /* "algorithms/sm/shortest_paths.pyx":221
+ *             v.state = SCANNED
+ *             # Early stop on reaching target
+ *             if v.index == target:             # <<<<<<<<<<<<<<
+ *                 dist_matrix[i, v.index] = v.val
+ *                 break
+ */
+      __pyx_t_13 = ((__pyx_v_v->index == __pyx_v_target) != 0);
+      if (__pyx_t_13) {
+
+        /* "algorithms/sm/shortest_paths.pyx":222
+ *             # Early stop on reaching target
+ *             if v.index == target:
+ *                 dist_matrix[i, v.index] = v.val             # <<<<<<<<<<<<<<
+ *                 break
+ *             for j in range(csr_indptr[v.index], csr_indptr[v.index + 1]):
+ */
+        __pyx_t_14 = __pyx_v_v->val;
+        __pyx_t_15 = __pyx_v_i;
+        __pyx_t_16 = __pyx_v_v->index;
+        __pyx_t_3 = -1;
+        if (unlikely(__pyx_t_15 >= (size_t)__pyx_pybuffernd_dist_matrix.diminfo[0].shape)) __pyx_t_3 = 0;
+        if (unlikely(__pyx_t_16 >= (size_t)__pyx_pybuffernd_dist_matrix.diminfo[1].shape)) __pyx_t_3 = 1;
+        if (unlikely(__pyx_t_3 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_3);
+          __PYX_ERR(0, 222, __pyx_L1_error)
+        }
+        *__Pyx_BufPtrCContig2d(__pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t *, __pyx_pybuffernd_dist_matrix.rcbuffer->pybuffer.buf, __pyx_t_15, __pyx_pybuffernd_dist_matrix.diminfo[0].strides, __pyx_t_16, __pyx_pybuffernd_dist_matrix.diminfo[1].strides) = __pyx_t_14;
+
+        /* "algorithms/sm/shortest_paths.pyx":223
+ *             if v.index == target:
+ *                 dist_matrix[i, v.index] = v.val
+ *                 break             # <<<<<<<<<<<<<<
+ *             for j in range(csr_indptr[v.index], csr_indptr[v.index + 1]):
+ *                 j_current = csr_indices[j]
+ */
+        goto __pyx_L8_break;
+
+        /* "algorithms/sm/shortest_paths.pyx":221
+ *             v.state = SCANNED
+ *             # Early stop on reaching target
+ *             if v.index == target:             # <<<<<<<<<<<<<<
+ *                 dist_matrix[i, v.index] = v.val
+ *                 break
+ */
+      }
+
+      /* "algorithms/sm/shortest_paths.pyx":224
+ *                 dist_matrix[i, v.index] = v.val
+ *                 break
+ *             for j in range(csr_indptr[v.index], csr_indptr[v.index + 1]):             # <<<<<<<<<<<<<<
+ *                 j_current = csr_indices[j]
+ *                 current_node = &nodes[j_current]
+ */
+      __pyx_t_17 = (__pyx_v_v->index + 1);
+      __pyx_t_3 = -1;
+      if (__pyx_t_17 < 0) {
+        __pyx_t_17 += __pyx_pybuffernd_csr_indptr.diminfo[0].shape;
+        if (unlikely(__pyx_t_17 < 0)) __pyx_t_3 = 0;
+      } else if (unlikely(__pyx_t_17 >= __pyx_pybuffernd_csr_indptr.diminfo[0].shape)) __pyx_t_3 = 0;
+      if (unlikely(__pyx_t_3 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_3);
+        __PYX_ERR(0, 224, __pyx_L1_error)
+      }
+      __pyx_t_18 = (*__Pyx_BufPtrCContig1d(__pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t *, __pyx_pybuffernd_csr_indptr.rcbuffer->pybuffer.buf, __pyx_t_17, __pyx_pybuffernd_csr_indptr.diminfo[0].strides));
+      __pyx_t_19 = __pyx_v_v->index;
+      __pyx_t_3 = -1;
+      if (unlikely(__pyx_t_19 >= (size_t)__pyx_pybuffernd_csr_indptr.diminfo[0].shape)) __pyx_t_3 = 0;
+      if (unlikely(__pyx_t_3 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_3);
+        __PYX_ERR(0, 224, __pyx_L1_error)
+      }
+      __pyx_t_20 = __pyx_t_18;
+      for (__pyx_t_21 = (*__Pyx_BufPtrCContig1d(__pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t *, __pyx_pybuffernd_csr_indptr.rcbuffer->pybuffer.buf, __pyx_t_19, __pyx_pybuffernd_csr_indptr.diminfo[0].strides)); __pyx_t_21 < __pyx_t_20; __pyx_t_21+=1) {
+        __pyx_v_j = __pyx_t_21;
+
+        /* "algorithms/sm/shortest_paths.pyx":225
+ *                 break
+ *             for j in range(csr_indptr[v.index], csr_indptr[v.index + 1]):
+ *                 j_current = csr_indices[j]             # <<<<<<<<<<<<<<
+ *                 current_node = &nodes[j_current]
+ *                 if current_node.state != SCANNED:
+ */
+        __pyx_t_22 = __pyx_v_j;
+        __pyx_t_3 = -1;
+        if (__pyx_t_22 < 0) {
+          __pyx_t_22 += __pyx_pybuffernd_csr_indices.diminfo[0].shape;
+          if (unlikely(__pyx_t_22 < 0)) __pyx_t_3 = 0;
+        } else if (unlikely(__pyx_t_22 >= __pyx_pybuffernd_csr_indices.diminfo[0].shape)) __pyx_t_3 = 0;
+        if (unlikely(__pyx_t_3 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_3);
+          __PYX_ERR(0, 225, __pyx_L1_error)
+        }
+        __pyx_v_j_current = (*__Pyx_BufPtrCContig1d(__pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t *, __pyx_pybuffernd_csr_indices.rcbuffer->pybuffer.buf, __pyx_t_22, __pyx_pybuffernd_csr_indices.diminfo[0].strides));
+
+        /* "algorithms/sm/shortest_paths.pyx":226
+ *             for j in range(csr_indptr[v.index], csr_indptr[v.index + 1]):
+ *                 j_current = csr_indices[j]
+ *                 current_node = &nodes[j_current]             # <<<<<<<<<<<<<<
+ *                 if current_node.state != SCANNED:
+ *                     next_val = v.val + csr_weights[j]
+ */
+        __pyx_v_current_node = (&(__pyx_v_nodes[__pyx_v_j_current]));
+
+        /* "algorithms/sm/shortest_paths.pyx":227
+ *                 j_current = csr_indices[j]
+ *                 current_node = &nodes[j_current]
+ *                 if current_node.state != SCANNED:             # <<<<<<<<<<<<<<
+ *                     next_val = v.val + csr_weights[j]
+ *                     if next_val <= limit:
+ */
+        __pyx_t_13 = ((__pyx_v_current_node->state != __pyx_e_10algorithms_2sm_14shortest_paths_SCANNED) != 0);
+        if (__pyx_t_13) {
+
+          /* "algorithms/sm/shortest_paths.pyx":228
+ *                 current_node = &nodes[j_current]
+ *                 if current_node.state != SCANNED:
+ *                     next_val = v.val + csr_weights[j]             # <<<<<<<<<<<<<<
+ *                     if next_val <= limit:
+ *                         if current_node.state == NOT_IN_HEAP:
+ */
+          __pyx_t_23 = __pyx_v_j;
+          __pyx_t_3 = -1;
+          if (__pyx_t_23 < 0) {
+            __pyx_t_23 += __pyx_pybuffernd_csr_weights.diminfo[0].shape;
+            if (unlikely(__pyx_t_23 < 0)) __pyx_t_3 = 0;
+          } else if (unlikely(__pyx_t_23 >= __pyx_pybuffernd_csr_weights.diminfo[0].shape)) __pyx_t_3 = 0;
+          if (unlikely(__pyx_t_3 != -1)) {
+            __Pyx_RaiseBufferIndexError(__pyx_t_3);
+            __PYX_ERR(0, 228, __pyx_L1_error)
+          }
+          __pyx_v_next_val = (__pyx_v_v->val + (*__Pyx_BufPtrCContig1d(__pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t *, __pyx_pybuffernd_csr_weights.rcbuffer->pybuffer.buf, __pyx_t_23, __pyx_pybuffernd_csr_weights.diminfo[0].strides)));
+
+          /* "algorithms/sm/shortest_paths.pyx":229
+ *                 if current_node.state != SCANNED:
+ *                     next_val = v.val + csr_weights[j]
+ *                     if next_val <= limit:             # <<<<<<<<<<<<<<
+ *                         if current_node.state == NOT_IN_HEAP:
+ *                             current_node.state = IN_HEAP
+ */
+          __pyx_t_13 = ((__pyx_v_next_val <= __pyx_v_limit) != 0);
+          if (__pyx_t_13) {
+
+            /* "algorithms/sm/shortest_paths.pyx":230
+ *                     next_val = v.val + csr_weights[j]
+ *                     if next_val <= limit:
+ *                         if current_node.state == NOT_IN_HEAP:             # <<<<<<<<<<<<<<
+ *                             current_node.state = IN_HEAP
+ *                             current_node.val = next_val
+ */
+            __pyx_t_13 = ((__pyx_v_current_node->state == __pyx_e_10algorithms_2sm_14shortest_paths_NOT_IN_HEAP) != 0);
+            if (__pyx_t_13) {
+
+              /* "algorithms/sm/shortest_paths.pyx":231
+ *                     if next_val <= limit:
+ *                         if current_node.state == NOT_IN_HEAP:
+ *                             current_node.state = IN_HEAP             # <<<<<<<<<<<<<<
+ *                             current_node.val = next_val
+ *                             insert_node(&heap, current_node)
+ */
+              __pyx_v_current_node->state = __pyx_e_10algorithms_2sm_14shortest_paths_IN_HEAP;
+
+              /* "algorithms/sm/shortest_paths.pyx":232
+ *                         if current_node.state == NOT_IN_HEAP:
+ *                             current_node.state = IN_HEAP
+ *                             current_node.val = next_val             # <<<<<<<<<<<<<<
+ *                             insert_node(&heap, current_node)
+ *                             if return_pred:
+ */
+              __pyx_v_current_node->val = __pyx_v_next_val;
+
+              /* "algorithms/sm/shortest_paths.pyx":233
+ *                             current_node.state = IN_HEAP
+ *                             current_node.val = next_val
+ *                             insert_node(&heap, current_node)             # <<<<<<<<<<<<<<
+ *                             if return_pred:
+ *                                 pred[i, j_current] = v.index
+ */
+              __pyx_f_10algorithms_2sm_14shortest_paths_insert_node((&__pyx_v_heap), __pyx_v_current_node);
+
+              /* "algorithms/sm/shortest_paths.pyx":234
+ *                             current_node.val = next_val
+ *                             insert_node(&heap, current_node)
+ *                             if return_pred:             # <<<<<<<<<<<<<<
+ *                                 pred[i, j_current] = v.index
+ *                         elif current_node.val > next_val:
+ */
+              __pyx_t_13 = (__pyx_v_return_pred != 0);
+              if (__pyx_t_13) {
+
+                /* "algorithms/sm/shortest_paths.pyx":235
+ *                             insert_node(&heap, current_node)
+ *                             if return_pred:
+ *                                 pred[i, j_current] = v.index             # <<<<<<<<<<<<<<
+ *                         elif current_node.val > next_val:
+ *                             decrease_val(&heap, current_node,
+ */
+                __pyx_t_8 = __pyx_v_v->index;
+                __pyx_t_24 = __pyx_v_i;
+                __pyx_t_25 = __pyx_v_j_current;
+                __pyx_t_3 = -1;
+                if (unlikely(__pyx_t_24 >= (size_t)__pyx_pybuffernd_pred.diminfo[0].shape)) __pyx_t_3 = 0;
+                if (unlikely(__pyx_t_25 >= (size_t)__pyx_pybuffernd_pred.diminfo[1].shape)) __pyx_t_3 = 1;
+                if (unlikely(__pyx_t_3 != -1)) {
+                  __Pyx_RaiseBufferIndexError(__pyx_t_3);
+                  __PYX_ERR(0, 235, __pyx_L1_error)
+                }
+                *__Pyx_BufPtrCContig2d(__pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t *, __pyx_pybuffernd_pred.rcbuffer->pybuffer.buf, __pyx_t_24, __pyx_pybuffernd_pred.diminfo[0].strides, __pyx_t_25, __pyx_pybuffernd_pred.diminfo[1].strides) = __pyx_t_8;
+
+                /* "algorithms/sm/shortest_paths.pyx":234
+ *                             current_node.val = next_val
+ *                             insert_node(&heap, current_node)
+ *                             if return_pred:             # <<<<<<<<<<<<<<
+ *                                 pred[i, j_current] = v.index
+ *                         elif current_node.val > next_val:
+ */
+              }
+
+              /* "algorithms/sm/shortest_paths.pyx":230
+ *                     next_val = v.val + csr_weights[j]
+ *                     if next_val <= limit:
+ *                         if current_node.state == NOT_IN_HEAP:             # <<<<<<<<<<<<<<
+ *                             current_node.state = IN_HEAP
+ *                             current_node.val = next_val
+ */
+              goto __pyx_L14;
+            }
+
+            /* "algorithms/sm/shortest_paths.pyx":236
+ *                             if return_pred:
+ *                                 pred[i, j_current] = v.index
+ *                         elif current_node.val > next_val:             # <<<<<<<<<<<<<<
+ *                             decrease_val(&heap, current_node,
+ *                                          next_val)
+ */
+            __pyx_t_13 = ((__pyx_v_current_node->val > __pyx_v_next_val) != 0);
+            if (__pyx_t_13) {
+
+              /* "algorithms/sm/shortest_paths.pyx":237
+ *                                 pred[i, j_current] = v.index
+ *                         elif current_node.val > next_val:
+ *                             decrease_val(&heap, current_node,             # <<<<<<<<<<<<<<
+ *                                          next_val)
+ *                             if return_pred:
+ */
+              __pyx_f_10algorithms_2sm_14shortest_paths_decrease_val((&__pyx_v_heap), __pyx_v_current_node, __pyx_v_next_val);
+
+              /* "algorithms/sm/shortest_paths.pyx":239
+ *                             decrease_val(&heap, current_node,
+ *                                          next_val)
+ *                             if return_pred:             # <<<<<<<<<<<<<<
+ *                                 pred[i, j_current] = v.index
+ * 
+ */
+              __pyx_t_13 = (__pyx_v_return_pred != 0);
+              if (__pyx_t_13) {
+
+                /* "algorithms/sm/shortest_paths.pyx":240
+ *                                          next_val)
+ *                             if return_pred:
+ *                                 pred[i, j_current] = v.index             # <<<<<<<<<<<<<<
+ * 
+ *             #v has now been scanned: add the distance to the results
+ */
+                __pyx_t_8 = __pyx_v_v->index;
+                __pyx_t_26 = __pyx_v_i;
+                __pyx_t_27 = __pyx_v_j_current;
+                __pyx_t_3 = -1;
+                if (unlikely(__pyx_t_26 >= (size_t)__pyx_pybuffernd_pred.diminfo[0].shape)) __pyx_t_3 = 0;
+                if (unlikely(__pyx_t_27 >= (size_t)__pyx_pybuffernd_pred.diminfo[1].shape)) __pyx_t_3 = 1;
+                if (unlikely(__pyx_t_3 != -1)) {
+                  __Pyx_RaiseBufferIndexError(__pyx_t_3);
+                  __PYX_ERR(0, 240, __pyx_L1_error)
+                }
+                *__Pyx_BufPtrCContig2d(__pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t *, __pyx_pybuffernd_pred.rcbuffer->pybuffer.buf, __pyx_t_26, __pyx_pybuffernd_pred.diminfo[0].strides, __pyx_t_27, __pyx_pybuffernd_pred.diminfo[1].strides) = __pyx_t_8;
+
+                /* "algorithms/sm/shortest_paths.pyx":239
+ *                             decrease_val(&heap, current_node,
+ *                                          next_val)
+ *                             if return_pred:             # <<<<<<<<<<<<<<
+ *                                 pred[i, j_current] = v.index
+ * 
+ */
+              }
+
+              /* "algorithms/sm/shortest_paths.pyx":236
+ *                             if return_pred:
+ *                                 pred[i, j_current] = v.index
+ *                         elif current_node.val > next_val:             # <<<<<<<<<<<<<<
+ *                             decrease_val(&heap, current_node,
+ *                                          next_val)
+ */
+            }
+            __pyx_L14:;
+
+            /* "algorithms/sm/shortest_paths.pyx":229
+ *                 if current_node.state != SCANNED:
+ *                     next_val = v.val + csr_weights[j]
+ *                     if next_val <= limit:             # <<<<<<<<<<<<<<
+ *                         if current_node.state == NOT_IN_HEAP:
+ *                             current_node.state = IN_HEAP
+ */
+          }
+
+          /* "algorithms/sm/shortest_paths.pyx":227
+ *                 j_current = csr_indices[j]
+ *                 current_node = &nodes[j_current]
+ *                 if current_node.state != SCANNED:             # <<<<<<<<<<<<<<
+ *                     next_val = v.val + csr_weights[j]
+ *                     if next_val <= limit:
+ */
+        }
+      }
+
+      /* "algorithms/sm/shortest_paths.pyx":243
+ * 
+ *             #v has now been scanned: add the distance to the results
+ *             dist_matrix[i, v.index] = v.val             # <<<<<<<<<<<<<<
+ * 
+ *     free(nodes)
+ */
+      __pyx_t_14 = __pyx_v_v->val;
+      __pyx_t_28 = __pyx_v_i;
+      __pyx_t_29 = __pyx_v_v->index;
+      __pyx_t_3 = -1;
+      if (unlikely(__pyx_t_28 >= (size_t)__pyx_pybuffernd_dist_matrix.diminfo[0].shape)) __pyx_t_3 = 0;
+      if (unlikely(__pyx_t_29 >= (size_t)__pyx_pybuffernd_dist_matrix.diminfo[1].shape)) __pyx_t_3 = 1;
+      if (unlikely(__pyx_t_3 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_3);
+        __PYX_ERR(0, 243, __pyx_L1_error)
+      }
+      *__Pyx_BufPtrCContig2d(__pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t *, __pyx_pybuffernd_dist_matrix.rcbuffer->pybuffer.buf, __pyx_t_28, __pyx_pybuffernd_dist_matrix.diminfo[0].strides, __pyx_t_29, __pyx_pybuffernd_dist_matrix.diminfo[1].strides) = __pyx_t_14;
+    }
+    __pyx_L8_break:;
+  }
+
+  /* "algorithms/sm/shortest_paths.pyx":245
+ *             dist_matrix[i, v.index] = v.val
+ * 
+ *     free(nodes)             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+  free(__pyx_v_nodes);
+
+  /* "algorithms/sm/shortest_paths.pyx":183
+ * 
+ * 
+ * cdef _dijkstra_directed(             # <<<<<<<<<<<<<<
+ *             np.ndarray[ITYPE_t, ndim=1, mode='c'] source_indices,
+ *             np.ndarray[DTYPE_t, ndim=1, mode='c'] csr_weights,
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  { PyObject *__pyx_type, *__pyx_value, *__pyx_tb;
+    __Pyx_PyThreadState_declare
+    __Pyx_PyThreadState_assign
+    __Pyx_ErrFetch(&__pyx_type, &__pyx_value, &__pyx_tb);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_csr_indices.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_csr_indptr.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_csr_weights.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_dist_matrix.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_pred.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_source_indices.rcbuffer->pybuffer);
+  __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
+  __Pyx_AddTraceback("algorithms.sm.shortest_paths._dijkstra_directed", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = 0;
+  goto __pyx_L2;
+  __pyx_L0:;
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_csr_indices.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_csr_indptr.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_csr_weights.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_dist_matrix.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_pred.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_source_indices.rcbuffer->pybuffer);
+  __pyx_L2:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "algorithms/sm/shortest_paths.pyx":248
+ * 
+ * 
+ * cdef _dijkstra_undirected(             # <<<<<<<<<<<<<<
+ *             np.ndarray[ITYPE_t, ndim=1, mode='c'] source_indices,
+ *             np.ndarray[DTYPE_t, ndim=1, mode='c'] csr_weights,
+ */
+
+static PyObject *__pyx_f_10algorithms_2sm_14shortest_paths__dijkstra_undirected(PyArrayObject *__pyx_v_source_indices, PyArrayObject *__pyx_v_csr_weights, PyArrayObject *__pyx_v_csr_indices, PyArrayObject *__pyx_v_csr_indptr, PyArrayObject *__pyx_v_csrT_weights, PyArrayObject *__pyx_v_csrT_indices, PyArrayObject *__pyx_v_csrT_indptr, PyArrayObject *__pyx_v_dist_matrix, PyArrayObject *__pyx_v_pred, __pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t __pyx_v_limit) {
+  unsigned int __pyx_v_Nind;
+  unsigned int __pyx_v_N;
+  unsigned int __pyx_v_i;
+  unsigned int __pyx_v_k;
+  unsigned int __pyx_v_j_source;
+  unsigned int __pyx_v_j_current;
+  __pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t __pyx_v_j;
+  __pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t __pyx_v_next_val;
+  int __pyx_v_return_pred;
+  struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciHeap __pyx_v_heap;
+  struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_v_v;
+  struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_v_current_node;
+  struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_v_nodes;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_csrT_indices;
+  __Pyx_Buffer __pyx_pybuffer_csrT_indices;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_csrT_indptr;
+  __Pyx_Buffer __pyx_pybuffer_csrT_indptr;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_csrT_weights;
+  __Pyx_Buffer __pyx_pybuffer_csrT_weights;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_csr_indices;
+  __Pyx_Buffer __pyx_pybuffer_csr_indices;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_csr_indptr;
+  __Pyx_Buffer __pyx_pybuffer_csr_indptr;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_csr_weights;
+  __Pyx_Buffer __pyx_pybuffer_csr_weights;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_dist_matrix;
+  __Pyx_Buffer __pyx_pybuffer_dist_matrix;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_pred;
+  __Pyx_Buffer __pyx_pybuffer_pred;
+  __Pyx_LocalBuf_ND __pyx_pybuffernd_source_indices;
+  __Pyx_Buffer __pyx_pybuffer_source_indices;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  int __pyx_t_3;
+  unsigned int __pyx_t_4;
+  unsigned int __pyx_t_5;
+  unsigned int __pyx_t_6;
+  size_t __pyx_t_7;
+  unsigned int __pyx_t_8;
+  unsigned int __pyx_t_9;
+  unsigned int __pyx_t_10;
+  size_t __pyx_t_11;
+  size_t __pyx_t_12;
+  int __pyx_t_13;
+  Py_ssize_t __pyx_t_14;
+  __pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t __pyx_t_15;
+  size_t __pyx_t_16;
+  __pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t __pyx_t_17;
+  __pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t __pyx_t_18;
+  Py_ssize_t __pyx_t_19;
+  Py_ssize_t __pyx_t_20;
+  size_t __pyx_t_21;
+  size_t __pyx_t_22;
+  size_t __pyx_t_23;
+  size_t __pyx_t_24;
+  Py_ssize_t __pyx_t_25;
+  size_t __pyx_t_26;
+  Py_ssize_t __pyx_t_27;
+  Py_ssize_t __pyx_t_28;
+  size_t __pyx_t_29;
+  size_t __pyx_t_30;
+  size_t __pyx_t_31;
+  size_t __pyx_t_32;
+  __pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t __pyx_t_33;
+  size_t __pyx_t_34;
+  size_t __pyx_t_35;
+  __Pyx_RefNannySetupContext("_dijkstra_undirected", 0);
+  __pyx_pybuffer_source_indices.pybuffer.buf = NULL;
+  __pyx_pybuffer_source_indices.refcount = 0;
+  __pyx_pybuffernd_source_indices.data = NULL;
+  __pyx_pybuffernd_source_indices.rcbuffer = &__pyx_pybuffer_source_indices;
+  __pyx_pybuffer_csr_weights.pybuffer.buf = NULL;
+  __pyx_pybuffer_csr_weights.refcount = 0;
+  __pyx_pybuffernd_csr_weights.data = NULL;
+  __pyx_pybuffernd_csr_weights.rcbuffer = &__pyx_pybuffer_csr_weights;
+  __pyx_pybuffer_csr_indices.pybuffer.buf = NULL;
+  __pyx_pybuffer_csr_indices.refcount = 0;
+  __pyx_pybuffernd_csr_indices.data = NULL;
+  __pyx_pybuffernd_csr_indices.rcbuffer = &__pyx_pybuffer_csr_indices;
+  __pyx_pybuffer_csr_indptr.pybuffer.buf = NULL;
+  __pyx_pybuffer_csr_indptr.refcount = 0;
+  __pyx_pybuffernd_csr_indptr.data = NULL;
+  __pyx_pybuffernd_csr_indptr.rcbuffer = &__pyx_pybuffer_csr_indptr;
+  __pyx_pybuffer_csrT_weights.pybuffer.buf = NULL;
+  __pyx_pybuffer_csrT_weights.refcount = 0;
+  __pyx_pybuffernd_csrT_weights.data = NULL;
+  __pyx_pybuffernd_csrT_weights.rcbuffer = &__pyx_pybuffer_csrT_weights;
+  __pyx_pybuffer_csrT_indices.pybuffer.buf = NULL;
+  __pyx_pybuffer_csrT_indices.refcount = 0;
+  __pyx_pybuffernd_csrT_indices.data = NULL;
+  __pyx_pybuffernd_csrT_indices.rcbuffer = &__pyx_pybuffer_csrT_indices;
+  __pyx_pybuffer_csrT_indptr.pybuffer.buf = NULL;
+  __pyx_pybuffer_csrT_indptr.refcount = 0;
+  __pyx_pybuffernd_csrT_indptr.data = NULL;
+  __pyx_pybuffernd_csrT_indptr.rcbuffer = &__pyx_pybuffer_csrT_indptr;
+  __pyx_pybuffer_dist_matrix.pybuffer.buf = NULL;
+  __pyx_pybuffer_dist_matrix.refcount = 0;
+  __pyx_pybuffernd_dist_matrix.data = NULL;
+  __pyx_pybuffernd_dist_matrix.rcbuffer = &__pyx_pybuffer_dist_matrix;
+  __pyx_pybuffer_pred.pybuffer.buf = NULL;
+  __pyx_pybuffer_pred.refcount = 0;
+  __pyx_pybuffernd_pred.data = NULL;
+  __pyx_pybuffernd_pred.rcbuffer = &__pyx_pybuffer_pred;
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_source_indices.rcbuffer->pybuffer, (PyObject*)__pyx_v_source_indices, &__Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 248, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_source_indices.diminfo[0].strides = __pyx_pybuffernd_source_indices.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_source_indices.diminfo[0].shape = __pyx_pybuffernd_source_indices.rcbuffer->pybuffer.shape[0];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_csr_weights.rcbuffer->pybuffer, (PyObject*)__pyx_v_csr_weights, &__Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 248, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_csr_weights.diminfo[0].strides = __pyx_pybuffernd_csr_weights.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_csr_weights.diminfo[0].shape = __pyx_pybuffernd_csr_weights.rcbuffer->pybuffer.shape[0];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_csr_indices.rcbuffer->pybuffer, (PyObject*)__pyx_v_csr_indices, &__Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 248, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_csr_indices.diminfo[0].strides = __pyx_pybuffernd_csr_indices.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_csr_indices.diminfo[0].shape = __pyx_pybuffernd_csr_indices.rcbuffer->pybuffer.shape[0];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_csr_indptr.rcbuffer->pybuffer, (PyObject*)__pyx_v_csr_indptr, &__Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 248, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_csr_indptr.diminfo[0].strides = __pyx_pybuffernd_csr_indptr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_csr_indptr.diminfo[0].shape = __pyx_pybuffernd_csr_indptr.rcbuffer->pybuffer.shape[0];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_csrT_weights.rcbuffer->pybuffer, (PyObject*)__pyx_v_csrT_weights, &__Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 248, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_csrT_weights.diminfo[0].strides = __pyx_pybuffernd_csrT_weights.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_csrT_weights.diminfo[0].shape = __pyx_pybuffernd_csrT_weights.rcbuffer->pybuffer.shape[0];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_csrT_indices.rcbuffer->pybuffer, (PyObject*)__pyx_v_csrT_indices, &__Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 248, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_csrT_indices.diminfo[0].strides = __pyx_pybuffernd_csrT_indices.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_csrT_indices.diminfo[0].shape = __pyx_pybuffernd_csrT_indices.rcbuffer->pybuffer.shape[0];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_csrT_indptr.rcbuffer->pybuffer, (PyObject*)__pyx_v_csrT_indptr, &__Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 248, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_csrT_indptr.diminfo[0].strides = __pyx_pybuffernd_csrT_indptr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_csrT_indptr.diminfo[0].shape = __pyx_pybuffernd_csrT_indptr.rcbuffer->pybuffer.shape[0];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_dist_matrix.rcbuffer->pybuffer, (PyObject*)__pyx_v_dist_matrix, &__Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS| PyBUF_WRITABLE, 2, 0, __pyx_stack) == -1)) __PYX_ERR(0, 248, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_dist_matrix.diminfo[0].strides = __pyx_pybuffernd_dist_matrix.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_dist_matrix.diminfo[0].shape = __pyx_pybuffernd_dist_matrix.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_dist_matrix.diminfo[1].strides = __pyx_pybuffernd_dist_matrix.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_dist_matrix.diminfo[1].shape = __pyx_pybuffernd_dist_matrix.rcbuffer->pybuffer.shape[1];
+  {
+    __Pyx_BufFmt_StackElem __pyx_stack[1];
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_pred.rcbuffer->pybuffer, (PyObject*)__pyx_v_pred, &__Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS| PyBUF_WRITABLE, 2, 0, __pyx_stack) == -1)) __PYX_ERR(0, 248, __pyx_L1_error)
+  }
+  __pyx_pybuffernd_pred.diminfo[0].strides = __pyx_pybuffernd_pred.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_pred.diminfo[0].shape = __pyx_pybuffernd_pred.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_pred.diminfo[1].strides = __pyx_pybuffernd_pred.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_pred.diminfo[1].shape = __pyx_pybuffernd_pred.rcbuffer->pybuffer.shape[1];
+
+  /* "algorithms/sm/shortest_paths.pyx":259
+ *             np.ndarray[ITYPE_t, ndim=2, mode='c'] pred,
+ *             DTYPE_t limit):
+ *     cdef unsigned int Nind = dist_matrix.shape[0]             # <<<<<<<<<<<<<<
+ *     cdef unsigned int N = dist_matrix.shape[1]
+ *     cdef unsigned int i, k, j_source, j_current
+ */
+  __pyx_v_Nind = (__pyx_v_dist_matrix->dimensions[0]);
+
+  /* "algorithms/sm/shortest_paths.pyx":260
+ *             DTYPE_t limit):
+ *     cdef unsigned int Nind = dist_matrix.shape[0]
+ *     cdef unsigned int N = dist_matrix.shape[1]             # <<<<<<<<<<<<<<
+ *     cdef unsigned int i, k, j_source, j_current
+ *     cdef ITYPE_t j
+ */
+  __pyx_v_N = (__pyx_v_dist_matrix->dimensions[1]);
+
+  /* "algorithms/sm/shortest_paths.pyx":266
+ *     cdef DTYPE_t next_val
+ * 
+ *     cdef int return_pred = (pred.size > 0)             # <<<<<<<<<<<<<<
+ * 
+ *     cdef FibonacciHeap heap
+ */
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_pred), __pyx_n_s_size); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 266, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyObject_RichCompare(__pyx_t_1, __pyx_int_0, Py_GT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 266, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 266, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_return_pred = __pyx_t_3;
+
+  /* "algorithms/sm/shortest_paths.pyx":271
+ *     cdef FibonacciNode *v
+ *     cdef FibonacciNode *current_node
+ *     cdef FibonacciNode* nodes = <FibonacciNode*> malloc(N *             # <<<<<<<<<<<<<<
+ *                                                         sizeof(FibonacciNode))
+ * 
+ */
+  __pyx_v_nodes = ((struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *)malloc((__pyx_v_N * (sizeof(struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode)))));
+
+  /* "algorithms/sm/shortest_paths.pyx":274
+ *                                                         sizeof(FibonacciNode))
+ * 
+ *     for i in range(Nind):             # <<<<<<<<<<<<<<
+ *         j_source = source_indices[i]
+ * 
+ */
+  __pyx_t_4 = __pyx_v_Nind;
+  __pyx_t_5 = __pyx_t_4;
+  for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
+    __pyx_v_i = __pyx_t_6;
+
+    /* "algorithms/sm/shortest_paths.pyx":275
+ * 
+ *     for i in range(Nind):
+ *         j_source = source_indices[i]             # <<<<<<<<<<<<<<
+ * 
+ *         for k in range(N):
+ */
+    __pyx_t_7 = __pyx_v_i;
+    __pyx_t_3 = -1;
+    if (unlikely(__pyx_t_7 >= (size_t)__pyx_pybuffernd_source_indices.diminfo[0].shape)) __pyx_t_3 = 0;
+    if (unlikely(__pyx_t_3 != -1)) {
+      __Pyx_RaiseBufferIndexError(__pyx_t_3);
+      __PYX_ERR(0, 275, __pyx_L1_error)
+    }
+    __pyx_v_j_source = (*__Pyx_BufPtrCContig1d(__pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t *, __pyx_pybuffernd_source_indices.rcbuffer->pybuffer.buf, __pyx_t_7, __pyx_pybuffernd_source_indices.diminfo[0].strides));
+
+    /* "algorithms/sm/shortest_paths.pyx":277
+ *         j_source = source_indices[i]
+ * 
+ *         for k in range(N):             # <<<<<<<<<<<<<<
+ *             initialize_node(&nodes[k], k)
+ * 
+ */
+    __pyx_t_8 = __pyx_v_N;
+    __pyx_t_9 = __pyx_t_8;
+    for (__pyx_t_10 = 0; __pyx_t_10 < __pyx_t_9; __pyx_t_10+=1) {
+      __pyx_v_k = __pyx_t_10;
+
+      /* "algorithms/sm/shortest_paths.pyx":278
+ * 
+ *         for k in range(N):
+ *             initialize_node(&nodes[k], k)             # <<<<<<<<<<<<<<
+ * 
+ *         dist_matrix[i, j_source] = 0
+ */
+      __pyx_f_10algorithms_2sm_14shortest_paths_initialize_node((&(__pyx_v_nodes[__pyx_v_k])), __pyx_v_k, NULL);
+    }
+
+    /* "algorithms/sm/shortest_paths.pyx":280
+ *             initialize_node(&nodes[k], k)
+ * 
+ *         dist_matrix[i, j_source] = 0             # <<<<<<<<<<<<<<
+ *         heap.min_node = NULL
+ *         insert_node(&heap, &nodes[j_source])
+ */
+    __pyx_t_11 = __pyx_v_i;
+    __pyx_t_12 = __pyx_v_j_source;
+    __pyx_t_3 = -1;
+    if (unlikely(__pyx_t_11 >= (size_t)__pyx_pybuffernd_dist_matrix.diminfo[0].shape)) __pyx_t_3 = 0;
+    if (unlikely(__pyx_t_12 >= (size_t)__pyx_pybuffernd_dist_matrix.diminfo[1].shape)) __pyx_t_3 = 1;
+    if (unlikely(__pyx_t_3 != -1)) {
+      __Pyx_RaiseBufferIndexError(__pyx_t_3);
+      __PYX_ERR(0, 280, __pyx_L1_error)
+    }
+    *__Pyx_BufPtrCContig2d(__pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t *, __pyx_pybuffernd_dist_matrix.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_dist_matrix.diminfo[0].strides, __pyx_t_12, __pyx_pybuffernd_dist_matrix.diminfo[1].strides) = 0.0;
+
+    /* "algorithms/sm/shortest_paths.pyx":281
+ * 
+ *         dist_matrix[i, j_source] = 0
+ *         heap.min_node = NULL             # <<<<<<<<<<<<<<
+ *         insert_node(&heap, &nodes[j_source])
+ * 
+ */
+    __pyx_v_heap.min_node = NULL;
+
+    /* "algorithms/sm/shortest_paths.pyx":282
+ *         dist_matrix[i, j_source] = 0
+ *         heap.min_node = NULL
+ *         insert_node(&heap, &nodes[j_source])             # <<<<<<<<<<<<<<
+ * 
+ *         while heap.min_node:
+ */
+    __pyx_f_10algorithms_2sm_14shortest_paths_insert_node((&__pyx_v_heap), (&(__pyx_v_nodes[__pyx_v_j_source])));
+
+    /* "algorithms/sm/shortest_paths.pyx":284
+ *         insert_node(&heap, &nodes[j_source])
+ * 
+ *         while heap.min_node:             # <<<<<<<<<<<<<<
+ *             v = remove_min(&heap)
+ *             v.state = SCANNED
+ */
+    while (1) {
+      __pyx_t_13 = (__pyx_v_heap.min_node != 0);
+      if (!__pyx_t_13) break;
+
+      /* "algorithms/sm/shortest_paths.pyx":285
+ * 
+ *         while heap.min_node:
+ *             v = remove_min(&heap)             # <<<<<<<<<<<<<<
+ *             v.state = SCANNED
+ *             ## Stopping here
+ */
+      __pyx_v_v = __pyx_f_10algorithms_2sm_14shortest_paths_remove_min((&__pyx_v_heap));
+
+      /* "algorithms/sm/shortest_paths.pyx":286
+ *         while heap.min_node:
+ *             v = remove_min(&heap)
+ *             v.state = SCANNED             # <<<<<<<<<<<<<<
+ *             ## Stopping here
+ *             for j in range(csr_indptr[v.index], csr_indptr[v.index + 1]):
+ */
+      __pyx_v_v->state = __pyx_e_10algorithms_2sm_14shortest_paths_SCANNED;
+
+      /* "algorithms/sm/shortest_paths.pyx":288
+ *             v.state = SCANNED
+ *             ## Stopping here
+ *             for j in range(csr_indptr[v.index], csr_indptr[v.index + 1]):             # <<<<<<<<<<<<<<
+ *                 j_current = csr_indices[j]
+ *                 current_node = &nodes[j_current]
+ */
+      __pyx_t_14 = (__pyx_v_v->index + 1);
+      __pyx_t_3 = -1;
+      if (__pyx_t_14 < 0) {
+        __pyx_t_14 += __pyx_pybuffernd_csr_indptr.diminfo[0].shape;
+        if (unlikely(__pyx_t_14 < 0)) __pyx_t_3 = 0;
+      } else if (unlikely(__pyx_t_14 >= __pyx_pybuffernd_csr_indptr.diminfo[0].shape)) __pyx_t_3 = 0;
+      if (unlikely(__pyx_t_3 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_3);
+        __PYX_ERR(0, 288, __pyx_L1_error)
+      }
+      __pyx_t_15 = (*__Pyx_BufPtrCContig1d(__pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t *, __pyx_pybuffernd_csr_indptr.rcbuffer->pybuffer.buf, __pyx_t_14, __pyx_pybuffernd_csr_indptr.diminfo[0].strides));
+      __pyx_t_16 = __pyx_v_v->index;
+      __pyx_t_3 = -1;
+      if (unlikely(__pyx_t_16 >= (size_t)__pyx_pybuffernd_csr_indptr.diminfo[0].shape)) __pyx_t_3 = 0;
+      if (unlikely(__pyx_t_3 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_3);
+        __PYX_ERR(0, 288, __pyx_L1_error)
+      }
+      __pyx_t_17 = __pyx_t_15;
+      for (__pyx_t_18 = (*__Pyx_BufPtrCContig1d(__pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t *, __pyx_pybuffernd_csr_indptr.rcbuffer->pybuffer.buf, __pyx_t_16, __pyx_pybuffernd_csr_indptr.diminfo[0].strides)); __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
+        __pyx_v_j = __pyx_t_18;
+
+        /* "algorithms/sm/shortest_paths.pyx":289
+ *             ## Stopping here
+ *             for j in range(csr_indptr[v.index], csr_indptr[v.index + 1]):
+ *                 j_current = csr_indices[j]             # <<<<<<<<<<<<<<
+ *                 current_node = &nodes[j_current]
+ *                 if current_node.state != SCANNED:
+ */
+        __pyx_t_19 = __pyx_v_j;
+        __pyx_t_3 = -1;
+        if (__pyx_t_19 < 0) {
+          __pyx_t_19 += __pyx_pybuffernd_csr_indices.diminfo[0].shape;
+          if (unlikely(__pyx_t_19 < 0)) __pyx_t_3 = 0;
+        } else if (unlikely(__pyx_t_19 >= __pyx_pybuffernd_csr_indices.diminfo[0].shape)) __pyx_t_3 = 0;
+        if (unlikely(__pyx_t_3 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_3);
+          __PYX_ERR(0, 289, __pyx_L1_error)
+        }
+        __pyx_v_j_current = (*__Pyx_BufPtrCContig1d(__pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t *, __pyx_pybuffernd_csr_indices.rcbuffer->pybuffer.buf, __pyx_t_19, __pyx_pybuffernd_csr_indices.diminfo[0].strides));
+
+        /* "algorithms/sm/shortest_paths.pyx":290
+ *             for j in range(csr_indptr[v.index], csr_indptr[v.index + 1]):
+ *                 j_current = csr_indices[j]
+ *                 current_node = &nodes[j_current]             # <<<<<<<<<<<<<<
+ *                 if current_node.state != SCANNED:
+ *                     next_val = v.val + csr_weights[j]
+ */
+        __pyx_v_current_node = (&(__pyx_v_nodes[__pyx_v_j_current]));
+
+        /* "algorithms/sm/shortest_paths.pyx":291
+ *                 j_current = csr_indices[j]
+ *                 current_node = &nodes[j_current]
+ *                 if current_node.state != SCANNED:             # <<<<<<<<<<<<<<
+ *                     next_val = v.val + csr_weights[j]
+ *                     if next_val <= limit:
+ */
+        __pyx_t_13 = ((__pyx_v_current_node->state != __pyx_e_10algorithms_2sm_14shortest_paths_SCANNED) != 0);
+        if (__pyx_t_13) {
+
+          /* "algorithms/sm/shortest_paths.pyx":292
+ *                 current_node = &nodes[j_current]
+ *                 if current_node.state != SCANNED:
+ *                     next_val = v.val + csr_weights[j]             # <<<<<<<<<<<<<<
+ *                     if next_val <= limit:
+ *                         if current_node.state == NOT_IN_HEAP:
+ */
+          __pyx_t_20 = __pyx_v_j;
+          __pyx_t_3 = -1;
+          if (__pyx_t_20 < 0) {
+            __pyx_t_20 += __pyx_pybuffernd_csr_weights.diminfo[0].shape;
+            if (unlikely(__pyx_t_20 < 0)) __pyx_t_3 = 0;
+          } else if (unlikely(__pyx_t_20 >= __pyx_pybuffernd_csr_weights.diminfo[0].shape)) __pyx_t_3 = 0;
+          if (unlikely(__pyx_t_3 != -1)) {
+            __Pyx_RaiseBufferIndexError(__pyx_t_3);
+            __PYX_ERR(0, 292, __pyx_L1_error)
+          }
+          __pyx_v_next_val = (__pyx_v_v->val + (*__Pyx_BufPtrCContig1d(__pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t *, __pyx_pybuffernd_csr_weights.rcbuffer->pybuffer.buf, __pyx_t_20, __pyx_pybuffernd_csr_weights.diminfo[0].strides)));
+
+          /* "algorithms/sm/shortest_paths.pyx":293
+ *                 if current_node.state != SCANNED:
+ *                     next_val = v.val + csr_weights[j]
+ *                     if next_val <= limit:             # <<<<<<<<<<<<<<
+ *                         if current_node.state == NOT_IN_HEAP:
+ *                             current_node.state = IN_HEAP
+ */
+          __pyx_t_13 = ((__pyx_v_next_val <= __pyx_v_limit) != 0);
+          if (__pyx_t_13) {
+
+            /* "algorithms/sm/shortest_paths.pyx":294
+ *                     next_val = v.val + csr_weights[j]
+ *                     if next_val <= limit:
+ *                         if current_node.state == NOT_IN_HEAP:             # <<<<<<<<<<<<<<
+ *                             current_node.state = IN_HEAP
+ *                             current_node.val = next_val
+ */
+            __pyx_t_13 = ((__pyx_v_current_node->state == __pyx_e_10algorithms_2sm_14shortest_paths_NOT_IN_HEAP) != 0);
+            if (__pyx_t_13) {
+
+              /* "algorithms/sm/shortest_paths.pyx":295
+ *                     if next_val <= limit:
+ *                         if current_node.state == NOT_IN_HEAP:
+ *                             current_node.state = IN_HEAP             # <<<<<<<<<<<<<<
+ *                             current_node.val = next_val
+ *                             insert_node(&heap, current_node)
+ */
+              __pyx_v_current_node->state = __pyx_e_10algorithms_2sm_14shortest_paths_IN_HEAP;
+
+              /* "algorithms/sm/shortest_paths.pyx":296
+ *                         if current_node.state == NOT_IN_HEAP:
+ *                             current_node.state = IN_HEAP
+ *                             current_node.val = next_val             # <<<<<<<<<<<<<<
+ *                             insert_node(&heap, current_node)
+ *                             if return_pred:
+ */
+              __pyx_v_current_node->val = __pyx_v_next_val;
+
+              /* "algorithms/sm/shortest_paths.pyx":297
+ *                             current_node.state = IN_HEAP
+ *                             current_node.val = next_val
+ *                             insert_node(&heap, current_node)             # <<<<<<<<<<<<<<
+ *                             if return_pred:
+ *                                 pred[i, j_current] = v.index
+ */
+              __pyx_f_10algorithms_2sm_14shortest_paths_insert_node((&__pyx_v_heap), __pyx_v_current_node);
+
+              /* "algorithms/sm/shortest_paths.pyx":298
+ *                             current_node.val = next_val
+ *                             insert_node(&heap, current_node)
+ *                             if return_pred:             # <<<<<<<<<<<<<<
+ *                                 pred[i, j_current] = v.index
+ *                         elif current_node.val > next_val:
+ */
+              __pyx_t_13 = (__pyx_v_return_pred != 0);
+              if (__pyx_t_13) {
+
+                /* "algorithms/sm/shortest_paths.pyx":299
+ *                             insert_node(&heap, current_node)
+ *                             if return_pred:
+ *                                 pred[i, j_current] = v.index             # <<<<<<<<<<<<<<
+ *                         elif current_node.val > next_val:
+ *                             decrease_val(&heap, current_node,
+ */
+                __pyx_t_8 = __pyx_v_v->index;
+                __pyx_t_21 = __pyx_v_i;
+                __pyx_t_22 = __pyx_v_j_current;
+                __pyx_t_3 = -1;
+                if (unlikely(__pyx_t_21 >= (size_t)__pyx_pybuffernd_pred.diminfo[0].shape)) __pyx_t_3 = 0;
+                if (unlikely(__pyx_t_22 >= (size_t)__pyx_pybuffernd_pred.diminfo[1].shape)) __pyx_t_3 = 1;
+                if (unlikely(__pyx_t_3 != -1)) {
+                  __Pyx_RaiseBufferIndexError(__pyx_t_3);
+                  __PYX_ERR(0, 299, __pyx_L1_error)
+                }
+                *__Pyx_BufPtrCContig2d(__pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t *, __pyx_pybuffernd_pred.rcbuffer->pybuffer.buf, __pyx_t_21, __pyx_pybuffernd_pred.diminfo[0].strides, __pyx_t_22, __pyx_pybuffernd_pred.diminfo[1].strides) = __pyx_t_8;
+
+                /* "algorithms/sm/shortest_paths.pyx":298
+ *                             current_node.val = next_val
+ *                             insert_node(&heap, current_node)
+ *                             if return_pred:             # <<<<<<<<<<<<<<
+ *                                 pred[i, j_current] = v.index
+ *                         elif current_node.val > next_val:
+ */
+              }
+
+              /* "algorithms/sm/shortest_paths.pyx":294
+ *                     next_val = v.val + csr_weights[j]
+ *                     if next_val <= limit:
+ *                         if current_node.state == NOT_IN_HEAP:             # <<<<<<<<<<<<<<
+ *                             current_node.state = IN_HEAP
+ *                             current_node.val = next_val
+ */
+              goto __pyx_L13;
+            }
+
+            /* "algorithms/sm/shortest_paths.pyx":300
+ *                             if return_pred:
+ *                                 pred[i, j_current] = v.index
+ *                         elif current_node.val > next_val:             # <<<<<<<<<<<<<<
+ *                             decrease_val(&heap, current_node,
+ *                                          next_val)
+ */
+            __pyx_t_13 = ((__pyx_v_current_node->val > __pyx_v_next_val) != 0);
+            if (__pyx_t_13) {
+
+              /* "algorithms/sm/shortest_paths.pyx":301
+ *                                 pred[i, j_current] = v.index
+ *                         elif current_node.val > next_val:
+ *                             decrease_val(&heap, current_node,             # <<<<<<<<<<<<<<
+ *                                          next_val)
+ *                             if return_pred:
+ */
+              __pyx_f_10algorithms_2sm_14shortest_paths_decrease_val((&__pyx_v_heap), __pyx_v_current_node, __pyx_v_next_val);
+
+              /* "algorithms/sm/shortest_paths.pyx":303
+ *                             decrease_val(&heap, current_node,
+ *                                          next_val)
+ *                             if return_pred:             # <<<<<<<<<<<<<<
+ *                                 pred[i, j_current] = v.index
+ * 
+ */
+              __pyx_t_13 = (__pyx_v_return_pred != 0);
+              if (__pyx_t_13) {
+
+                /* "algorithms/sm/shortest_paths.pyx":304
+ *                                          next_val)
+ *                             if return_pred:
+ *                                 pred[i, j_current] = v.index             # <<<<<<<<<<<<<<
+ * 
+ *             for j in range(csrT_indptr[v.index], csrT_indptr[v.index + 1]):
+ */
+                __pyx_t_8 = __pyx_v_v->index;
+                __pyx_t_23 = __pyx_v_i;
+                __pyx_t_24 = __pyx_v_j_current;
+                __pyx_t_3 = -1;
+                if (unlikely(__pyx_t_23 >= (size_t)__pyx_pybuffernd_pred.diminfo[0].shape)) __pyx_t_3 = 0;
+                if (unlikely(__pyx_t_24 >= (size_t)__pyx_pybuffernd_pred.diminfo[1].shape)) __pyx_t_3 = 1;
+                if (unlikely(__pyx_t_3 != -1)) {
+                  __Pyx_RaiseBufferIndexError(__pyx_t_3);
+                  __PYX_ERR(0, 304, __pyx_L1_error)
+                }
+                *__Pyx_BufPtrCContig2d(__pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t *, __pyx_pybuffernd_pred.rcbuffer->pybuffer.buf, __pyx_t_23, __pyx_pybuffernd_pred.diminfo[0].strides, __pyx_t_24, __pyx_pybuffernd_pred.diminfo[1].strides) = __pyx_t_8;
+
+                /* "algorithms/sm/shortest_paths.pyx":303
+ *                             decrease_val(&heap, current_node,
+ *                                          next_val)
+ *                             if return_pred:             # <<<<<<<<<<<<<<
+ *                                 pred[i, j_current] = v.index
+ * 
+ */
+              }
+
+              /* "algorithms/sm/shortest_paths.pyx":300
+ *                             if return_pred:
+ *                                 pred[i, j_current] = v.index
+ *                         elif current_node.val > next_val:             # <<<<<<<<<<<<<<
+ *                             decrease_val(&heap, current_node,
+ *                                          next_val)
+ */
+            }
+            __pyx_L13:;
+
+            /* "algorithms/sm/shortest_paths.pyx":293
+ *                 if current_node.state != SCANNED:
+ *                     next_val = v.val + csr_weights[j]
+ *                     if next_val <= limit:             # <<<<<<<<<<<<<<
+ *                         if current_node.state == NOT_IN_HEAP:
+ *                             current_node.state = IN_HEAP
+ */
+          }
+
+          /* "algorithms/sm/shortest_paths.pyx":291
+ *                 j_current = csr_indices[j]
+ *                 current_node = &nodes[j_current]
+ *                 if current_node.state != SCANNED:             # <<<<<<<<<<<<<<
+ *                     next_val = v.val + csr_weights[j]
+ *                     if next_val <= limit:
+ */
+        }
+      }
+
+      /* "algorithms/sm/shortest_paths.pyx":306
+ *                                 pred[i, j_current] = v.index
+ * 
+ *             for j in range(csrT_indptr[v.index], csrT_indptr[v.index + 1]):             # <<<<<<<<<<<<<<
+ *                 j_current = csrT_indices[j]
+ *                 current_node = &nodes[j_current]
+ */
+      __pyx_t_25 = (__pyx_v_v->index + 1);
+      __pyx_t_3 = -1;
+      if (__pyx_t_25 < 0) {
+        __pyx_t_25 += __pyx_pybuffernd_csrT_indptr.diminfo[0].shape;
+        if (unlikely(__pyx_t_25 < 0)) __pyx_t_3 = 0;
+      } else if (unlikely(__pyx_t_25 >= __pyx_pybuffernd_csrT_indptr.diminfo[0].shape)) __pyx_t_3 = 0;
+      if (unlikely(__pyx_t_3 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_3);
+        __PYX_ERR(0, 306, __pyx_L1_error)
+      }
+      __pyx_t_15 = (*__Pyx_BufPtrCContig1d(__pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t *, __pyx_pybuffernd_csrT_indptr.rcbuffer->pybuffer.buf, __pyx_t_25, __pyx_pybuffernd_csrT_indptr.diminfo[0].strides));
+      __pyx_t_26 = __pyx_v_v->index;
+      __pyx_t_3 = -1;
+      if (unlikely(__pyx_t_26 >= (size_t)__pyx_pybuffernd_csrT_indptr.diminfo[0].shape)) __pyx_t_3 = 0;
+      if (unlikely(__pyx_t_3 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_3);
+        __PYX_ERR(0, 306, __pyx_L1_error)
+      }
+      __pyx_t_17 = __pyx_t_15;
+      for (__pyx_t_18 = (*__Pyx_BufPtrCContig1d(__pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t *, __pyx_pybuffernd_csrT_indptr.rcbuffer->pybuffer.buf, __pyx_t_26, __pyx_pybuffernd_csrT_indptr.diminfo[0].strides)); __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
+        __pyx_v_j = __pyx_t_18;
+
+        /* "algorithms/sm/shortest_paths.pyx":307
+ * 
+ *             for j in range(csrT_indptr[v.index], csrT_indptr[v.index + 1]):
+ *                 j_current = csrT_indices[j]             # <<<<<<<<<<<<<<
+ *                 current_node = &nodes[j_current]
+ *                 if current_node.state != SCANNED:
+ */
+        __pyx_t_27 = __pyx_v_j;
+        __pyx_t_3 = -1;
+        if (__pyx_t_27 < 0) {
+          __pyx_t_27 += __pyx_pybuffernd_csrT_indices.diminfo[0].shape;
+          if (unlikely(__pyx_t_27 < 0)) __pyx_t_3 = 0;
+        } else if (unlikely(__pyx_t_27 >= __pyx_pybuffernd_csrT_indices.diminfo[0].shape)) __pyx_t_3 = 0;
+        if (unlikely(__pyx_t_3 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_3);
+          __PYX_ERR(0, 307, __pyx_L1_error)
+        }
+        __pyx_v_j_current = (*__Pyx_BufPtrCContig1d(__pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t *, __pyx_pybuffernd_csrT_indices.rcbuffer->pybuffer.buf, __pyx_t_27, __pyx_pybuffernd_csrT_indices.diminfo[0].strides));
+
+        /* "algorithms/sm/shortest_paths.pyx":308
+ *             for j in range(csrT_indptr[v.index], csrT_indptr[v.index + 1]):
+ *                 j_current = csrT_indices[j]
+ *                 current_node = &nodes[j_current]             # <<<<<<<<<<<<<<
+ *                 if current_node.state != SCANNED:
+ *                     next_val = v.val + csrT_weights[j]
+ */
+        __pyx_v_current_node = (&(__pyx_v_nodes[__pyx_v_j_current]));
+
+        /* "algorithms/sm/shortest_paths.pyx":309
+ *                 j_current = csrT_indices[j]
+ *                 current_node = &nodes[j_current]
+ *                 if current_node.state != SCANNED:             # <<<<<<<<<<<<<<
+ *                     next_val = v.val + csrT_weights[j]
+ *                     if next_val <= limit:
+ */
+        __pyx_t_13 = ((__pyx_v_current_node->state != __pyx_e_10algorithms_2sm_14shortest_paths_SCANNED) != 0);
+        if (__pyx_t_13) {
+
+          /* "algorithms/sm/shortest_paths.pyx":310
+ *                 current_node = &nodes[j_current]
+ *                 if current_node.state != SCANNED:
+ *                     next_val = v.val + csrT_weights[j]             # <<<<<<<<<<<<<<
+ *                     if next_val <= limit:
+ *                         if current_node.state == NOT_IN_HEAP:
+ */
+          __pyx_t_28 = __pyx_v_j;
+          __pyx_t_3 = -1;
+          if (__pyx_t_28 < 0) {
+            __pyx_t_28 += __pyx_pybuffernd_csrT_weights.diminfo[0].shape;
+            if (unlikely(__pyx_t_28 < 0)) __pyx_t_3 = 0;
+          } else if (unlikely(__pyx_t_28 >= __pyx_pybuffernd_csrT_weights.diminfo[0].shape)) __pyx_t_3 = 0;
+          if (unlikely(__pyx_t_3 != -1)) {
+            __Pyx_RaiseBufferIndexError(__pyx_t_3);
+            __PYX_ERR(0, 310, __pyx_L1_error)
+          }
+          __pyx_v_next_val = (__pyx_v_v->val + (*__Pyx_BufPtrCContig1d(__pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t *, __pyx_pybuffernd_csrT_weights.rcbuffer->pybuffer.buf, __pyx_t_28, __pyx_pybuffernd_csrT_weights.diminfo[0].strides)));
+
+          /* "algorithms/sm/shortest_paths.pyx":311
+ *                 if current_node.state != SCANNED:
+ *                     next_val = v.val + csrT_weights[j]
+ *                     if next_val <= limit:             # <<<<<<<<<<<<<<
+ *                         if current_node.state == NOT_IN_HEAP:
+ *                             current_node.state = IN_HEAP
+ */
+          __pyx_t_13 = ((__pyx_v_next_val <= __pyx_v_limit) != 0);
+          if (__pyx_t_13) {
+
+            /* "algorithms/sm/shortest_paths.pyx":312
+ *                     next_val = v.val + csrT_weights[j]
+ *                     if next_val <= limit:
+ *                         if current_node.state == NOT_IN_HEAP:             # <<<<<<<<<<<<<<
+ *                             current_node.state = IN_HEAP
+ *                             current_node.val = next_val
+ */
+            __pyx_t_13 = ((__pyx_v_current_node->state == __pyx_e_10algorithms_2sm_14shortest_paths_NOT_IN_HEAP) != 0);
+            if (__pyx_t_13) {
+
+              /* "algorithms/sm/shortest_paths.pyx":313
+ *                     if next_val <= limit:
+ *                         if current_node.state == NOT_IN_HEAP:
+ *                             current_node.state = IN_HEAP             # <<<<<<<<<<<<<<
+ *                             current_node.val = next_val
+ *                             insert_node(&heap, current_node)
+ */
+              __pyx_v_current_node->state = __pyx_e_10algorithms_2sm_14shortest_paths_IN_HEAP;
+
+              /* "algorithms/sm/shortest_paths.pyx":314
+ *                         if current_node.state == NOT_IN_HEAP:
+ *                             current_node.state = IN_HEAP
+ *                             current_node.val = next_val             # <<<<<<<<<<<<<<
+ *                             insert_node(&heap, current_node)
+ *                             if return_pred:
+ */
+              __pyx_v_current_node->val = __pyx_v_next_val;
+
+              /* "algorithms/sm/shortest_paths.pyx":315
+ *                             current_node.state = IN_HEAP
+ *                             current_node.val = next_val
+ *                             insert_node(&heap, current_node)             # <<<<<<<<<<<<<<
+ *                             if return_pred:
+ *                                 pred[i, j_current] = v.index
+ */
+              __pyx_f_10algorithms_2sm_14shortest_paths_insert_node((&__pyx_v_heap), __pyx_v_current_node);
+
+              /* "algorithms/sm/shortest_paths.pyx":316
+ *                             current_node.val = next_val
+ *                             insert_node(&heap, current_node)
+ *                             if return_pred:             # <<<<<<<<<<<<<<
+ *                                 pred[i, j_current] = v.index
+ *                         elif current_node.val > next_val:
+ */
+              __pyx_t_13 = (__pyx_v_return_pred != 0);
+              if (__pyx_t_13) {
+
+                /* "algorithms/sm/shortest_paths.pyx":317
+ *                             insert_node(&heap, current_node)
+ *                             if return_pred:
+ *                                 pred[i, j_current] = v.index             # <<<<<<<<<<<<<<
+ *                         elif current_node.val > next_val:
+ *                             decrease_val(&heap, current_node, next_val)
+ */
+                __pyx_t_8 = __pyx_v_v->index;
+                __pyx_t_29 = __pyx_v_i;
+                __pyx_t_30 = __pyx_v_j_current;
+                __pyx_t_3 = -1;
+                if (unlikely(__pyx_t_29 >= (size_t)__pyx_pybuffernd_pred.diminfo[0].shape)) __pyx_t_3 = 0;
+                if (unlikely(__pyx_t_30 >= (size_t)__pyx_pybuffernd_pred.diminfo[1].shape)) __pyx_t_3 = 1;
+                if (unlikely(__pyx_t_3 != -1)) {
+                  __Pyx_RaiseBufferIndexError(__pyx_t_3);
+                  __PYX_ERR(0, 317, __pyx_L1_error)
+                }
+                *__Pyx_BufPtrCContig2d(__pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t *, __pyx_pybuffernd_pred.rcbuffer->pybuffer.buf, __pyx_t_29, __pyx_pybuffernd_pred.diminfo[0].strides, __pyx_t_30, __pyx_pybuffernd_pred.diminfo[1].strides) = __pyx_t_8;
+
+                /* "algorithms/sm/shortest_paths.pyx":316
+ *                             current_node.val = next_val
+ *                             insert_node(&heap, current_node)
+ *                             if return_pred:             # <<<<<<<<<<<<<<
+ *                                 pred[i, j_current] = v.index
+ *                         elif current_node.val > next_val:
+ */
+              }
+
+              /* "algorithms/sm/shortest_paths.pyx":312
+ *                     next_val = v.val + csrT_weights[j]
+ *                     if next_val <= limit:
+ *                         if current_node.state == NOT_IN_HEAP:             # <<<<<<<<<<<<<<
+ *                             current_node.state = IN_HEAP
+ *                             current_node.val = next_val
+ */
+              goto __pyx_L20;
+            }
+
+            /* "algorithms/sm/shortest_paths.pyx":318
+ *                             if return_pred:
+ *                                 pred[i, j_current] = v.index
+ *                         elif current_node.val > next_val:             # <<<<<<<<<<<<<<
+ *                             decrease_val(&heap, current_node, next_val)
+ *                             if return_pred:
+ */
+            __pyx_t_13 = ((__pyx_v_current_node->val > __pyx_v_next_val) != 0);
+            if (__pyx_t_13) {
+
+              /* "algorithms/sm/shortest_paths.pyx":319
+ *                                 pred[i, j_current] = v.index
+ *                         elif current_node.val > next_val:
+ *                             decrease_val(&heap, current_node, next_val)             # <<<<<<<<<<<<<<
+ *                             if return_pred:
+ *                                 pred[i, j_current] = v.index
+ */
+              __pyx_f_10algorithms_2sm_14shortest_paths_decrease_val((&__pyx_v_heap), __pyx_v_current_node, __pyx_v_next_val);
+
+              /* "algorithms/sm/shortest_paths.pyx":320
+ *                         elif current_node.val > next_val:
+ *                             decrease_val(&heap, current_node, next_val)
+ *                             if return_pred:             # <<<<<<<<<<<<<<
+ *                                 pred[i, j_current] = v.index
+ * 
+ */
+              __pyx_t_13 = (__pyx_v_return_pred != 0);
+              if (__pyx_t_13) {
+
+                /* "algorithms/sm/shortest_paths.pyx":321
+ *                             decrease_val(&heap, current_node, next_val)
+ *                             if return_pred:
+ *                                 pred[i, j_current] = v.index             # <<<<<<<<<<<<<<
+ * 
+ *             #v has now been scanned: add the distance to the results
+ */
+                __pyx_t_8 = __pyx_v_v->index;
+                __pyx_t_31 = __pyx_v_i;
+                __pyx_t_32 = __pyx_v_j_current;
+                __pyx_t_3 = -1;
+                if (unlikely(__pyx_t_31 >= (size_t)__pyx_pybuffernd_pred.diminfo[0].shape)) __pyx_t_3 = 0;
+                if (unlikely(__pyx_t_32 >= (size_t)__pyx_pybuffernd_pred.diminfo[1].shape)) __pyx_t_3 = 1;
+                if (unlikely(__pyx_t_3 != -1)) {
+                  __Pyx_RaiseBufferIndexError(__pyx_t_3);
+                  __PYX_ERR(0, 321, __pyx_L1_error)
+                }
+                *__Pyx_BufPtrCContig2d(__pyx_t_10algorithms_2sm_14shortest_paths_ITYPE_t *, __pyx_pybuffernd_pred.rcbuffer->pybuffer.buf, __pyx_t_31, __pyx_pybuffernd_pred.diminfo[0].strides, __pyx_t_32, __pyx_pybuffernd_pred.diminfo[1].strides) = __pyx_t_8;
+
+                /* "algorithms/sm/shortest_paths.pyx":320
+ *                         elif current_node.val > next_val:
+ *                             decrease_val(&heap, current_node, next_val)
+ *                             if return_pred:             # <<<<<<<<<<<<<<
+ *                                 pred[i, j_current] = v.index
+ * 
+ */
+              }
+
+              /* "algorithms/sm/shortest_paths.pyx":318
+ *                             if return_pred:
+ *                                 pred[i, j_current] = v.index
+ *                         elif current_node.val > next_val:             # <<<<<<<<<<<<<<
+ *                             decrease_val(&heap, current_node, next_val)
+ *                             if return_pred:
+ */
+            }
+            __pyx_L20:;
+
+            /* "algorithms/sm/shortest_paths.pyx":311
+ *                 if current_node.state != SCANNED:
+ *                     next_val = v.val + csrT_weights[j]
+ *                     if next_val <= limit:             # <<<<<<<<<<<<<<
+ *                         if current_node.state == NOT_IN_HEAP:
+ *                             current_node.state = IN_HEAP
+ */
+          }
+
+          /* "algorithms/sm/shortest_paths.pyx":309
+ *                 j_current = csrT_indices[j]
+ *                 current_node = &nodes[j_current]
+ *                 if current_node.state != SCANNED:             # <<<<<<<<<<<<<<
+ *                     next_val = v.val + csrT_weights[j]
+ *                     if next_val <= limit:
+ */
+        }
+      }
+
+      /* "algorithms/sm/shortest_paths.pyx":324
+ * 
+ *             #v has now been scanned: add the distance to the results
+ *             dist_matrix[i, v.index] = v.val             # <<<<<<<<<<<<<<
+ * 
+ *     free(nodes)
+ */
+      __pyx_t_33 = __pyx_v_v->val;
+      __pyx_t_34 = __pyx_v_i;
+      __pyx_t_35 = __pyx_v_v->index;
+      __pyx_t_3 = -1;
+      if (unlikely(__pyx_t_34 >= (size_t)__pyx_pybuffernd_dist_matrix.diminfo[0].shape)) __pyx_t_3 = 0;
+      if (unlikely(__pyx_t_35 >= (size_t)__pyx_pybuffernd_dist_matrix.diminfo[1].shape)) __pyx_t_3 = 1;
+      if (unlikely(__pyx_t_3 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_3);
+        __PYX_ERR(0, 324, __pyx_L1_error)
+      }
+      *__Pyx_BufPtrCContig2d(__pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t *, __pyx_pybuffernd_dist_matrix.rcbuffer->pybuffer.buf, __pyx_t_34, __pyx_pybuffernd_dist_matrix.diminfo[0].strides, __pyx_t_35, __pyx_pybuffernd_dist_matrix.diminfo[1].strides) = __pyx_t_33;
+    }
+  }
+
+  /* "algorithms/sm/shortest_paths.pyx":326
+ *             dist_matrix[i, v.index] = v.val
+ * 
+ *     free(nodes)             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+  free(__pyx_v_nodes);
+
+  /* "algorithms/sm/shortest_paths.pyx":248
+ * 
+ * 
+ * cdef _dijkstra_undirected(             # <<<<<<<<<<<<<<
+ *             np.ndarray[ITYPE_t, ndim=1, mode='c'] source_indices,
+ *             np.ndarray[DTYPE_t, ndim=1, mode='c'] csr_weights,
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  { PyObject *__pyx_type, *__pyx_value, *__pyx_tb;
+    __Pyx_PyThreadState_declare
+    __Pyx_PyThreadState_assign
+    __Pyx_ErrFetch(&__pyx_type, &__pyx_value, &__pyx_tb);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_csrT_indices.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_csrT_indptr.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_csrT_weights.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_csr_indices.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_csr_indptr.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_csr_weights.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_dist_matrix.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_pred.rcbuffer->pybuffer);
+    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_source_indices.rcbuffer->pybuffer);
+  __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
+  __Pyx_AddTraceback("algorithms.sm.shortest_paths._dijkstra_undirected", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = 0;
+  goto __pyx_L2;
+  __pyx_L0:;
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_csrT_indices.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_csrT_indptr.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_csrT_weights.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_csr_indices.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_csr_indptr.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_csr_weights.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_dist_matrix.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_pred.rcbuffer->pybuffer);
+  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_source_indices.rcbuffer->pybuffer);
+  __pyx_L2:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "algorithms/sm/shortest_paths.pyx":351
  * 
  * 
  * cdef void initialize_node(FibonacciNode* node,             # <<<<<<<<<<<<<<
@@ -3649,8 +5373,8 @@ static PyArrayObject *__pyx_f_10algorithms_2sm_21sparse_shortest_paths_dijkstra(
  *                           DTYPE_t val=0):
  */
 
-static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_initialize_node(struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_v_node, unsigned int __pyx_v_index, struct __pyx_opt_args_10algorithms_2sm_21sparse_shortest_paths_initialize_node *__pyx_optional_args) {
-  __pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t __pyx_v_val = ((__pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t)0.0);
+static void __pyx_f_10algorithms_2sm_14shortest_paths_initialize_node(struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_v_node, unsigned int __pyx_v_index, struct __pyx_opt_args_10algorithms_2sm_14shortest_paths_initialize_node *__pyx_optional_args) {
+  __pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t __pyx_v_val = ((__pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t)0.0);
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("initialize_node", 0);
   if (__pyx_optional_args) {
@@ -3659,7 +5383,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_initialize_node(str
     }
   }
 
-  /* "algorithms/sm/shortest_paths.pyx":241
+  /* "algorithms/sm/shortest_paths.pyx":356
  *     # Assumptions: - node is a valid pointer
  *     #              - node is not currently part of a heap
  *     node.index = index             # <<<<<<<<<<<<<<
@@ -3668,35 +5392,35 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_initialize_node(str
  */
   __pyx_v_node->index = __pyx_v_index;
 
-  /* "algorithms/sm/shortest_paths.pyx":242
+  /* "algorithms/sm/shortest_paths.pyx":357
  *     #              - node is not currently part of a heap
  *     node.index = index
  *     node.val = val             # <<<<<<<<<<<<<<
  *     node.rank = 0
- *     node.state = 0  # 0 -> NOT_IN_HEAP
+ *     node.state = NOT_IN_HEAP
  */
   __pyx_v_node->val = __pyx_v_val;
 
-  /* "algorithms/sm/shortest_paths.pyx":243
+  /* "algorithms/sm/shortest_paths.pyx":358
  *     node.index = index
  *     node.val = val
  *     node.rank = 0             # <<<<<<<<<<<<<<
- *     node.state = 0  # 0 -> NOT_IN_HEAP
+ *     node.state = NOT_IN_HEAP
  * 
  */
   __pyx_v_node->rank = 0;
 
-  /* "algorithms/sm/shortest_paths.pyx":244
+  /* "algorithms/sm/shortest_paths.pyx":359
  *     node.val = val
  *     node.rank = 0
- *     node.state = 0  # 0 -> NOT_IN_HEAP             # <<<<<<<<<<<<<<
+ *     node.state = NOT_IN_HEAP             # <<<<<<<<<<<<<<
  * 
  *     node.parent = NULL
  */
-  __pyx_v_node->state = 0;
+  __pyx_v_node->state = __pyx_e_10algorithms_2sm_14shortest_paths_NOT_IN_HEAP;
 
-  /* "algorithms/sm/shortest_paths.pyx":246
- *     node.state = 0  # 0 -> NOT_IN_HEAP
+  /* "algorithms/sm/shortest_paths.pyx":361
+ *     node.state = NOT_IN_HEAP
  * 
  *     node.parent = NULL             # <<<<<<<<<<<<<<
  *     node.left_sibling = NULL
@@ -3704,7 +5428,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_initialize_node(str
  */
   __pyx_v_node->parent = NULL;
 
-  /* "algorithms/sm/shortest_paths.pyx":247
+  /* "algorithms/sm/shortest_paths.pyx":362
  * 
  *     node.parent = NULL
  *     node.left_sibling = NULL             # <<<<<<<<<<<<<<
@@ -3713,7 +5437,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_initialize_node(str
  */
   __pyx_v_node->left_sibling = NULL;
 
-  /* "algorithms/sm/shortest_paths.pyx":248
+  /* "algorithms/sm/shortest_paths.pyx":363
  *     node.parent = NULL
  *     node.left_sibling = NULL
  *     node.right_sibling = NULL             # <<<<<<<<<<<<<<
@@ -3722,7 +5446,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_initialize_node(str
  */
   __pyx_v_node->right_sibling = NULL;
 
-  /* "algorithms/sm/shortest_paths.pyx":249
+  /* "algorithms/sm/shortest_paths.pyx":364
  *     node.left_sibling = NULL
  *     node.right_sibling = NULL
  *     node.children = NULL             # <<<<<<<<<<<<<<
@@ -3731,7 +5455,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_initialize_node(str
  */
   __pyx_v_node->children = NULL;
 
-  /* "algorithms/sm/shortest_paths.pyx":236
+  /* "algorithms/sm/shortest_paths.pyx":351
  * 
  * 
  * cdef void initialize_node(FibonacciNode* node,             # <<<<<<<<<<<<<<
@@ -3743,7 +5467,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_initialize_node(str
   __Pyx_RefNannyFinishContext();
 }
 
-/* "algorithms/sm/shortest_paths.pyx":252
+/* "algorithms/sm/shortest_paths.pyx":367
  * 
  * 
  * cdef FibonacciNode* rightmost_sibling(FibonacciNode* node):             # <<<<<<<<<<<<<<
@@ -3751,15 +5475,15 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_initialize_node(str
  *     cdef FibonacciNode* temp = node
  */
 
-static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_f_10algorithms_2sm_21sparse_shortest_paths_rightmost_sibling(struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_v_node) {
-  struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_v_temp;
-  struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_r;
+static struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_f_10algorithms_2sm_14shortest_paths_rightmost_sibling(struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_v_node) {
+  struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_v_temp;
+  struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_r;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
-  struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_t_2;
+  struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_t_2;
   __Pyx_RefNannySetupContext("rightmost_sibling", 0);
 
-  /* "algorithms/sm/shortest_paths.pyx":254
+  /* "algorithms/sm/shortest_paths.pyx":369
  * cdef FibonacciNode* rightmost_sibling(FibonacciNode* node):
  *     # Assumptions: - node is a valid pointer
  *     cdef FibonacciNode* temp = node             # <<<<<<<<<<<<<<
@@ -3768,7 +5492,7 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
  */
   __pyx_v_temp = __pyx_v_node;
 
-  /* "algorithms/sm/shortest_paths.pyx":255
+  /* "algorithms/sm/shortest_paths.pyx":370
  *     # Assumptions: - node is a valid pointer
  *     cdef FibonacciNode* temp = node
  *     while(temp.right_sibling):             # <<<<<<<<<<<<<<
@@ -3779,7 +5503,7 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
     __pyx_t_1 = (__pyx_v_temp->right_sibling != 0);
     if (!__pyx_t_1) break;
 
-    /* "algorithms/sm/shortest_paths.pyx":256
+    /* "algorithms/sm/shortest_paths.pyx":371
  *     cdef FibonacciNode* temp = node
  *     while(temp.right_sibling):
  *         temp = temp.right_sibling             # <<<<<<<<<<<<<<
@@ -3790,7 +5514,7 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
     __pyx_v_temp = __pyx_t_2;
   }
 
-  /* "algorithms/sm/shortest_paths.pyx":257
+  /* "algorithms/sm/shortest_paths.pyx":372
  *     while(temp.right_sibling):
  *         temp = temp.right_sibling
  *     return temp             # <<<<<<<<<<<<<<
@@ -3800,7 +5524,7 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
   __pyx_r = __pyx_v_temp;
   goto __pyx_L0;
 
-  /* "algorithms/sm/shortest_paths.pyx":252
+  /* "algorithms/sm/shortest_paths.pyx":367
  * 
  * 
  * cdef FibonacciNode* rightmost_sibling(FibonacciNode* node):             # <<<<<<<<<<<<<<
@@ -3814,7 +5538,7 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
   return __pyx_r;
 }
 
-/* "algorithms/sm/shortest_paths.pyx":260
+/* "algorithms/sm/shortest_paths.pyx":375
  * 
  * 
  * cdef FibonacciNode* leftmost_sibling(FibonacciNode* node):             # <<<<<<<<<<<<<<
@@ -3822,15 +5546,15 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
  *     cdef FibonacciNode* temp = node
  */
 
-static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_f_10algorithms_2sm_21sparse_shortest_paths_leftmost_sibling(struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_v_node) {
-  struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_v_temp;
-  struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_r;
+static struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_f_10algorithms_2sm_14shortest_paths_leftmost_sibling(struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_v_node) {
+  struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_v_temp;
+  struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_r;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
-  struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_t_2;
+  struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_t_2;
   __Pyx_RefNannySetupContext("leftmost_sibling", 0);
 
-  /* "algorithms/sm/shortest_paths.pyx":262
+  /* "algorithms/sm/shortest_paths.pyx":377
  * cdef FibonacciNode* leftmost_sibling(FibonacciNode* node):
  *     # Assumptions: - node is a valid pointer
  *     cdef FibonacciNode* temp = node             # <<<<<<<<<<<<<<
@@ -3839,7 +5563,7 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
  */
   __pyx_v_temp = __pyx_v_node;
 
-  /* "algorithms/sm/shortest_paths.pyx":263
+  /* "algorithms/sm/shortest_paths.pyx":378
  *     # Assumptions: - node is a valid pointer
  *     cdef FibonacciNode* temp = node
  *     while(temp.left_sibling):             # <<<<<<<<<<<<<<
@@ -3850,7 +5574,7 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
     __pyx_t_1 = (__pyx_v_temp->left_sibling != 0);
     if (!__pyx_t_1) break;
 
-    /* "algorithms/sm/shortest_paths.pyx":264
+    /* "algorithms/sm/shortest_paths.pyx":379
  *     cdef FibonacciNode* temp = node
  *     while(temp.left_sibling):
  *         temp = temp.left_sibling             # <<<<<<<<<<<<<<
@@ -3861,7 +5585,7 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
     __pyx_v_temp = __pyx_t_2;
   }
 
-  /* "algorithms/sm/shortest_paths.pyx":265
+  /* "algorithms/sm/shortest_paths.pyx":380
  *     while(temp.left_sibling):
  *         temp = temp.left_sibling
  *     return temp             # <<<<<<<<<<<<<<
@@ -3871,7 +5595,7 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
   __pyx_r = __pyx_v_temp;
   goto __pyx_L0;
 
-  /* "algorithms/sm/shortest_paths.pyx":260
+  /* "algorithms/sm/shortest_paths.pyx":375
  * 
  * 
  * cdef FibonacciNode* leftmost_sibling(FibonacciNode* node):             # <<<<<<<<<<<<<<
@@ -3885,7 +5609,7 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
   return __pyx_r;
 }
 
-/* "algorithms/sm/shortest_paths.pyx":268
+/* "algorithms/sm/shortest_paths.pyx":383
  * 
  * 
  * cdef void add_child(FibonacciNode* node, FibonacciNode* new_child):             # <<<<<<<<<<<<<<
@@ -3893,12 +5617,12 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
  *     #              - new_child is a valid pointer
  */
 
-static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_add_child(struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_v_node, struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_v_new_child) {
+static void __pyx_f_10algorithms_2sm_14shortest_paths_add_child(struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_v_node, struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_v_new_child) {
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
   __Pyx_RefNannySetupContext("add_child", 0);
 
-  /* "algorithms/sm/shortest_paths.pyx":272
+  /* "algorithms/sm/shortest_paths.pyx":387
  *     #              - new_child is a valid pointer
  *     #              - new_child is not the sibling or child of another node
  *     new_child.parent = node             # <<<<<<<<<<<<<<
@@ -3907,7 +5631,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_add_child(struct __
  */
   __pyx_v_new_child->parent = __pyx_v_node;
 
-  /* "algorithms/sm/shortest_paths.pyx":274
+  /* "algorithms/sm/shortest_paths.pyx":389
  *     new_child.parent = node
  * 
  *     if node.children:             # <<<<<<<<<<<<<<
@@ -3917,16 +5641,16 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_add_child(struct __
   __pyx_t_1 = (__pyx_v_node->children != 0);
   if (__pyx_t_1) {
 
-    /* "algorithms/sm/shortest_paths.pyx":275
+    /* "algorithms/sm/shortest_paths.pyx":390
  * 
  *     if node.children:
  *         add_sibling(node.children, new_child)             # <<<<<<<<<<<<<<
  *     else:
  *         node.children = new_child
  */
-    __pyx_f_10algorithms_2sm_21sparse_shortest_paths_add_sibling(__pyx_v_node->children, __pyx_v_new_child);
+    __pyx_f_10algorithms_2sm_14shortest_paths_add_sibling(__pyx_v_node->children, __pyx_v_new_child);
 
-    /* "algorithms/sm/shortest_paths.pyx":274
+    /* "algorithms/sm/shortest_paths.pyx":389
  *     new_child.parent = node
  * 
  *     if node.children:             # <<<<<<<<<<<<<<
@@ -3936,7 +5660,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_add_child(struct __
     goto __pyx_L3;
   }
 
-  /* "algorithms/sm/shortest_paths.pyx":277
+  /* "algorithms/sm/shortest_paths.pyx":392
  *         add_sibling(node.children, new_child)
  *     else:
  *         node.children = new_child             # <<<<<<<<<<<<<<
@@ -3946,7 +5670,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_add_child(struct __
   /*else*/ {
     __pyx_v_node->children = __pyx_v_new_child;
 
-    /* "algorithms/sm/shortest_paths.pyx":278
+    /* "algorithms/sm/shortest_paths.pyx":393
  *     else:
  *         node.children = new_child
  *         new_child.right_sibling = NULL             # <<<<<<<<<<<<<<
@@ -3955,7 +5679,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_add_child(struct __
  */
     __pyx_v_new_child->right_sibling = NULL;
 
-    /* "algorithms/sm/shortest_paths.pyx":279
+    /* "algorithms/sm/shortest_paths.pyx":394
  *         node.children = new_child
  *         new_child.right_sibling = NULL
  *         new_child.left_sibling = NULL             # <<<<<<<<<<<<<<
@@ -3964,7 +5688,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_add_child(struct __
  */
     __pyx_v_new_child->left_sibling = NULL;
 
-    /* "algorithms/sm/shortest_paths.pyx":280
+    /* "algorithms/sm/shortest_paths.pyx":395
  *         new_child.right_sibling = NULL
  *         new_child.left_sibling = NULL
  *         node.rank = 1             # <<<<<<<<<<<<<<
@@ -3975,7 +5699,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_add_child(struct __
   }
   __pyx_L3:;
 
-  /* "algorithms/sm/shortest_paths.pyx":268
+  /* "algorithms/sm/shortest_paths.pyx":383
  * 
  * 
  * cdef void add_child(FibonacciNode* node, FibonacciNode* new_child):             # <<<<<<<<<<<<<<
@@ -3987,7 +5711,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_add_child(struct __
   __Pyx_RefNannyFinishContext();
 }
 
-/* "algorithms/sm/shortest_paths.pyx":283
+/* "algorithms/sm/shortest_paths.pyx":398
  * 
  * 
  * cdef void add_sibling(FibonacciNode* node, FibonacciNode* new_sibling):             # <<<<<<<<<<<<<<
@@ -3995,23 +5719,23 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_add_child(struct __
  *     #              - new_sibling is a valid pointer
  */
 
-static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_add_sibling(struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_v_node, struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_v_new_sibling) {
-  struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_v_temp;
+static void __pyx_f_10algorithms_2sm_14shortest_paths_add_sibling(struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_v_node, struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_v_new_sibling) {
+  struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_v_temp;
   __Pyx_RefNannyDeclarations
-  struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_t_1;
+  struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_t_1;
   int __pyx_t_2;
   __Pyx_RefNannySetupContext("add_sibling", 0);
 
-  /* "algorithms/sm/shortest_paths.pyx":287
+  /* "algorithms/sm/shortest_paths.pyx":402
  *     #              - new_sibling is a valid pointer
  *     #              - new_sibling is not the child or sibling of another node
  *     cdef FibonacciNode* temp = rightmost_sibling(node)             # <<<<<<<<<<<<<<
  *     temp.right_sibling = new_sibling
  *     new_sibling.left_sibling = temp
  */
-  __pyx_v_temp = __pyx_f_10algorithms_2sm_21sparse_shortest_paths_rightmost_sibling(__pyx_v_node);
+  __pyx_v_temp = __pyx_f_10algorithms_2sm_14shortest_paths_rightmost_sibling(__pyx_v_node);
 
-  /* "algorithms/sm/shortest_paths.pyx":288
+  /* "algorithms/sm/shortest_paths.pyx":403
  *     #              - new_sibling is not the child or sibling of another node
  *     cdef FibonacciNode* temp = rightmost_sibling(node)
  *     temp.right_sibling = new_sibling             # <<<<<<<<<<<<<<
@@ -4020,7 +5744,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_add_sibling(struct 
  */
   __pyx_v_temp->right_sibling = __pyx_v_new_sibling;
 
-  /* "algorithms/sm/shortest_paths.pyx":289
+  /* "algorithms/sm/shortest_paths.pyx":404
  *     cdef FibonacciNode* temp = rightmost_sibling(node)
  *     temp.right_sibling = new_sibling
  *     new_sibling.left_sibling = temp             # <<<<<<<<<<<<<<
@@ -4029,7 +5753,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_add_sibling(struct 
  */
   __pyx_v_new_sibling->left_sibling = __pyx_v_temp;
 
-  /* "algorithms/sm/shortest_paths.pyx":290
+  /* "algorithms/sm/shortest_paths.pyx":405
  *     temp.right_sibling = new_sibling
  *     new_sibling.left_sibling = temp
  *     new_sibling.right_sibling = NULL             # <<<<<<<<<<<<<<
@@ -4038,7 +5762,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_add_sibling(struct 
  */
   __pyx_v_new_sibling->right_sibling = NULL;
 
-  /* "algorithms/sm/shortest_paths.pyx":291
+  /* "algorithms/sm/shortest_paths.pyx":406
  *     new_sibling.left_sibling = temp
  *     new_sibling.right_sibling = NULL
  *     new_sibling.parent = node.parent             # <<<<<<<<<<<<<<
@@ -4048,7 +5772,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_add_sibling(struct 
   __pyx_t_1 = __pyx_v_node->parent;
   __pyx_v_new_sibling->parent = __pyx_t_1;
 
-  /* "algorithms/sm/shortest_paths.pyx":292
+  /* "algorithms/sm/shortest_paths.pyx":407
  *     new_sibling.right_sibling = NULL
  *     new_sibling.parent = node.parent
  *     if new_sibling.parent:             # <<<<<<<<<<<<<<
@@ -4058,7 +5782,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_add_sibling(struct 
   __pyx_t_2 = (__pyx_v_new_sibling->parent != 0);
   if (__pyx_t_2) {
 
-    /* "algorithms/sm/shortest_paths.pyx":293
+    /* "algorithms/sm/shortest_paths.pyx":408
  *     new_sibling.parent = node.parent
  *     if new_sibling.parent:
  *         new_sibling.parent.rank += 1             # <<<<<<<<<<<<<<
@@ -4067,7 +5791,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_add_sibling(struct 
  */
     __pyx_v_new_sibling->parent->rank = (__pyx_v_new_sibling->parent->rank + 1);
 
-    /* "algorithms/sm/shortest_paths.pyx":292
+    /* "algorithms/sm/shortest_paths.pyx":407
  *     new_sibling.right_sibling = NULL
  *     new_sibling.parent = node.parent
  *     if new_sibling.parent:             # <<<<<<<<<<<<<<
@@ -4076,7 +5800,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_add_sibling(struct 
  */
   }
 
-  /* "algorithms/sm/shortest_paths.pyx":283
+  /* "algorithms/sm/shortest_paths.pyx":398
  * 
  * 
  * cdef void add_sibling(FibonacciNode* node, FibonacciNode* new_sibling):             # <<<<<<<<<<<<<<
@@ -4088,7 +5812,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_add_sibling(struct 
   __Pyx_RefNannyFinishContext();
 }
 
-/* "algorithms/sm/shortest_paths.pyx":296
+/* "algorithms/sm/shortest_paths.pyx":411
  * 
  * 
  * cdef void remove(FibonacciNode* node):             # <<<<<<<<<<<<<<
@@ -4096,13 +5820,13 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_add_sibling(struct 
  *     if node.parent:
  */
 
-static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove(struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_v_node) {
+static void __pyx_f_10algorithms_2sm_14shortest_paths_remove(struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_v_node) {
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
-  struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_t_2;
+  struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_t_2;
   __Pyx_RefNannySetupContext("remove", 0);
 
-  /* "algorithms/sm/shortest_paths.pyx":298
+  /* "algorithms/sm/shortest_paths.pyx":413
  * cdef void remove(FibonacciNode* node):
  *     # Assumptions: - node is a valid pointer
  *     if node.parent:             # <<<<<<<<<<<<<<
@@ -4112,7 +5836,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove(struct __pyx
   __pyx_t_1 = (__pyx_v_node->parent != 0);
   if (__pyx_t_1) {
 
-    /* "algorithms/sm/shortest_paths.pyx":299
+    /* "algorithms/sm/shortest_paths.pyx":414
  *     # Assumptions: - node is a valid pointer
  *     if node.parent:
  *         node.parent.rank -= 1             # <<<<<<<<<<<<<<
@@ -4121,7 +5845,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove(struct __pyx
  */
     __pyx_v_node->parent->rank = (__pyx_v_node->parent->rank - 1);
 
-    /* "algorithms/sm/shortest_paths.pyx":300
+    /* "algorithms/sm/shortest_paths.pyx":415
  *     if node.parent:
  *         node.parent.rank -= 1
  *         if node.left_sibling:             # <<<<<<<<<<<<<<
@@ -4131,7 +5855,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove(struct __pyx
     __pyx_t_1 = (__pyx_v_node->left_sibling != 0);
     if (__pyx_t_1) {
 
-      /* "algorithms/sm/shortest_paths.pyx":301
+      /* "algorithms/sm/shortest_paths.pyx":416
  *         node.parent.rank -= 1
  *         if node.left_sibling:
  *             node.parent.children = node.left_sibling             # <<<<<<<<<<<<<<
@@ -4141,7 +5865,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove(struct __pyx
       __pyx_t_2 = __pyx_v_node->left_sibling;
       __pyx_v_node->parent->children = __pyx_t_2;
 
-      /* "algorithms/sm/shortest_paths.pyx":300
+      /* "algorithms/sm/shortest_paths.pyx":415
  *     if node.parent:
  *         node.parent.rank -= 1
  *         if node.left_sibling:             # <<<<<<<<<<<<<<
@@ -4151,7 +5875,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove(struct __pyx
       goto __pyx_L4;
     }
 
-    /* "algorithms/sm/shortest_paths.pyx":302
+    /* "algorithms/sm/shortest_paths.pyx":417
  *         if node.left_sibling:
  *             node.parent.children = node.left_sibling
  *         elif node.right_sibling:             # <<<<<<<<<<<<<<
@@ -4161,7 +5885,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove(struct __pyx
     __pyx_t_1 = (__pyx_v_node->right_sibling != 0);
     if (__pyx_t_1) {
 
-      /* "algorithms/sm/shortest_paths.pyx":303
+      /* "algorithms/sm/shortest_paths.pyx":418
  *             node.parent.children = node.left_sibling
  *         elif node.right_sibling:
  *             node.parent.children = node.right_sibling             # <<<<<<<<<<<<<<
@@ -4171,7 +5895,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove(struct __pyx
       __pyx_t_2 = __pyx_v_node->right_sibling;
       __pyx_v_node->parent->children = __pyx_t_2;
 
-      /* "algorithms/sm/shortest_paths.pyx":302
+      /* "algorithms/sm/shortest_paths.pyx":417
  *         if node.left_sibling:
  *             node.parent.children = node.left_sibling
  *         elif node.right_sibling:             # <<<<<<<<<<<<<<
@@ -4181,7 +5905,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove(struct __pyx
       goto __pyx_L4;
     }
 
-    /* "algorithms/sm/shortest_paths.pyx":305
+    /* "algorithms/sm/shortest_paths.pyx":420
  *             node.parent.children = node.right_sibling
  *         else:
  *             node.parent.children = NULL             # <<<<<<<<<<<<<<
@@ -4193,7 +5917,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove(struct __pyx
     }
     __pyx_L4:;
 
-    /* "algorithms/sm/shortest_paths.pyx":298
+    /* "algorithms/sm/shortest_paths.pyx":413
  * cdef void remove(FibonacciNode* node):
  *     # Assumptions: - node is a valid pointer
  *     if node.parent:             # <<<<<<<<<<<<<<
@@ -4202,7 +5926,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove(struct __pyx
  */
   }
 
-  /* "algorithms/sm/shortest_paths.pyx":307
+  /* "algorithms/sm/shortest_paths.pyx":422
  *             node.parent.children = NULL
  * 
  *     if node.left_sibling:             # <<<<<<<<<<<<<<
@@ -4212,7 +5936,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove(struct __pyx
   __pyx_t_1 = (__pyx_v_node->left_sibling != 0);
   if (__pyx_t_1) {
 
-    /* "algorithms/sm/shortest_paths.pyx":308
+    /* "algorithms/sm/shortest_paths.pyx":423
  * 
  *     if node.left_sibling:
  *         node.left_sibling.right_sibling = node.right_sibling             # <<<<<<<<<<<<<<
@@ -4222,7 +5946,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove(struct __pyx
     __pyx_t_2 = __pyx_v_node->right_sibling;
     __pyx_v_node->left_sibling->right_sibling = __pyx_t_2;
 
-    /* "algorithms/sm/shortest_paths.pyx":307
+    /* "algorithms/sm/shortest_paths.pyx":422
  *             node.parent.children = NULL
  * 
  *     if node.left_sibling:             # <<<<<<<<<<<<<<
@@ -4231,7 +5955,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove(struct __pyx
  */
   }
 
-  /* "algorithms/sm/shortest_paths.pyx":309
+  /* "algorithms/sm/shortest_paths.pyx":424
  *     if node.left_sibling:
  *         node.left_sibling.right_sibling = node.right_sibling
  *     if node.right_sibling:             # <<<<<<<<<<<<<<
@@ -4241,7 +5965,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove(struct __pyx
   __pyx_t_1 = (__pyx_v_node->right_sibling != 0);
   if (__pyx_t_1) {
 
-    /* "algorithms/sm/shortest_paths.pyx":310
+    /* "algorithms/sm/shortest_paths.pyx":425
  *         node.left_sibling.right_sibling = node.right_sibling
  *     if node.right_sibling:
  *         node.right_sibling.left_sibling = node.left_sibling             # <<<<<<<<<<<<<<
@@ -4251,7 +5975,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove(struct __pyx
     __pyx_t_2 = __pyx_v_node->left_sibling;
     __pyx_v_node->right_sibling->left_sibling = __pyx_t_2;
 
-    /* "algorithms/sm/shortest_paths.pyx":309
+    /* "algorithms/sm/shortest_paths.pyx":424
  *     if node.left_sibling:
  *         node.left_sibling.right_sibling = node.right_sibling
  *     if node.right_sibling:             # <<<<<<<<<<<<<<
@@ -4260,7 +5984,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove(struct __pyx
  */
   }
 
-  /* "algorithms/sm/shortest_paths.pyx":312
+  /* "algorithms/sm/shortest_paths.pyx":427
  *         node.right_sibling.left_sibling = node.left_sibling
  * 
  *     node.left_sibling = NULL             # <<<<<<<<<<<<<<
@@ -4269,7 +5993,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove(struct __pyx
  */
   __pyx_v_node->left_sibling = NULL;
 
-  /* "algorithms/sm/shortest_paths.pyx":313
+  /* "algorithms/sm/shortest_paths.pyx":428
  * 
  *     node.left_sibling = NULL
  *     node.right_sibling = NULL             # <<<<<<<<<<<<<<
@@ -4278,7 +6002,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove(struct __pyx
  */
   __pyx_v_node->right_sibling = NULL;
 
-  /* "algorithms/sm/shortest_paths.pyx":314
+  /* "algorithms/sm/shortest_paths.pyx":429
  *     node.left_sibling = NULL
  *     node.right_sibling = NULL
  *     node.parent = NULL             # <<<<<<<<<<<<<<
@@ -4287,7 +6011,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove(struct __pyx
  */
   __pyx_v_node->parent = NULL;
 
-  /* "algorithms/sm/shortest_paths.pyx":296
+  /* "algorithms/sm/shortest_paths.pyx":411
  * 
  * 
  * cdef void remove(FibonacciNode* node):             # <<<<<<<<<<<<<<
@@ -4299,7 +6023,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove(struct __pyx
   __Pyx_RefNannyFinishContext();
 }
 
-/* "algorithms/sm/shortest_paths.pyx":330
+/* "algorithms/sm/shortest_paths.pyx":445
  * 
  * 
  * cdef void insert_node(FibonacciHeap* heap,             # <<<<<<<<<<<<<<
@@ -4307,12 +6031,12 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove(struct __pyx
  *     # Assumptions: - heap is a valid pointer
  */
 
-static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_insert_node(struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciHeap *__pyx_v_heap, struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_v_node) {
+static void __pyx_f_10algorithms_2sm_14shortest_paths_insert_node(struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciHeap *__pyx_v_heap, struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_v_node) {
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
   __Pyx_RefNannySetupContext("insert_node", 0);
 
-  /* "algorithms/sm/shortest_paths.pyx":335
+  /* "algorithms/sm/shortest_paths.pyx":450
  *     #              - node is a valid pointer
  *     #              - node is not the child or sibling of another node
  *     if heap.min_node:             # <<<<<<<<<<<<<<
@@ -4322,16 +6046,16 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_insert_node(struct 
   __pyx_t_1 = (__pyx_v_heap->min_node != 0);
   if (__pyx_t_1) {
 
-    /* "algorithms/sm/shortest_paths.pyx":336
+    /* "algorithms/sm/shortest_paths.pyx":451
  *     #              - node is not the child or sibling of another node
  *     if heap.min_node:
  *         add_sibling(heap.min_node, node)             # <<<<<<<<<<<<<<
  *         if node.val < heap.min_node.val:
  *             heap.min_node = node
  */
-    __pyx_f_10algorithms_2sm_21sparse_shortest_paths_add_sibling(__pyx_v_heap->min_node, __pyx_v_node);
+    __pyx_f_10algorithms_2sm_14shortest_paths_add_sibling(__pyx_v_heap->min_node, __pyx_v_node);
 
-    /* "algorithms/sm/shortest_paths.pyx":337
+    /* "algorithms/sm/shortest_paths.pyx":452
  *     if heap.min_node:
  *         add_sibling(heap.min_node, node)
  *         if node.val < heap.min_node.val:             # <<<<<<<<<<<<<<
@@ -4341,7 +6065,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_insert_node(struct 
     __pyx_t_1 = ((__pyx_v_node->val < __pyx_v_heap->min_node->val) != 0);
     if (__pyx_t_1) {
 
-      /* "algorithms/sm/shortest_paths.pyx":338
+      /* "algorithms/sm/shortest_paths.pyx":453
  *         add_sibling(heap.min_node, node)
  *         if node.val < heap.min_node.val:
  *             heap.min_node = node             # <<<<<<<<<<<<<<
@@ -4350,7 +6074,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_insert_node(struct 
  */
       __pyx_v_heap->min_node = __pyx_v_node;
 
-      /* "algorithms/sm/shortest_paths.pyx":337
+      /* "algorithms/sm/shortest_paths.pyx":452
  *     if heap.min_node:
  *         add_sibling(heap.min_node, node)
  *         if node.val < heap.min_node.val:             # <<<<<<<<<<<<<<
@@ -4359,7 +6083,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_insert_node(struct 
  */
     }
 
-    /* "algorithms/sm/shortest_paths.pyx":335
+    /* "algorithms/sm/shortest_paths.pyx":450
  *     #              - node is a valid pointer
  *     #              - node is not the child or sibling of another node
  *     if heap.min_node:             # <<<<<<<<<<<<<<
@@ -4369,7 +6093,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_insert_node(struct 
     goto __pyx_L3;
   }
 
-  /* "algorithms/sm/shortest_paths.pyx":340
+  /* "algorithms/sm/shortest_paths.pyx":455
  *             heap.min_node = node
  *     else:
  *         heap.min_node = node             # <<<<<<<<<<<<<<
@@ -4381,7 +6105,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_insert_node(struct 
   }
   __pyx_L3:;
 
-  /* "algorithms/sm/shortest_paths.pyx":330
+  /* "algorithms/sm/shortest_paths.pyx":445
  * 
  * 
  * cdef void insert_node(FibonacciHeap* heap,             # <<<<<<<<<<<<<<
@@ -4393,7 +6117,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_insert_node(struct 
   __Pyx_RefNannyFinishContext();
 }
 
-/* "algorithms/sm/shortest_paths.pyx":343
+/* "algorithms/sm/shortest_paths.pyx":458
  * 
  * 
  * cdef void decrease_val(FibonacciHeap* heap,             # <<<<<<<<<<<<<<
@@ -4401,23 +6125,23 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_insert_node(struct 
  *                        DTYPE_t newval):
  */
 
-static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_decrease_val(struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciHeap *__pyx_v_heap, struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_v_node, __pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t __pyx_v_newval) {
+static void __pyx_f_10algorithms_2sm_14shortest_paths_decrease_val(struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciHeap *__pyx_v_heap, struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_v_node, __pyx_t_10algorithms_2sm_14shortest_paths_DTYPE_t __pyx_v_newval) {
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
   int __pyx_t_2;
   __Pyx_RefNannySetupContext("decrease_val", 0);
 
-  /* "algorithms/sm/shortest_paths.pyx":350
- *     #              - node is a valid pointer
+  /* "algorithms/sm/shortest_paths.pyx":466
  *     #              - node is not the child or sibling of another node
+ *     #              - node is in the heap
  *     node.val = newval             # <<<<<<<<<<<<<<
  *     if node.parent and (node.parent.val >= newval):
  *         remove(node)
  */
   __pyx_v_node->val = __pyx_v_newval;
 
-  /* "algorithms/sm/shortest_paths.pyx":351
- *     #              - node is not the child or sibling of another node
+  /* "algorithms/sm/shortest_paths.pyx":467
+ *     #              - node is in the heap
  *     node.val = newval
  *     if node.parent and (node.parent.val >= newval):             # <<<<<<<<<<<<<<
  *         remove(node)
@@ -4434,26 +6158,26 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_decrease_val(struct
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "algorithms/sm/shortest_paths.pyx":352
+    /* "algorithms/sm/shortest_paths.pyx":468
  *     node.val = newval
  *     if node.parent and (node.parent.val >= newval):
  *         remove(node)             # <<<<<<<<<<<<<<
  *         insert_node(heap, node)
  *     elif heap.min_node.val > node.val:
  */
-    __pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove(__pyx_v_node);
+    __pyx_f_10algorithms_2sm_14shortest_paths_remove(__pyx_v_node);
 
-    /* "algorithms/sm/shortest_paths.pyx":353
+    /* "algorithms/sm/shortest_paths.pyx":469
  *     if node.parent and (node.parent.val >= newval):
  *         remove(node)
  *         insert_node(heap, node)             # <<<<<<<<<<<<<<
  *     elif heap.min_node.val > node.val:
  *         heap.min_node = node
  */
-    __pyx_f_10algorithms_2sm_21sparse_shortest_paths_insert_node(__pyx_v_heap, __pyx_v_node);
+    __pyx_f_10algorithms_2sm_14shortest_paths_insert_node(__pyx_v_heap, __pyx_v_node);
 
-    /* "algorithms/sm/shortest_paths.pyx":351
- *     #              - node is not the child or sibling of another node
+    /* "algorithms/sm/shortest_paths.pyx":467
+ *     #              - node is in the heap
  *     node.val = newval
  *     if node.parent and (node.parent.val >= newval):             # <<<<<<<<<<<<<<
  *         remove(node)
@@ -4462,7 +6186,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_decrease_val(struct
     goto __pyx_L3;
   }
 
-  /* "algorithms/sm/shortest_paths.pyx":354
+  /* "algorithms/sm/shortest_paths.pyx":470
  *         remove(node)
  *         insert_node(heap, node)
  *     elif heap.min_node.val > node.val:             # <<<<<<<<<<<<<<
@@ -4472,7 +6196,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_decrease_val(struct
   __pyx_t_1 = ((__pyx_v_heap->min_node->val > __pyx_v_node->val) != 0);
   if (__pyx_t_1) {
 
-    /* "algorithms/sm/shortest_paths.pyx":355
+    /* "algorithms/sm/shortest_paths.pyx":471
  *         insert_node(heap, node)
  *     elif heap.min_node.val > node.val:
  *         heap.min_node = node             # <<<<<<<<<<<<<<
@@ -4481,7 +6205,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_decrease_val(struct
  */
     __pyx_v_heap->min_node = __pyx_v_node;
 
-    /* "algorithms/sm/shortest_paths.pyx":354
+    /* "algorithms/sm/shortest_paths.pyx":470
  *         remove(node)
  *         insert_node(heap, node)
  *     elif heap.min_node.val > node.val:             # <<<<<<<<<<<<<<
@@ -4491,7 +6215,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_decrease_val(struct
   }
   __pyx_L3:;
 
-  /* "algorithms/sm/shortest_paths.pyx":343
+  /* "algorithms/sm/shortest_paths.pyx":458
  * 
  * 
  * cdef void decrease_val(FibonacciHeap* heap,             # <<<<<<<<<<<<<<
@@ -4503,7 +6227,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_decrease_val(struct
   __Pyx_RefNannyFinishContext();
 }
 
-/* "algorithms/sm/shortest_paths.pyx":358
+/* "algorithms/sm/shortest_paths.pyx":474
  * 
  * 
  * cdef void link(FibonacciHeap* heap, FibonacciNode* node):             # <<<<<<<<<<<<<<
@@ -4511,14 +6235,14 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_decrease_val(struct
  *     #              - node is a valid pointer
  */
 
-static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_link(struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciHeap *__pyx_v_heap, struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_v_node) {
-  struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_v_linknode;
+static void __pyx_f_10algorithms_2sm_14shortest_paths_link(struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciHeap *__pyx_v_heap, struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_v_node) {
+  struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_v_linknode;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
   int __pyx_t_2;
   __Pyx_RefNannySetupContext("link", 0);
 
-  /* "algorithms/sm/shortest_paths.pyx":367
+  /* "algorithms/sm/shortest_paths.pyx":483
  *     cdef FibonacciNode *child
  * 
  *     if heap.roots_by_rank[node.rank] == NULL:             # <<<<<<<<<<<<<<
@@ -4528,7 +6252,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_link(struct __pyx_t
   __pyx_t_1 = (((__pyx_v_heap->roots_by_rank[__pyx_v_node->rank]) == NULL) != 0);
   if (__pyx_t_1) {
 
-    /* "algorithms/sm/shortest_paths.pyx":368
+    /* "algorithms/sm/shortest_paths.pyx":484
  * 
  *     if heap.roots_by_rank[node.rank] == NULL:
  *         heap.roots_by_rank[node.rank] = node             # <<<<<<<<<<<<<<
@@ -4537,7 +6261,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_link(struct __pyx_t
  */
     (__pyx_v_heap->roots_by_rank[__pyx_v_node->rank]) = __pyx_v_node;
 
-    /* "algorithms/sm/shortest_paths.pyx":367
+    /* "algorithms/sm/shortest_paths.pyx":483
  *     cdef FibonacciNode *child
  * 
  *     if heap.roots_by_rank[node.rank] == NULL:             # <<<<<<<<<<<<<<
@@ -4547,7 +6271,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_link(struct __pyx_t
     goto __pyx_L3;
   }
 
-  /* "algorithms/sm/shortest_paths.pyx":370
+  /* "algorithms/sm/shortest_paths.pyx":486
  *         heap.roots_by_rank[node.rank] = node
  *     else:
  *         linknode = heap.roots_by_rank[node.rank]             # <<<<<<<<<<<<<<
@@ -4557,7 +6281,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_link(struct __pyx_t
   /*else*/ {
     __pyx_v_linknode = (__pyx_v_heap->roots_by_rank[__pyx_v_node->rank]);
 
-    /* "algorithms/sm/shortest_paths.pyx":371
+    /* "algorithms/sm/shortest_paths.pyx":487
  *     else:
  *         linknode = heap.roots_by_rank[node.rank]
  *         heap.roots_by_rank[node.rank] = NULL             # <<<<<<<<<<<<<<
@@ -4566,7 +6290,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_link(struct __pyx_t
  */
     (__pyx_v_heap->roots_by_rank[__pyx_v_node->rank]) = NULL;
 
-    /* "algorithms/sm/shortest_paths.pyx":373
+    /* "algorithms/sm/shortest_paths.pyx":489
  *         heap.roots_by_rank[node.rank] = NULL
  * 
  *         if node.val < linknode.val or node == heap.min_node:             # <<<<<<<<<<<<<<
@@ -4584,34 +6308,34 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_link(struct __pyx_t
     __pyx_L5_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "algorithms/sm/shortest_paths.pyx":374
+      /* "algorithms/sm/shortest_paths.pyx":490
  * 
  *         if node.val < linknode.val or node == heap.min_node:
  *             remove(linknode)             # <<<<<<<<<<<<<<
  *             add_child(node, linknode)
  *             link(heap, node)
  */
-      __pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove(__pyx_v_linknode);
+      __pyx_f_10algorithms_2sm_14shortest_paths_remove(__pyx_v_linknode);
 
-      /* "algorithms/sm/shortest_paths.pyx":375
+      /* "algorithms/sm/shortest_paths.pyx":491
  *         if node.val < linknode.val or node == heap.min_node:
  *             remove(linknode)
  *             add_child(node, linknode)             # <<<<<<<<<<<<<<
  *             link(heap, node)
  *         else:
  */
-      __pyx_f_10algorithms_2sm_21sparse_shortest_paths_add_child(__pyx_v_node, __pyx_v_linknode);
+      __pyx_f_10algorithms_2sm_14shortest_paths_add_child(__pyx_v_node, __pyx_v_linknode);
 
-      /* "algorithms/sm/shortest_paths.pyx":376
+      /* "algorithms/sm/shortest_paths.pyx":492
  *             remove(linknode)
  *             add_child(node, linknode)
  *             link(heap, node)             # <<<<<<<<<<<<<<
  *         else:
  *             remove(node)
  */
-      __pyx_f_10algorithms_2sm_21sparse_shortest_paths_link(__pyx_v_heap, __pyx_v_node);
+      __pyx_f_10algorithms_2sm_14shortest_paths_link(__pyx_v_heap, __pyx_v_node);
 
-      /* "algorithms/sm/shortest_paths.pyx":373
+      /* "algorithms/sm/shortest_paths.pyx":489
  *         heap.roots_by_rank[node.rank] = NULL
  * 
  *         if node.val < linknode.val or node == heap.min_node:             # <<<<<<<<<<<<<<
@@ -4621,7 +6345,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_link(struct __pyx_t
       goto __pyx_L4;
     }
 
-    /* "algorithms/sm/shortest_paths.pyx":378
+    /* "algorithms/sm/shortest_paths.pyx":494
  *             link(heap, node)
  *         else:
  *             remove(node)             # <<<<<<<<<<<<<<
@@ -4629,31 +6353,31 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_link(struct __pyx_t
  *             link(heap, linknode)
  */
     /*else*/ {
-      __pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove(__pyx_v_node);
+      __pyx_f_10algorithms_2sm_14shortest_paths_remove(__pyx_v_node);
 
-      /* "algorithms/sm/shortest_paths.pyx":379
+      /* "algorithms/sm/shortest_paths.pyx":495
  *         else:
  *             remove(node)
  *             add_child(linknode, node)             # <<<<<<<<<<<<<<
  *             link(heap, linknode)
  * 
  */
-      __pyx_f_10algorithms_2sm_21sparse_shortest_paths_add_child(__pyx_v_linknode, __pyx_v_node);
+      __pyx_f_10algorithms_2sm_14shortest_paths_add_child(__pyx_v_linknode, __pyx_v_node);
 
-      /* "algorithms/sm/shortest_paths.pyx":380
+      /* "algorithms/sm/shortest_paths.pyx":496
  *             remove(node)
  *             add_child(linknode, node)
  *             link(heap, linknode)             # <<<<<<<<<<<<<<
  * 
  * 
  */
-      __pyx_f_10algorithms_2sm_21sparse_shortest_paths_link(__pyx_v_heap, __pyx_v_linknode);
+      __pyx_f_10algorithms_2sm_14shortest_paths_link(__pyx_v_heap, __pyx_v_linknode);
     }
     __pyx_L4:;
   }
   __pyx_L3:;
 
-  /* "algorithms/sm/shortest_paths.pyx":358
+  /* "algorithms/sm/shortest_paths.pyx":474
  * 
  * 
  * cdef void link(FibonacciHeap* heap, FibonacciNode* node):             # <<<<<<<<<<<<<<
@@ -4665,7 +6389,7 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_link(struct __pyx_t
   __Pyx_RefNannyFinishContext();
 }
 
-/* "algorithms/sm/shortest_paths.pyx":383
+/* "algorithms/sm/shortest_paths.pyx":499
  * 
  * 
  * cdef FibonacciNode* remove_min(FibonacciHeap* heap):             # <<<<<<<<<<<<<<
@@ -4673,18 +6397,19 @@ static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_link(struct __pyx_t
  *     #              - heap.min_node is a valid pointer
  */
 
-static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove_min(struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciHeap *__pyx_v_heap) {
-  struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_v_temp;
-  struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_v_temp_right;
-  struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_v_out;
+static struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_f_10algorithms_2sm_14shortest_paths_remove_min(struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciHeap *__pyx_v_heap) {
+  struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_v_temp;
+  struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_v_temp_right;
+  struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_v_out;
   unsigned int __pyx_v_i;
-  struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_r;
+  struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_r;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
-  struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_t_2;
+  struct __pyx_t_10algorithms_2sm_14shortest_paths_FibonacciNode *__pyx_t_2;
+  unsigned int __pyx_t_3;
   __Pyx_RefNannySetupContext("remove_min", 0);
 
-  /* "algorithms/sm/shortest_paths.pyx":392
+  /* "algorithms/sm/shortest_paths.pyx":508
  * 
  *     # make all min_node children into root nodes
  *     if heap.min_node.children:             # <<<<<<<<<<<<<<
@@ -4694,16 +6419,16 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
   __pyx_t_1 = (__pyx_v_heap->min_node->children != 0);
   if (__pyx_t_1) {
 
-    /* "algorithms/sm/shortest_paths.pyx":393
+    /* "algorithms/sm/shortest_paths.pyx":509
  *     # make all min_node children into root nodes
  *     if heap.min_node.children:
  *         temp = leftmost_sibling(heap.min_node.children)             # <<<<<<<<<<<<<<
  *         temp_right = NULL
  * 
  */
-    __pyx_v_temp = __pyx_f_10algorithms_2sm_21sparse_shortest_paths_leftmost_sibling(__pyx_v_heap->min_node->children);
+    __pyx_v_temp = __pyx_f_10algorithms_2sm_14shortest_paths_leftmost_sibling(__pyx_v_heap->min_node->children);
 
-    /* "algorithms/sm/shortest_paths.pyx":394
+    /* "algorithms/sm/shortest_paths.pyx":510
  *     if heap.min_node.children:
  *         temp = leftmost_sibling(heap.min_node.children)
  *         temp_right = NULL             # <<<<<<<<<<<<<<
@@ -4712,7 +6437,7 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
  */
     __pyx_v_temp_right = NULL;
 
-    /* "algorithms/sm/shortest_paths.pyx":396
+    /* "algorithms/sm/shortest_paths.pyx":512
  *         temp_right = NULL
  * 
  *         while temp:             # <<<<<<<<<<<<<<
@@ -4723,7 +6448,7 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
       __pyx_t_1 = (__pyx_v_temp != 0);
       if (!__pyx_t_1) break;
 
-      /* "algorithms/sm/shortest_paths.pyx":397
+      /* "algorithms/sm/shortest_paths.pyx":513
  * 
  *         while temp:
  *             temp_right = temp.right_sibling             # <<<<<<<<<<<<<<
@@ -4733,25 +6458,25 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
       __pyx_t_2 = __pyx_v_temp->right_sibling;
       __pyx_v_temp_right = __pyx_t_2;
 
-      /* "algorithms/sm/shortest_paths.pyx":398
+      /* "algorithms/sm/shortest_paths.pyx":514
  *         while temp:
  *             temp_right = temp.right_sibling
  *             remove(temp)             # <<<<<<<<<<<<<<
  *             add_sibling(heap.min_node, temp)
  *             temp = temp_right
  */
-      __pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove(__pyx_v_temp);
+      __pyx_f_10algorithms_2sm_14shortest_paths_remove(__pyx_v_temp);
 
-      /* "algorithms/sm/shortest_paths.pyx":399
+      /* "algorithms/sm/shortest_paths.pyx":515
  *             temp_right = temp.right_sibling
  *             remove(temp)
  *             add_sibling(heap.min_node, temp)             # <<<<<<<<<<<<<<
  *             temp = temp_right
  * 
  */
-      __pyx_f_10algorithms_2sm_21sparse_shortest_paths_add_sibling(__pyx_v_heap->min_node, __pyx_v_temp);
+      __pyx_f_10algorithms_2sm_14shortest_paths_add_sibling(__pyx_v_heap->min_node, __pyx_v_temp);
 
-      /* "algorithms/sm/shortest_paths.pyx":400
+      /* "algorithms/sm/shortest_paths.pyx":516
  *             remove(temp)
  *             add_sibling(heap.min_node, temp)
  *             temp = temp_right             # <<<<<<<<<<<<<<
@@ -4761,7 +6486,7 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
       __pyx_v_temp = __pyx_v_temp_right;
     }
 
-    /* "algorithms/sm/shortest_paths.pyx":402
+    /* "algorithms/sm/shortest_paths.pyx":518
  *             temp = temp_right
  * 
  *         heap.min_node.children = NULL             # <<<<<<<<<<<<<<
@@ -4770,7 +6495,7 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
  */
     __pyx_v_heap->min_node->children = NULL;
 
-    /* "algorithms/sm/shortest_paths.pyx":392
+    /* "algorithms/sm/shortest_paths.pyx":508
  * 
  *     # make all min_node children into root nodes
  *     if heap.min_node.children:             # <<<<<<<<<<<<<<
@@ -4779,16 +6504,16 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
  */
   }
 
-  /* "algorithms/sm/shortest_paths.pyx":405
+  /* "algorithms/sm/shortest_paths.pyx":521
  * 
  *     # choose a root node other than min_node
  *     temp = leftmost_sibling(heap.min_node)             # <<<<<<<<<<<<<<
  *     if temp == heap.min_node:
  *         if heap.min_node.right_sibling:
  */
-  __pyx_v_temp = __pyx_f_10algorithms_2sm_21sparse_shortest_paths_leftmost_sibling(__pyx_v_heap->min_node);
+  __pyx_v_temp = __pyx_f_10algorithms_2sm_14shortest_paths_leftmost_sibling(__pyx_v_heap->min_node);
 
-  /* "algorithms/sm/shortest_paths.pyx":406
+  /* "algorithms/sm/shortest_paths.pyx":522
  *     # choose a root node other than min_node
  *     temp = leftmost_sibling(heap.min_node)
  *     if temp == heap.min_node:             # <<<<<<<<<<<<<<
@@ -4798,7 +6523,7 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
   __pyx_t_1 = ((__pyx_v_temp == __pyx_v_heap->min_node) != 0);
   if (__pyx_t_1) {
 
-    /* "algorithms/sm/shortest_paths.pyx":407
+    /* "algorithms/sm/shortest_paths.pyx":523
  *     temp = leftmost_sibling(heap.min_node)
  *     if temp == heap.min_node:
  *         if heap.min_node.right_sibling:             # <<<<<<<<<<<<<<
@@ -4808,7 +6533,7 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
     __pyx_t_1 = (__pyx_v_heap->min_node->right_sibling != 0);
     if (__pyx_t_1) {
 
-      /* "algorithms/sm/shortest_paths.pyx":408
+      /* "algorithms/sm/shortest_paths.pyx":524
  *     if temp == heap.min_node:
  *         if heap.min_node.right_sibling:
  *             temp = heap.min_node.right_sibling             # <<<<<<<<<<<<<<
@@ -4818,7 +6543,7 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
       __pyx_t_2 = __pyx_v_heap->min_node->right_sibling;
       __pyx_v_temp = __pyx_t_2;
 
-      /* "algorithms/sm/shortest_paths.pyx":407
+      /* "algorithms/sm/shortest_paths.pyx":523
  *     temp = leftmost_sibling(heap.min_node)
  *     if temp == heap.min_node:
  *         if heap.min_node.right_sibling:             # <<<<<<<<<<<<<<
@@ -4828,7 +6553,7 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
       goto __pyx_L7;
     }
 
-    /* "algorithms/sm/shortest_paths.pyx":410
+    /* "algorithms/sm/shortest_paths.pyx":526
  *             temp = heap.min_node.right_sibling
  *         else:
  *             out = heap.min_node             # <<<<<<<<<<<<<<
@@ -4839,7 +6564,7 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
       __pyx_t_2 = __pyx_v_heap->min_node;
       __pyx_v_out = __pyx_t_2;
 
-      /* "algorithms/sm/shortest_paths.pyx":411
+      /* "algorithms/sm/shortest_paths.pyx":527
  *         else:
  *             out = heap.min_node
  *             heap.min_node = NULL             # <<<<<<<<<<<<<<
@@ -4848,7 +6573,7 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
  */
       __pyx_v_heap->min_node = NULL;
 
-      /* "algorithms/sm/shortest_paths.pyx":412
+      /* "algorithms/sm/shortest_paths.pyx":528
  *             out = heap.min_node
  *             heap.min_node = NULL
  *             return out             # <<<<<<<<<<<<<<
@@ -4860,7 +6585,7 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
     }
     __pyx_L7:;
 
-    /* "algorithms/sm/shortest_paths.pyx":406
+    /* "algorithms/sm/shortest_paths.pyx":522
  *     # choose a root node other than min_node
  *     temp = leftmost_sibling(heap.min_node)
  *     if temp == heap.min_node:             # <<<<<<<<<<<<<<
@@ -4869,7 +6594,7 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
  */
   }
 
-  /* "algorithms/sm/shortest_paths.pyx":415
+  /* "algorithms/sm/shortest_paths.pyx":531
  * 
  *     # remove min_node, and point heap to the new min
  *     out = heap.min_node             # <<<<<<<<<<<<<<
@@ -4879,16 +6604,16 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
   __pyx_t_2 = __pyx_v_heap->min_node;
   __pyx_v_out = __pyx_t_2;
 
-  /* "algorithms/sm/shortest_paths.pyx":416
+  /* "algorithms/sm/shortest_paths.pyx":532
  *     # remove min_node, and point heap to the new min
  *     out = heap.min_node
  *     remove(heap.min_node)             # <<<<<<<<<<<<<<
  *     heap.min_node = temp
  * 
  */
-  __pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove(__pyx_v_heap->min_node);
+  __pyx_f_10algorithms_2sm_14shortest_paths_remove(__pyx_v_heap->min_node);
 
-  /* "algorithms/sm/shortest_paths.pyx":417
+  /* "algorithms/sm/shortest_paths.pyx":533
  *     out = heap.min_node
  *     remove(heap.min_node)
  *     heap.min_node = temp             # <<<<<<<<<<<<<<
@@ -4897,18 +6622,19 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
  */
   __pyx_v_heap->min_node = __pyx_v_temp;
 
-  /* "algorithms/sm/shortest_paths.pyx":420
+  /* "algorithms/sm/shortest_paths.pyx":536
  * 
  *     # re-link the heap
- *     for i from 0 <= i < 100:             # <<<<<<<<<<<<<<
+ *     for i in range(100):             # <<<<<<<<<<<<<<
  *         heap.roots_by_rank[i] = NULL
  * 
  */
-  for (__pyx_v_i = 0; __pyx_v_i < 0x64; __pyx_v_i++) {
+  for (__pyx_t_3 = 0; __pyx_t_3 < 0x64; __pyx_t_3+=1) {
+    __pyx_v_i = __pyx_t_3;
 
-    /* "algorithms/sm/shortest_paths.pyx":421
+    /* "algorithms/sm/shortest_paths.pyx":537
  *     # re-link the heap
- *     for i from 0 <= i < 100:
+ *     for i in range(100):
  *         heap.roots_by_rank[i] = NULL             # <<<<<<<<<<<<<<
  * 
  *     while temp:
@@ -4916,7 +6642,7 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
     (__pyx_v_heap->roots_by_rank[__pyx_v_i]) = NULL;
   }
 
-  /* "algorithms/sm/shortest_paths.pyx":423
+  /* "algorithms/sm/shortest_paths.pyx":539
  *         heap.roots_by_rank[i] = NULL
  * 
  *     while temp:             # <<<<<<<<<<<<<<
@@ -4927,7 +6653,7 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
     __pyx_t_1 = (__pyx_v_temp != 0);
     if (!__pyx_t_1) break;
 
-    /* "algorithms/sm/shortest_paths.pyx":424
+    /* "algorithms/sm/shortest_paths.pyx":540
  * 
  *     while temp:
  *         if temp.val < heap.min_node.val:             # <<<<<<<<<<<<<<
@@ -4937,7 +6663,7 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
     __pyx_t_1 = ((__pyx_v_temp->val < __pyx_v_heap->min_node->val) != 0);
     if (__pyx_t_1) {
 
-      /* "algorithms/sm/shortest_paths.pyx":425
+      /* "algorithms/sm/shortest_paths.pyx":541
  *     while temp:
  *         if temp.val < heap.min_node.val:
  *             heap.min_node = temp             # <<<<<<<<<<<<<<
@@ -4946,7 +6672,7 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
  */
       __pyx_v_heap->min_node = __pyx_v_temp;
 
-      /* "algorithms/sm/shortest_paths.pyx":424
+      /* "algorithms/sm/shortest_paths.pyx":540
  * 
  *     while temp:
  *         if temp.val < heap.min_node.val:             # <<<<<<<<<<<<<<
@@ -4955,7 +6681,7 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
  */
     }
 
-    /* "algorithms/sm/shortest_paths.pyx":426
+    /* "algorithms/sm/shortest_paths.pyx":542
  *         if temp.val < heap.min_node.val:
  *             heap.min_node = temp
  *         temp_right = temp.right_sibling             # <<<<<<<<<<<<<<
@@ -4965,16 +6691,16 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
     __pyx_t_2 = __pyx_v_temp->right_sibling;
     __pyx_v_temp_right = __pyx_t_2;
 
-    /* "algorithms/sm/shortest_paths.pyx":427
+    /* "algorithms/sm/shortest_paths.pyx":543
  *             heap.min_node = temp
  *         temp_right = temp.right_sibling
  *         link(heap, temp)             # <<<<<<<<<<<<<<
  *         temp = temp_right
  * 
  */
-    __pyx_f_10algorithms_2sm_21sparse_shortest_paths_link(__pyx_v_heap, __pyx_v_temp);
+    __pyx_f_10algorithms_2sm_14shortest_paths_link(__pyx_v_heap, __pyx_v_temp);
 
-    /* "algorithms/sm/shortest_paths.pyx":428
+    /* "algorithms/sm/shortest_paths.pyx":544
  *         temp_right = temp.right_sibling
  *         link(heap, temp)
  *         temp = temp_right             # <<<<<<<<<<<<<<
@@ -4984,7 +6710,7 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
     __pyx_v_temp = __pyx_v_temp_right;
   }
 
-  /* "algorithms/sm/shortest_paths.pyx":430
+  /* "algorithms/sm/shortest_paths.pyx":546
  *         temp = temp_right
  * 
  *     return out             # <<<<<<<<<<<<<<
@@ -4994,7 +6720,7 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
   __pyx_r = __pyx_v_out;
   goto __pyx_L0;
 
-  /* "algorithms/sm/shortest_paths.pyx":383
+  /* "algorithms/sm/shortest_paths.pyx":499
  * 
  * 
  * cdef FibonacciNode* remove_min(FibonacciHeap* heap):             # <<<<<<<<<<<<<<
@@ -5006,859 +6732,6 @@ static struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
-}
-
-/* "algorithms/sm/shortest_paths.pyx":453
- * 
- * @cython.boundscheck(False)
- * cdef void dijkstra_directed_one_row(             # <<<<<<<<<<<<<<
- *                     unsigned int i_node,
- *                     unsigned int t_node,
- */
-
-static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_dijkstra_directed_one_row(unsigned int __pyx_v_i_node, unsigned int __pyx_v_t_node, PyArrayObject *__pyx_v_neighbors, PyArrayObject *__pyx_v_distances, PyArrayObject *__pyx_v_indptr, PyArrayObject *__pyx_v_graph, struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciHeap *__pyx_v_heap, struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_v_nodes) {
-  unsigned int __pyx_v_N;
-  unsigned int __pyx_v_i;
-  struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_v_v;
-  struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_v_current_neighbor;
-  __pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t __pyx_v_dist;
-  __Pyx_LocalBuf_ND __pyx_pybuffernd_distances;
-  __Pyx_Buffer __pyx_pybuffer_distances;
-  __Pyx_LocalBuf_ND __pyx_pybuffernd_graph;
-  __Pyx_Buffer __pyx_pybuffer_graph;
-  __Pyx_LocalBuf_ND __pyx_pybuffernd_indptr;
-  __Pyx_Buffer __pyx_pybuffer_indptr;
-  __Pyx_LocalBuf_ND __pyx_pybuffernd_neighbors;
-  __Pyx_Buffer __pyx_pybuffer_neighbors;
-  __Pyx_RefNannyDeclarations
-  unsigned int __pyx_t_1;
-  int __pyx_t_2;
-  __pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t __pyx_t_3;
-  size_t __pyx_t_4;
-  size_t __pyx_t_5;
-  size_t __pyx_t_6;
-  Py_ssize_t __pyx_t_7;
-  __pyx_t_10algorithms_2sm_21sparse_shortest_paths_ITYPE_t __pyx_t_8;
-  size_t __pyx_t_9;
-  size_t __pyx_t_10;
-  size_t __pyx_t_11;
-  size_t __pyx_t_12;
-  __Pyx_RefNannySetupContext("dijkstra_directed_one_row", 0);
-  __pyx_pybuffer_neighbors.pybuffer.buf = NULL;
-  __pyx_pybuffer_neighbors.refcount = 0;
-  __pyx_pybuffernd_neighbors.data = NULL;
-  __pyx_pybuffernd_neighbors.rcbuffer = &__pyx_pybuffer_neighbors;
-  __pyx_pybuffer_distances.pybuffer.buf = NULL;
-  __pyx_pybuffer_distances.refcount = 0;
-  __pyx_pybuffernd_distances.data = NULL;
-  __pyx_pybuffernd_distances.rcbuffer = &__pyx_pybuffer_distances;
-  __pyx_pybuffer_indptr.pybuffer.buf = NULL;
-  __pyx_pybuffer_indptr.refcount = 0;
-  __pyx_pybuffernd_indptr.data = NULL;
-  __pyx_pybuffernd_indptr.rcbuffer = &__pyx_pybuffer_indptr;
-  __pyx_pybuffer_graph.pybuffer.buf = NULL;
-  __pyx_pybuffer_graph.refcount = 0;
-  __pyx_pybuffernd_graph.data = NULL;
-  __pyx_pybuffernd_graph.rcbuffer = &__pyx_pybuffer_graph;
-  {
-    __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_neighbors.rcbuffer->pybuffer, (PyObject*)__pyx_v_neighbors, &__Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_21sparse_shortest_paths_ITYPE_t, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 453, __pyx_L1_error)
-  }
-  __pyx_pybuffernd_neighbors.diminfo[0].strides = __pyx_pybuffernd_neighbors.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_neighbors.diminfo[0].shape = __pyx_pybuffernd_neighbors.rcbuffer->pybuffer.shape[0];
-  {
-    __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_distances.rcbuffer->pybuffer, (PyObject*)__pyx_v_distances, &__Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 453, __pyx_L1_error)
-  }
-  __pyx_pybuffernd_distances.diminfo[0].strides = __pyx_pybuffernd_distances.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_distances.diminfo[0].shape = __pyx_pybuffernd_distances.rcbuffer->pybuffer.shape[0];
-  {
-    __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_indptr.rcbuffer->pybuffer, (PyObject*)__pyx_v_indptr, &__Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_21sparse_shortest_paths_ITYPE_t, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 453, __pyx_L1_error)
-  }
-  __pyx_pybuffernd_indptr.diminfo[0].strides = __pyx_pybuffernd_indptr.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_indptr.diminfo[0].shape = __pyx_pybuffernd_indptr.rcbuffer->pybuffer.shape[0];
-  {
-    __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_graph.rcbuffer->pybuffer, (PyObject*)__pyx_v_graph, &__Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS| PyBUF_WRITABLE, 2, 0, __pyx_stack) == -1)) __PYX_ERR(0, 453, __pyx_L1_error)
-  }
-  __pyx_pybuffernd_graph.diminfo[0].strides = __pyx_pybuffernd_graph.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_graph.diminfo[0].shape = __pyx_pybuffernd_graph.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_graph.diminfo[1].strides = __pyx_pybuffernd_graph.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_graph.diminfo[1].shape = __pyx_pybuffernd_graph.rcbuffer->pybuffer.shape[1];
-
-  /* "algorithms/sm/shortest_paths.pyx":482
- *     nodes : the array of nodes to use
- *     """
- *     cdef unsigned int N = graph.shape[0]             # <<<<<<<<<<<<<<
- *     cdef unsigned int i
- *     cdef FibonacciNode *v
- */
-  __pyx_v_N = (__pyx_v_graph->dimensions[0]);
-
-  /* "algorithms/sm/shortest_paths.pyx":489
- * 
- *     # initialize nodes
- *     for i from 0 <= i < N:             # <<<<<<<<<<<<<<
- *         initialize_node(&nodes[i], i)
- * 
- */
-  __pyx_t_1 = __pyx_v_N;
-  for (__pyx_v_i = 0; __pyx_v_i < __pyx_t_1; __pyx_v_i++) {
-
-    /* "algorithms/sm/shortest_paths.pyx":490
- *     # initialize nodes
- *     for i from 0 <= i < N:
- *         initialize_node(&nodes[i], i)             # <<<<<<<<<<<<<<
- * 
- *     heap.min_node = NULL
- */
-    __pyx_f_10algorithms_2sm_21sparse_shortest_paths_initialize_node((&(__pyx_v_nodes[__pyx_v_i])), __pyx_v_i, NULL);
-  }
-
-  /* "algorithms/sm/shortest_paths.pyx":492
- *         initialize_node(&nodes[i], i)
- * 
- *     heap.min_node = NULL             # <<<<<<<<<<<<<<
- *     insert_node(heap, &nodes[i_node])
- * 
- */
-  __pyx_v_heap->min_node = NULL;
-
-  /* "algorithms/sm/shortest_paths.pyx":493
- * 
- *     heap.min_node = NULL
- *     insert_node(heap, &nodes[i_node])             # <<<<<<<<<<<<<<
- * 
- *     while heap.min_node:
- */
-  __pyx_f_10algorithms_2sm_21sparse_shortest_paths_insert_node(__pyx_v_heap, (&(__pyx_v_nodes[__pyx_v_i_node])));
-
-  /* "algorithms/sm/shortest_paths.pyx":495
- *     insert_node(heap, &nodes[i_node])
- * 
- *     while heap.min_node:             # <<<<<<<<<<<<<<
- *         v = remove_min(heap)
- *         v.state = 2  # 2 -> SCANNED
- */
-  while (1) {
-    __pyx_t_2 = (__pyx_v_heap->min_node != 0);
-    if (!__pyx_t_2) break;
-
-    /* "algorithms/sm/shortest_paths.pyx":496
- * 
- *     while heap.min_node:
- *         v = remove_min(heap)             # <<<<<<<<<<<<<<
- *         v.state = 2  # 2 -> SCANNED
- *         if v.index == t_node:
- */
-    __pyx_v_v = __pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove_min(__pyx_v_heap);
-
-    /* "algorithms/sm/shortest_paths.pyx":497
- *     while heap.min_node:
- *         v = remove_min(heap)
- *         v.state = 2  # 2 -> SCANNED             # <<<<<<<<<<<<<<
- *         if v.index == t_node:
- *             graph[i_node, v.index] = v.val
- */
-    __pyx_v_v->state = 2;
-
-    /* "algorithms/sm/shortest_paths.pyx":498
- *         v = remove_min(heap)
- *         v.state = 2  # 2 -> SCANNED
- *         if v.index == t_node:             # <<<<<<<<<<<<<<
- *             graph[i_node, v.index] = v.val
- *             break
- */
-    __pyx_t_2 = ((__pyx_v_v->index == __pyx_v_t_node) != 0);
-    if (__pyx_t_2) {
-
-      /* "algorithms/sm/shortest_paths.pyx":499
- *         v.state = 2  # 2 -> SCANNED
- *         if v.index == t_node:
- *             graph[i_node, v.index] = v.val             # <<<<<<<<<<<<<<
- *             break
- *         for i from indptr[v.index] <= i < indptr[v.index + 1]:
- */
-      __pyx_t_3 = __pyx_v_v->val;
-      __pyx_t_4 = __pyx_v_i_node;
-      __pyx_t_5 = __pyx_v_v->index;
-      *__Pyx_BufPtrCContig2d(__pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t *, __pyx_pybuffernd_graph.rcbuffer->pybuffer.buf, __pyx_t_4, __pyx_pybuffernd_graph.diminfo[0].strides, __pyx_t_5, __pyx_pybuffernd_graph.diminfo[1].strides) = __pyx_t_3;
-
-      /* "algorithms/sm/shortest_paths.pyx":500
- *         if v.index == t_node:
- *             graph[i_node, v.index] = v.val
- *             break             # <<<<<<<<<<<<<<
- *         for i from indptr[v.index] <= i < indptr[v.index + 1]:
- *             current_neighbor = &nodes[neighbors[i]]
- */
-      goto __pyx_L6_break;
-
-      /* "algorithms/sm/shortest_paths.pyx":498
- *         v = remove_min(heap)
- *         v.state = 2  # 2 -> SCANNED
- *         if v.index == t_node:             # <<<<<<<<<<<<<<
- *             graph[i_node, v.index] = v.val
- *             break
- */
-    }
-
-    /* "algorithms/sm/shortest_paths.pyx":501
- *             graph[i_node, v.index] = v.val
- *             break
- *         for i from indptr[v.index] <= i < indptr[v.index + 1]:             # <<<<<<<<<<<<<<
- *             current_neighbor = &nodes[neighbors[i]]
- *             if current_neighbor.state != 2:      # 2 -> SCANNED
- */
-    __pyx_t_6 = __pyx_v_v->index;
-    __pyx_t_7 = (__pyx_v_v->index + 1);
-    if (__pyx_t_7 < 0) __pyx_t_7 += __pyx_pybuffernd_indptr.diminfo[0].shape;
-    __pyx_t_8 = (*__Pyx_BufPtrCContig1d(__pyx_t_10algorithms_2sm_21sparse_shortest_paths_ITYPE_t *, __pyx_pybuffernd_indptr.rcbuffer->pybuffer.buf, __pyx_t_7, __pyx_pybuffernd_indptr.diminfo[0].strides));
-    for (__pyx_v_i = (*__Pyx_BufPtrCContig1d(__pyx_t_10algorithms_2sm_21sparse_shortest_paths_ITYPE_t *, __pyx_pybuffernd_indptr.rcbuffer->pybuffer.buf, __pyx_t_6, __pyx_pybuffernd_indptr.diminfo[0].strides)); __pyx_v_i < __pyx_t_8; __pyx_v_i++) {
-
-      /* "algorithms/sm/shortest_paths.pyx":502
- *             break
- *         for i from indptr[v.index] <= i < indptr[v.index + 1]:
- *             current_neighbor = &nodes[neighbors[i]]             # <<<<<<<<<<<<<<
- *             if current_neighbor.state != 2:      # 2 -> SCANNED
- *                 dist = distances[i]
- */
-      __pyx_t_9 = __pyx_v_i;
-      __pyx_v_current_neighbor = (&(__pyx_v_nodes[(*__Pyx_BufPtrCContig1d(__pyx_t_10algorithms_2sm_21sparse_shortest_paths_ITYPE_t *, __pyx_pybuffernd_neighbors.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_neighbors.diminfo[0].strides))]));
-
-      /* "algorithms/sm/shortest_paths.pyx":503
- *         for i from indptr[v.index] <= i < indptr[v.index + 1]:
- *             current_neighbor = &nodes[neighbors[i]]
- *             if current_neighbor.state != 2:      # 2 -> SCANNED             # <<<<<<<<<<<<<<
- *                 dist = distances[i]
- *                 if current_neighbor.state == 0:  # 0 -> NOT_IN_HEAP
- */
-      __pyx_t_2 = ((__pyx_v_current_neighbor->state != 2) != 0);
-      if (__pyx_t_2) {
-
-        /* "algorithms/sm/shortest_paths.pyx":504
- *             current_neighbor = &nodes[neighbors[i]]
- *             if current_neighbor.state != 2:      # 2 -> SCANNED
- *                 dist = distances[i]             # <<<<<<<<<<<<<<
- *                 if current_neighbor.state == 0:  # 0 -> NOT_IN_HEAP
- *                     current_neighbor.state = 1   # 1 -> IN_HEAP
- */
-        __pyx_t_10 = __pyx_v_i;
-        __pyx_v_dist = (*__Pyx_BufPtrCContig1d(__pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t *, __pyx_pybuffernd_distances.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_distances.diminfo[0].strides));
-
-        /* "algorithms/sm/shortest_paths.pyx":505
- *             if current_neighbor.state != 2:      # 2 -> SCANNED
- *                 dist = distances[i]
- *                 if current_neighbor.state == 0:  # 0 -> NOT_IN_HEAP             # <<<<<<<<<<<<<<
- *                     current_neighbor.state = 1   # 1 -> IN_HEAP
- *                     current_neighbor.val = v.val + dist
- */
-        __pyx_t_2 = ((__pyx_v_current_neighbor->state == 0) != 0);
-        if (__pyx_t_2) {
-
-          /* "algorithms/sm/shortest_paths.pyx":506
- *                 dist = distances[i]
- *                 if current_neighbor.state == 0:  # 0 -> NOT_IN_HEAP
- *                     current_neighbor.state = 1   # 1 -> IN_HEAP             # <<<<<<<<<<<<<<
- *                     current_neighbor.val = v.val + dist
- *                     insert_node(heap, current_neighbor)
- */
-          __pyx_v_current_neighbor->state = 1;
-
-          /* "algorithms/sm/shortest_paths.pyx":507
- *                 if current_neighbor.state == 0:  # 0 -> NOT_IN_HEAP
- *                     current_neighbor.state = 1   # 1 -> IN_HEAP
- *                     current_neighbor.val = v.val + dist             # <<<<<<<<<<<<<<
- *                     insert_node(heap, current_neighbor)
- *                 elif current_neighbor.val > v.val + dist:
- */
-          __pyx_v_current_neighbor->val = (__pyx_v_v->val + __pyx_v_dist);
-
-          /* "algorithms/sm/shortest_paths.pyx":508
- *                     current_neighbor.state = 1   # 1 -> IN_HEAP
- *                     current_neighbor.val = v.val + dist
- *                     insert_node(heap, current_neighbor)             # <<<<<<<<<<<<<<
- *                 elif current_neighbor.val > v.val + dist:
- *                     decrease_val(heap, current_neighbor,
- */
-          __pyx_f_10algorithms_2sm_21sparse_shortest_paths_insert_node(__pyx_v_heap, __pyx_v_current_neighbor);
-
-          /* "algorithms/sm/shortest_paths.pyx":505
- *             if current_neighbor.state != 2:      # 2 -> SCANNED
- *                 dist = distances[i]
- *                 if current_neighbor.state == 0:  # 0 -> NOT_IN_HEAP             # <<<<<<<<<<<<<<
- *                     current_neighbor.state = 1   # 1 -> IN_HEAP
- *                     current_neighbor.val = v.val + dist
- */
-          goto __pyx_L11;
-        }
-
-        /* "algorithms/sm/shortest_paths.pyx":509
- *                     current_neighbor.val = v.val + dist
- *                     insert_node(heap, current_neighbor)
- *                 elif current_neighbor.val > v.val + dist:             # <<<<<<<<<<<<<<
- *                     decrease_val(heap, current_neighbor,
- *                                  v.val + dist)
- */
-        __pyx_t_2 = ((__pyx_v_current_neighbor->val > (__pyx_v_v->val + __pyx_v_dist)) != 0);
-        if (__pyx_t_2) {
-
-          /* "algorithms/sm/shortest_paths.pyx":510
- *                     insert_node(heap, current_neighbor)
- *                 elif current_neighbor.val > v.val + dist:
- *                     decrease_val(heap, current_neighbor,             # <<<<<<<<<<<<<<
- *                                  v.val + dist)
- * 
- */
-          __pyx_f_10algorithms_2sm_21sparse_shortest_paths_decrease_val(__pyx_v_heap, __pyx_v_current_neighbor, (__pyx_v_v->val + __pyx_v_dist));
-
-          /* "algorithms/sm/shortest_paths.pyx":509
- *                     current_neighbor.val = v.val + dist
- *                     insert_node(heap, current_neighbor)
- *                 elif current_neighbor.val > v.val + dist:             # <<<<<<<<<<<<<<
- *                     decrease_val(heap, current_neighbor,
- *                                  v.val + dist)
- */
-        }
-        __pyx_L11:;
-
-        /* "algorithms/sm/shortest_paths.pyx":503
- *         for i from indptr[v.index] <= i < indptr[v.index + 1]:
- *             current_neighbor = &nodes[neighbors[i]]
- *             if current_neighbor.state != 2:      # 2 -> SCANNED             # <<<<<<<<<<<<<<
- *                 dist = distances[i]
- *                 if current_neighbor.state == 0:  # 0 -> NOT_IN_HEAP
- */
-      }
-    }
-
-    /* "algorithms/sm/shortest_paths.pyx":514
- * 
- *         #v has now been scanned: add the distance to the results
- *         graph[i_node, v.index] = v.val             # <<<<<<<<<<<<<<
- * 
- * 
- */
-    __pyx_t_3 = __pyx_v_v->val;
-    __pyx_t_11 = __pyx_v_i_node;
-    __pyx_t_12 = __pyx_v_v->index;
-    *__Pyx_BufPtrCContig2d(__pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t *, __pyx_pybuffernd_graph.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_graph.diminfo[0].strides, __pyx_t_12, __pyx_pybuffernd_graph.diminfo[1].strides) = __pyx_t_3;
-  }
-  __pyx_L6_break:;
-
-  /* "algorithms/sm/shortest_paths.pyx":453
- * 
- * @cython.boundscheck(False)
- * cdef void dijkstra_directed_one_row(             # <<<<<<<<<<<<<<
- *                     unsigned int i_node,
- *                     unsigned int t_node,
- */
-
-  /* function exit code */
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  { PyObject *__pyx_type, *__pyx_value, *__pyx_tb;
-    __Pyx_PyThreadState_declare
-    __Pyx_PyThreadState_assign
-    __Pyx_ErrFetch(&__pyx_type, &__pyx_value, &__pyx_tb);
-    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_distances.rcbuffer->pybuffer);
-    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_graph.rcbuffer->pybuffer);
-    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_indptr.rcbuffer->pybuffer);
-    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_neighbors.rcbuffer->pybuffer);
-  __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_WriteUnraisable("algorithms.sm.sparse_shortest_paths.dijkstra_directed_one_row", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
-  goto __pyx_L2;
-  __pyx_L0:;
-  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_distances.rcbuffer->pybuffer);
-  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_graph.rcbuffer->pybuffer);
-  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_indptr.rcbuffer->pybuffer);
-  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_neighbors.rcbuffer->pybuffer);
-  __pyx_L2:;
-  __Pyx_RefNannyFinishContext();
-}
-
-/* "algorithms/sm/shortest_paths.pyx":518
- * 
- * @cython.boundscheck(False)
- * cdef void dijkstra_one_row(unsigned int i_node,             # <<<<<<<<<<<<<<
- *                     np.ndarray[ITYPE_t, ndim=1, mode='c'] neighbors1,
- *                     np.ndarray[DTYPE_t, ndim=1, mode='c'] distances1,
- */
-
-static void __pyx_f_10algorithms_2sm_21sparse_shortest_paths_dijkstra_one_row(unsigned int __pyx_v_i_node, PyArrayObject *__pyx_v_neighbors1, PyArrayObject *__pyx_v_distances1, PyArrayObject *__pyx_v_indptr1, PyArrayObject *__pyx_v_neighbors2, PyArrayObject *__pyx_v_distances2, PyArrayObject *__pyx_v_indptr2, PyArrayObject *__pyx_v_graph, struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciHeap *__pyx_v_heap, struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_v_nodes) {
-  unsigned int __pyx_v_N;
-  unsigned int __pyx_v_i;
-  struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_v_v;
-  struct __pyx_t_10algorithms_2sm_21sparse_shortest_paths_FibonacciNode *__pyx_v_current_neighbor;
-  __pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t __pyx_v_dist;
-  __Pyx_LocalBuf_ND __pyx_pybuffernd_distances1;
-  __Pyx_Buffer __pyx_pybuffer_distances1;
-  __Pyx_LocalBuf_ND __pyx_pybuffernd_distances2;
-  __Pyx_Buffer __pyx_pybuffer_distances2;
-  __Pyx_LocalBuf_ND __pyx_pybuffernd_graph;
-  __Pyx_Buffer __pyx_pybuffer_graph;
-  __Pyx_LocalBuf_ND __pyx_pybuffernd_indptr1;
-  __Pyx_Buffer __pyx_pybuffer_indptr1;
-  __Pyx_LocalBuf_ND __pyx_pybuffernd_indptr2;
-  __Pyx_Buffer __pyx_pybuffer_indptr2;
-  __Pyx_LocalBuf_ND __pyx_pybuffernd_neighbors1;
-  __Pyx_Buffer __pyx_pybuffer_neighbors1;
-  __Pyx_LocalBuf_ND __pyx_pybuffernd_neighbors2;
-  __Pyx_Buffer __pyx_pybuffer_neighbors2;
-  __Pyx_RefNannyDeclarations
-  unsigned int __pyx_t_1;
-  int __pyx_t_2;
-  size_t __pyx_t_3;
-  Py_ssize_t __pyx_t_4;
-  __pyx_t_10algorithms_2sm_21sparse_shortest_paths_ITYPE_t __pyx_t_5;
-  size_t __pyx_t_6;
-  size_t __pyx_t_7;
-  size_t __pyx_t_8;
-  Py_ssize_t __pyx_t_9;
-  size_t __pyx_t_10;
-  size_t __pyx_t_11;
-  __pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t __pyx_t_12;
-  size_t __pyx_t_13;
-  size_t __pyx_t_14;
-  __Pyx_RefNannySetupContext("dijkstra_one_row", 0);
-  __pyx_pybuffer_neighbors1.pybuffer.buf = NULL;
-  __pyx_pybuffer_neighbors1.refcount = 0;
-  __pyx_pybuffernd_neighbors1.data = NULL;
-  __pyx_pybuffernd_neighbors1.rcbuffer = &__pyx_pybuffer_neighbors1;
-  __pyx_pybuffer_distances1.pybuffer.buf = NULL;
-  __pyx_pybuffer_distances1.refcount = 0;
-  __pyx_pybuffernd_distances1.data = NULL;
-  __pyx_pybuffernd_distances1.rcbuffer = &__pyx_pybuffer_distances1;
-  __pyx_pybuffer_indptr1.pybuffer.buf = NULL;
-  __pyx_pybuffer_indptr1.refcount = 0;
-  __pyx_pybuffernd_indptr1.data = NULL;
-  __pyx_pybuffernd_indptr1.rcbuffer = &__pyx_pybuffer_indptr1;
-  __pyx_pybuffer_neighbors2.pybuffer.buf = NULL;
-  __pyx_pybuffer_neighbors2.refcount = 0;
-  __pyx_pybuffernd_neighbors2.data = NULL;
-  __pyx_pybuffernd_neighbors2.rcbuffer = &__pyx_pybuffer_neighbors2;
-  __pyx_pybuffer_distances2.pybuffer.buf = NULL;
-  __pyx_pybuffer_distances2.refcount = 0;
-  __pyx_pybuffernd_distances2.data = NULL;
-  __pyx_pybuffernd_distances2.rcbuffer = &__pyx_pybuffer_distances2;
-  __pyx_pybuffer_indptr2.pybuffer.buf = NULL;
-  __pyx_pybuffer_indptr2.refcount = 0;
-  __pyx_pybuffernd_indptr2.data = NULL;
-  __pyx_pybuffernd_indptr2.rcbuffer = &__pyx_pybuffer_indptr2;
-  __pyx_pybuffer_graph.pybuffer.buf = NULL;
-  __pyx_pybuffer_graph.refcount = 0;
-  __pyx_pybuffernd_graph.data = NULL;
-  __pyx_pybuffernd_graph.rcbuffer = &__pyx_pybuffer_graph;
-  {
-    __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_neighbors1.rcbuffer->pybuffer, (PyObject*)__pyx_v_neighbors1, &__Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_21sparse_shortest_paths_ITYPE_t, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 518, __pyx_L1_error)
-  }
-  __pyx_pybuffernd_neighbors1.diminfo[0].strides = __pyx_pybuffernd_neighbors1.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_neighbors1.diminfo[0].shape = __pyx_pybuffernd_neighbors1.rcbuffer->pybuffer.shape[0];
-  {
-    __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_distances1.rcbuffer->pybuffer, (PyObject*)__pyx_v_distances1, &__Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 518, __pyx_L1_error)
-  }
-  __pyx_pybuffernd_distances1.diminfo[0].strides = __pyx_pybuffernd_distances1.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_distances1.diminfo[0].shape = __pyx_pybuffernd_distances1.rcbuffer->pybuffer.shape[0];
-  {
-    __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_indptr1.rcbuffer->pybuffer, (PyObject*)__pyx_v_indptr1, &__Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_21sparse_shortest_paths_ITYPE_t, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 518, __pyx_L1_error)
-  }
-  __pyx_pybuffernd_indptr1.diminfo[0].strides = __pyx_pybuffernd_indptr1.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_indptr1.diminfo[0].shape = __pyx_pybuffernd_indptr1.rcbuffer->pybuffer.shape[0];
-  {
-    __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_neighbors2.rcbuffer->pybuffer, (PyObject*)__pyx_v_neighbors2, &__Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_21sparse_shortest_paths_ITYPE_t, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 518, __pyx_L1_error)
-  }
-  __pyx_pybuffernd_neighbors2.diminfo[0].strides = __pyx_pybuffernd_neighbors2.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_neighbors2.diminfo[0].shape = __pyx_pybuffernd_neighbors2.rcbuffer->pybuffer.shape[0];
-  {
-    __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_distances2.rcbuffer->pybuffer, (PyObject*)__pyx_v_distances2, &__Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 518, __pyx_L1_error)
-  }
-  __pyx_pybuffernd_distances2.diminfo[0].strides = __pyx_pybuffernd_distances2.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_distances2.diminfo[0].shape = __pyx_pybuffernd_distances2.rcbuffer->pybuffer.shape[0];
-  {
-    __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_indptr2.rcbuffer->pybuffer, (PyObject*)__pyx_v_indptr2, &__Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_21sparse_shortest_paths_ITYPE_t, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 518, __pyx_L1_error)
-  }
-  __pyx_pybuffernd_indptr2.diminfo[0].strides = __pyx_pybuffernd_indptr2.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_indptr2.diminfo[0].shape = __pyx_pybuffernd_indptr2.rcbuffer->pybuffer.shape[0];
-  {
-    __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_graph.rcbuffer->pybuffer, (PyObject*)__pyx_v_graph, &__Pyx_TypeInfo_nn___pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t, PyBUF_FORMAT| PyBUF_C_CONTIGUOUS| PyBUF_WRITABLE, 2, 0, __pyx_stack) == -1)) __PYX_ERR(0, 518, __pyx_L1_error)
-  }
-  __pyx_pybuffernd_graph.diminfo[0].strides = __pyx_pybuffernd_graph.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_graph.diminfo[0].shape = __pyx_pybuffernd_graph.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_graph.diminfo[1].strides = __pyx_pybuffernd_graph.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_graph.diminfo[1].shape = __pyx_pybuffernd_graph.rcbuffer->pybuffer.shape[1];
-
-  /* "algorithms/sm/shortest_paths.pyx":548
- *     nodes : the array of nodes to use
- *     """
- *     cdef unsigned int N = graph.shape[0]             # <<<<<<<<<<<<<<
- *     cdef unsigned int i
- *     cdef FibonacciNode *v
- */
-  __pyx_v_N = (__pyx_v_graph->dimensions[0]);
-
-  /* "algorithms/sm/shortest_paths.pyx":558
- *     # rank should already be 0, index will already be set
- *     # we just need to re-set state and val
- *     for i from 0 <= i < N:             # <<<<<<<<<<<<<<
- *         nodes[i].state = 0  # 0 -> NOT_IN_HEAP
- *         nodes[i].val = 0
- */
-  __pyx_t_1 = __pyx_v_N;
-  for (__pyx_v_i = 0; __pyx_v_i < __pyx_t_1; __pyx_v_i++) {
-
-    /* "algorithms/sm/shortest_paths.pyx":559
- *     # we just need to re-set state and val
- *     for i from 0 <= i < N:
- *         nodes[i].state = 0  # 0 -> NOT_IN_HEAP             # <<<<<<<<<<<<<<
- *         nodes[i].val = 0
- * 
- */
-    (__pyx_v_nodes[__pyx_v_i]).state = 0;
-
-    /* "algorithms/sm/shortest_paths.pyx":560
- *     for i from 0 <= i < N:
- *         nodes[i].state = 0  # 0 -> NOT_IN_HEAP
- *         nodes[i].val = 0             # <<<<<<<<<<<<<<
- * 
- *     insert_node(heap, &nodes[i_node])
- */
-    (__pyx_v_nodes[__pyx_v_i]).val = 0.0;
-  }
-
-  /* "algorithms/sm/shortest_paths.pyx":562
- *         nodes[i].val = 0
- * 
- *     insert_node(heap, &nodes[i_node])             # <<<<<<<<<<<<<<
- * 
- *     while heap.min_node:
- */
-  __pyx_f_10algorithms_2sm_21sparse_shortest_paths_insert_node(__pyx_v_heap, (&(__pyx_v_nodes[__pyx_v_i_node])));
-
-  /* "algorithms/sm/shortest_paths.pyx":564
- *     insert_node(heap, &nodes[i_node])
- * 
- *     while heap.min_node:             # <<<<<<<<<<<<<<
- *         v = remove_min(heap)
- *         v.state = 2  # 2 -> SCANNED
- */
-  while (1) {
-    __pyx_t_2 = (__pyx_v_heap->min_node != 0);
-    if (!__pyx_t_2) break;
-
-    /* "algorithms/sm/shortest_paths.pyx":565
- * 
- *     while heap.min_node:
- *         v = remove_min(heap)             # <<<<<<<<<<<<<<
- *         v.state = 2  # 2 -> SCANNED
- * 
- */
-    __pyx_v_v = __pyx_f_10algorithms_2sm_21sparse_shortest_paths_remove_min(__pyx_v_heap);
-
-    /* "algorithms/sm/shortest_paths.pyx":566
- *     while heap.min_node:
- *         v = remove_min(heap)
- *         v.state = 2  # 2 -> SCANNED             # <<<<<<<<<<<<<<
- * 
- *         for i from indptr1[v.index] <= i < indptr1[v.index + 1]:
- */
-    __pyx_v_v->state = 2;
-
-    /* "algorithms/sm/shortest_paths.pyx":568
- *         v.state = 2  # 2 -> SCANNED
- * 
- *         for i from indptr1[v.index] <= i < indptr1[v.index + 1]:             # <<<<<<<<<<<<<<
- *             current_neighbor = &nodes[neighbors1[i]]
- *             if current_neighbor.state != 2:      # 2 -> SCANNED
- */
-    __pyx_t_3 = __pyx_v_v->index;
-    __pyx_t_4 = (__pyx_v_v->index + 1);
-    if (__pyx_t_4 < 0) __pyx_t_4 += __pyx_pybuffernd_indptr1.diminfo[0].shape;
-    __pyx_t_5 = (*__Pyx_BufPtrCContig1d(__pyx_t_10algorithms_2sm_21sparse_shortest_paths_ITYPE_t *, __pyx_pybuffernd_indptr1.rcbuffer->pybuffer.buf, __pyx_t_4, __pyx_pybuffernd_indptr1.diminfo[0].strides));
-    for (__pyx_v_i = (*__Pyx_BufPtrCContig1d(__pyx_t_10algorithms_2sm_21sparse_shortest_paths_ITYPE_t *, __pyx_pybuffernd_indptr1.rcbuffer->pybuffer.buf, __pyx_t_3, __pyx_pybuffernd_indptr1.diminfo[0].strides)); __pyx_v_i < __pyx_t_5; __pyx_v_i++) {
-
-      /* "algorithms/sm/shortest_paths.pyx":569
- * 
- *         for i from indptr1[v.index] <= i < indptr1[v.index + 1]:
- *             current_neighbor = &nodes[neighbors1[i]]             # <<<<<<<<<<<<<<
- *             if current_neighbor.state != 2:      # 2 -> SCANNED
- *                 dist = distances1[i]
- */
-      __pyx_t_6 = __pyx_v_i;
-      __pyx_v_current_neighbor = (&(__pyx_v_nodes[(*__Pyx_BufPtrCContig1d(__pyx_t_10algorithms_2sm_21sparse_shortest_paths_ITYPE_t *, __pyx_pybuffernd_neighbors1.rcbuffer->pybuffer.buf, __pyx_t_6, __pyx_pybuffernd_neighbors1.diminfo[0].strides))]));
-
-      /* "algorithms/sm/shortest_paths.pyx":570
- *         for i from indptr1[v.index] <= i < indptr1[v.index + 1]:
- *             current_neighbor = &nodes[neighbors1[i]]
- *             if current_neighbor.state != 2:      # 2 -> SCANNED             # <<<<<<<<<<<<<<
- *                 dist = distances1[i]
- *                 if current_neighbor.state == 0:  # 0 -> NOT_IN_HEAP
- */
-      __pyx_t_2 = ((__pyx_v_current_neighbor->state != 2) != 0);
-      if (__pyx_t_2) {
-
-        /* "algorithms/sm/shortest_paths.pyx":571
- *             current_neighbor = &nodes[neighbors1[i]]
- *             if current_neighbor.state != 2:      # 2 -> SCANNED
- *                 dist = distances1[i]             # <<<<<<<<<<<<<<
- *                 if current_neighbor.state == 0:  # 0 -> NOT_IN_HEAP
- *                     current_neighbor.state = 1   # 1 -> IN_HEAP
- */
-        __pyx_t_7 = __pyx_v_i;
-        __pyx_v_dist = (*__Pyx_BufPtrCContig1d(__pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t *, __pyx_pybuffernd_distances1.rcbuffer->pybuffer.buf, __pyx_t_7, __pyx_pybuffernd_distances1.diminfo[0].strides));
-
-        /* "algorithms/sm/shortest_paths.pyx":572
- *             if current_neighbor.state != 2:      # 2 -> SCANNED
- *                 dist = distances1[i]
- *                 if current_neighbor.state == 0:  # 0 -> NOT_IN_HEAP             # <<<<<<<<<<<<<<
- *                     current_neighbor.state = 1   # 1 -> IN_HEAP
- *                     current_neighbor.val = v.val + dist
- */
-        __pyx_t_2 = ((__pyx_v_current_neighbor->state == 0) != 0);
-        if (__pyx_t_2) {
-
-          /* "algorithms/sm/shortest_paths.pyx":573
- *                 dist = distances1[i]
- *                 if current_neighbor.state == 0:  # 0 -> NOT_IN_HEAP
- *                     current_neighbor.state = 1   # 1 -> IN_HEAP             # <<<<<<<<<<<<<<
- *                     current_neighbor.val = v.val + dist
- *                     insert_node(heap, current_neighbor)
- */
-          __pyx_v_current_neighbor->state = 1;
-
-          /* "algorithms/sm/shortest_paths.pyx":574
- *                 if current_neighbor.state == 0:  # 0 -> NOT_IN_HEAP
- *                     current_neighbor.state = 1   # 1 -> IN_HEAP
- *                     current_neighbor.val = v.val + dist             # <<<<<<<<<<<<<<
- *                     insert_node(heap, current_neighbor)
- *                 elif current_neighbor.val > v.val + dist:
- */
-          __pyx_v_current_neighbor->val = (__pyx_v_v->val + __pyx_v_dist);
-
-          /* "algorithms/sm/shortest_paths.pyx":575
- *                     current_neighbor.state = 1   # 1 -> IN_HEAP
- *                     current_neighbor.val = v.val + dist
- *                     insert_node(heap, current_neighbor)             # <<<<<<<<<<<<<<
- *                 elif current_neighbor.val > v.val + dist:
- *                     decrease_val(heap, current_neighbor,
- */
-          __pyx_f_10algorithms_2sm_21sparse_shortest_paths_insert_node(__pyx_v_heap, __pyx_v_current_neighbor);
-
-          /* "algorithms/sm/shortest_paths.pyx":572
- *             if current_neighbor.state != 2:      # 2 -> SCANNED
- *                 dist = distances1[i]
- *                 if current_neighbor.state == 0:  # 0 -> NOT_IN_HEAP             # <<<<<<<<<<<<<<
- *                     current_neighbor.state = 1   # 1 -> IN_HEAP
- *                     current_neighbor.val = v.val + dist
- */
-          goto __pyx_L10;
-        }
-
-        /* "algorithms/sm/shortest_paths.pyx":576
- *                     current_neighbor.val = v.val + dist
- *                     insert_node(heap, current_neighbor)
- *                 elif current_neighbor.val > v.val + dist:             # <<<<<<<<<<<<<<
- *                     decrease_val(heap, current_neighbor,
- *                                  v.val + dist)
- */
-        __pyx_t_2 = ((__pyx_v_current_neighbor->val > (__pyx_v_v->val + __pyx_v_dist)) != 0);
-        if (__pyx_t_2) {
-
-          /* "algorithms/sm/shortest_paths.pyx":577
- *                     insert_node(heap, current_neighbor)
- *                 elif current_neighbor.val > v.val + dist:
- *                     decrease_val(heap, current_neighbor,             # <<<<<<<<<<<<<<
- *                                  v.val + dist)
- * 
- */
-          __pyx_f_10algorithms_2sm_21sparse_shortest_paths_decrease_val(__pyx_v_heap, __pyx_v_current_neighbor, (__pyx_v_v->val + __pyx_v_dist));
-
-          /* "algorithms/sm/shortest_paths.pyx":576
- *                     current_neighbor.val = v.val + dist
- *                     insert_node(heap, current_neighbor)
- *                 elif current_neighbor.val > v.val + dist:             # <<<<<<<<<<<<<<
- *                     decrease_val(heap, current_neighbor,
- *                                  v.val + dist)
- */
-        }
-        __pyx_L10:;
-
-        /* "algorithms/sm/shortest_paths.pyx":570
- *         for i from indptr1[v.index] <= i < indptr1[v.index + 1]:
- *             current_neighbor = &nodes[neighbors1[i]]
- *             if current_neighbor.state != 2:      # 2 -> SCANNED             # <<<<<<<<<<<<<<
- *                 dist = distances1[i]
- *                 if current_neighbor.state == 0:  # 0 -> NOT_IN_HEAP
- */
-      }
-    }
-
-    /* "algorithms/sm/shortest_paths.pyx":580
- *                                  v.val + dist)
- * 
- *         for i from indptr2[v.index] <= i < indptr2[v.index + 1]:             # <<<<<<<<<<<<<<
- *             current_neighbor = &nodes[neighbors2[i]]
- *             if current_neighbor.state != 2:      # 2 -> SCANNED
- */
-    __pyx_t_8 = __pyx_v_v->index;
-    __pyx_t_9 = (__pyx_v_v->index + 1);
-    if (__pyx_t_9 < 0) __pyx_t_9 += __pyx_pybuffernd_indptr2.diminfo[0].shape;
-    __pyx_t_5 = (*__Pyx_BufPtrCContig1d(__pyx_t_10algorithms_2sm_21sparse_shortest_paths_ITYPE_t *, __pyx_pybuffernd_indptr2.rcbuffer->pybuffer.buf, __pyx_t_9, __pyx_pybuffernd_indptr2.diminfo[0].strides));
-    for (__pyx_v_i = (*__Pyx_BufPtrCContig1d(__pyx_t_10algorithms_2sm_21sparse_shortest_paths_ITYPE_t *, __pyx_pybuffernd_indptr2.rcbuffer->pybuffer.buf, __pyx_t_8, __pyx_pybuffernd_indptr2.diminfo[0].strides)); __pyx_v_i < __pyx_t_5; __pyx_v_i++) {
-
-      /* "algorithms/sm/shortest_paths.pyx":581
- * 
- *         for i from indptr2[v.index] <= i < indptr2[v.index + 1]:
- *             current_neighbor = &nodes[neighbors2[i]]             # <<<<<<<<<<<<<<
- *             if current_neighbor.state != 2:      # 2 -> SCANNED
- *                 dist = distances2[i]
- */
-      __pyx_t_10 = __pyx_v_i;
-      __pyx_v_current_neighbor = (&(__pyx_v_nodes[(*__Pyx_BufPtrCContig1d(__pyx_t_10algorithms_2sm_21sparse_shortest_paths_ITYPE_t *, __pyx_pybuffernd_neighbors2.rcbuffer->pybuffer.buf, __pyx_t_10, __pyx_pybuffernd_neighbors2.diminfo[0].strides))]));
-
-      /* "algorithms/sm/shortest_paths.pyx":582
- *         for i from indptr2[v.index] <= i < indptr2[v.index + 1]:
- *             current_neighbor = &nodes[neighbors2[i]]
- *             if current_neighbor.state != 2:      # 2 -> SCANNED             # <<<<<<<<<<<<<<
- *                 dist = distances2[i]
- *                 if current_neighbor.state == 0:  # 0 -> NOT_IN_HEAP
- */
-      __pyx_t_2 = ((__pyx_v_current_neighbor->state != 2) != 0);
-      if (__pyx_t_2) {
-
-        /* "algorithms/sm/shortest_paths.pyx":583
- *             current_neighbor = &nodes[neighbors2[i]]
- *             if current_neighbor.state != 2:      # 2 -> SCANNED
- *                 dist = distances2[i]             # <<<<<<<<<<<<<<
- *                 if current_neighbor.state == 0:  # 0 -> NOT_IN_HEAP
- *                     current_neighbor.state = 1   # 1 -> IN_HEAP
- */
-        __pyx_t_11 = __pyx_v_i;
-        __pyx_v_dist = (*__Pyx_BufPtrCContig1d(__pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t *, __pyx_pybuffernd_distances2.rcbuffer->pybuffer.buf, __pyx_t_11, __pyx_pybuffernd_distances2.diminfo[0].strides));
-
-        /* "algorithms/sm/shortest_paths.pyx":584
- *             if current_neighbor.state != 2:      # 2 -> SCANNED
- *                 dist = distances2[i]
- *                 if current_neighbor.state == 0:  # 0 -> NOT_IN_HEAP             # <<<<<<<<<<<<<<
- *                     current_neighbor.state = 1   # 1 -> IN_HEAP
- *                     current_neighbor.val = v.val + dist
- */
-        __pyx_t_2 = ((__pyx_v_current_neighbor->state == 0) != 0);
-        if (__pyx_t_2) {
-
-          /* "algorithms/sm/shortest_paths.pyx":585
- *                 dist = distances2[i]
- *                 if current_neighbor.state == 0:  # 0 -> NOT_IN_HEAP
- *                     current_neighbor.state = 1   # 1 -> IN_HEAP             # <<<<<<<<<<<<<<
- *                     current_neighbor.val = v.val + dist
- *                     insert_node(heap, current_neighbor)
- */
-          __pyx_v_current_neighbor->state = 1;
-
-          /* "algorithms/sm/shortest_paths.pyx":586
- *                 if current_neighbor.state == 0:  # 0 -> NOT_IN_HEAP
- *                     current_neighbor.state = 1   # 1 -> IN_HEAP
- *                     current_neighbor.val = v.val + dist             # <<<<<<<<<<<<<<
- *                     insert_node(heap, current_neighbor)
- *                 elif current_neighbor.val > v.val + dist:
- */
-          __pyx_v_current_neighbor->val = (__pyx_v_v->val + __pyx_v_dist);
-
-          /* "algorithms/sm/shortest_paths.pyx":587
- *                     current_neighbor.state = 1   # 1 -> IN_HEAP
- *                     current_neighbor.val = v.val + dist
- *                     insert_node(heap, current_neighbor)             # <<<<<<<<<<<<<<
- *                 elif current_neighbor.val > v.val + dist:
- *                     decrease_val(heap, current_neighbor,
- */
-          __pyx_f_10algorithms_2sm_21sparse_shortest_paths_insert_node(__pyx_v_heap, __pyx_v_current_neighbor);
-
-          /* "algorithms/sm/shortest_paths.pyx":584
- *             if current_neighbor.state != 2:      # 2 -> SCANNED
- *                 dist = distances2[i]
- *                 if current_neighbor.state == 0:  # 0 -> NOT_IN_HEAP             # <<<<<<<<<<<<<<
- *                     current_neighbor.state = 1   # 1 -> IN_HEAP
- *                     current_neighbor.val = v.val + dist
- */
-          goto __pyx_L14;
-        }
-
-        /* "algorithms/sm/shortest_paths.pyx":588
- *                     current_neighbor.val = v.val + dist
- *                     insert_node(heap, current_neighbor)
- *                 elif current_neighbor.val > v.val + dist:             # <<<<<<<<<<<<<<
- *                     decrease_val(heap, current_neighbor,
- *                                  v.val + dist)
- */
-        __pyx_t_2 = ((__pyx_v_current_neighbor->val > (__pyx_v_v->val + __pyx_v_dist)) != 0);
-        if (__pyx_t_2) {
-
-          /* "algorithms/sm/shortest_paths.pyx":589
- *                     insert_node(heap, current_neighbor)
- *                 elif current_neighbor.val > v.val + dist:
- *                     decrease_val(heap, current_neighbor,             # <<<<<<<<<<<<<<
- *                                  v.val + dist)
- * 
- */
-          __pyx_f_10algorithms_2sm_21sparse_shortest_paths_decrease_val(__pyx_v_heap, __pyx_v_current_neighbor, (__pyx_v_v->val + __pyx_v_dist));
-
-          /* "algorithms/sm/shortest_paths.pyx":588
- *                     current_neighbor.val = v.val + dist
- *                     insert_node(heap, current_neighbor)
- *                 elif current_neighbor.val > v.val + dist:             # <<<<<<<<<<<<<<
- *                     decrease_val(heap, current_neighbor,
- *                                  v.val + dist)
- */
-        }
-        __pyx_L14:;
-
-        /* "algorithms/sm/shortest_paths.pyx":582
- *         for i from indptr2[v.index] <= i < indptr2[v.index + 1]:
- *             current_neighbor = &nodes[neighbors2[i]]
- *             if current_neighbor.state != 2:      # 2 -> SCANNED             # <<<<<<<<<<<<<<
- *                 dist = distances2[i]
- *                 if current_neighbor.state == 0:  # 0 -> NOT_IN_HEAP
- */
-      }
-    }
-
-    /* "algorithms/sm/shortest_paths.pyx":593
- * 
- *         #v has now been scanned: add the distance to the results
- *         graph[i_node, v.index] = v.val             # <<<<<<<<<<<<<<
- */
-    __pyx_t_12 = __pyx_v_v->val;
-    __pyx_t_13 = __pyx_v_i_node;
-    __pyx_t_14 = __pyx_v_v->index;
-    *__Pyx_BufPtrCContig2d(__pyx_t_10algorithms_2sm_21sparse_shortest_paths_DTYPE_t *, __pyx_pybuffernd_graph.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_graph.diminfo[0].strides, __pyx_t_14, __pyx_pybuffernd_graph.diminfo[1].strides) = __pyx_t_12;
-  }
-
-  /* "algorithms/sm/shortest_paths.pyx":518
- * 
- * @cython.boundscheck(False)
- * cdef void dijkstra_one_row(unsigned int i_node,             # <<<<<<<<<<<<<<
- *                     np.ndarray[ITYPE_t, ndim=1, mode='c'] neighbors1,
- *                     np.ndarray[DTYPE_t, ndim=1, mode='c'] distances1,
- */
-
-  /* function exit code */
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  { PyObject *__pyx_type, *__pyx_value, *__pyx_tb;
-    __Pyx_PyThreadState_declare
-    __Pyx_PyThreadState_assign
-    __Pyx_ErrFetch(&__pyx_type, &__pyx_value, &__pyx_tb);
-    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_distances1.rcbuffer->pybuffer);
-    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_distances2.rcbuffer->pybuffer);
-    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_graph.rcbuffer->pybuffer);
-    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_indptr1.rcbuffer->pybuffer);
-    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_indptr2.rcbuffer->pybuffer);
-    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_neighbors1.rcbuffer->pybuffer);
-    __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_neighbors2.rcbuffer->pybuffer);
-  __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_WriteUnraisable("algorithms.sm.sparse_shortest_paths.dijkstra_one_row", __pyx_clineno, __pyx_lineno, __pyx_filename, 1, 0);
-  goto __pyx_L2;
-  __pyx_L0:;
-  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_distances1.rcbuffer->pybuffer);
-  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_distances2.rcbuffer->pybuffer);
-  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_graph.rcbuffer->pybuffer);
-  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_indptr1.rcbuffer->pybuffer);
-  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_indptr2.rcbuffer->pybuffer);
-  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_neighbors1.rcbuffer->pybuffer);
-  __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_neighbors2.rcbuffer->pybuffer);
-  __pyx_L2:;
-  __Pyx_RefNannyFinishContext();
 }
 
 /* "../../anaconda3/envs/pcatwd2/lib/python2.7/site-packages/Cython/Includes/numpy/__init__.pxd":215
@@ -5977,7 +6850,7 @@ static int __pyx_pf_5numpy_7ndarray___getbuffer__(PyArrayObject *__pyx_v_self, P
  * 
  *             if ((flags & pybuf.PyBUF_F_CONTIGUOUS == pybuf.PyBUF_F_CONTIGUOUS)
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple_, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 229, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__8, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 229, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -6033,7 +6906,7 @@ static int __pyx_pf_5numpy_7ndarray___getbuffer__(PyArrayObject *__pyx_v_self, P
  * 
  *             info.buf = PyArray_DATA(self)
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__2, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 233, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__9, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 233, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -6290,7 +7163,7 @@ static int __pyx_pf_5numpy_7ndarray___getbuffer__(PyArrayObject *__pyx_v_self, P
  *                 if   t == NPY_BYTE:        f = "b"
  *                 elif t == NPY_UBYTE:       f = "B"
  */
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__3, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 263, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__10, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 263, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_Raise(__pyx_t_3, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -7170,7 +8043,7 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  * 
  *         if ((child.byteorder == c'>' and little_endian) or
  */
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_RuntimeError, __pyx_tuple__4, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 810, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_RuntimeError, __pyx_tuple__11, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 810, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_Raise(__pyx_t_3, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -7238,7 +8111,7 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  *             # One could encode it in the format string and have Cython
  *             # complain instead, BUT: < and > in format strings also imply
  */
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 814, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__12, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 814, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_Raise(__pyx_t_3, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -7347,7 +8220,7 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  * 
  *             # Until ticket #99 is fixed, use integers to avoid warnings
  */
-        __pyx_t_4 = __Pyx_PyObject_Call(__pyx_builtin_RuntimeError, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 834, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyObject_Call(__pyx_builtin_RuntimeError, __pyx_tuple__13, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 834, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_Raise(__pyx_t_4, 0, 0, 0);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -8021,7 +8894,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void) {
  * 
  * cdef inline int import_umath() except -1:
  */
-      __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_ImportError, __pyx_tuple__7, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 1000, __pyx_L5_except_error)
+      __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_ImportError, __pyx_tuple__14, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 1000, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_Raise(__pyx_t_8, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
@@ -8150,7 +9023,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_umath(void) {
  * 
  * cdef inline int import_ufunc() except -1:
  */
-      __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_ImportError, __pyx_tuple__8, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 1006, __pyx_L5_except_error)
+      __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_ImportError, __pyx_tuple__15, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 1006, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_Raise(__pyx_t_8, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
@@ -8276,7 +9149,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
  *     except Exception:
  *         raise ImportError("numpy.core.umath failed to import")             # <<<<<<<<<<<<<<
  */
-      __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_ImportError, __pyx_tuple__9, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 1012, __pyx_L5_except_error)
+      __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_ImportError, __pyx_tuple__16, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 1012, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_Raise(__pyx_t_8, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
@@ -8330,18 +9203,18 @@ static PyMethodDef __pyx_methods[] = {
 #if PY_MAJOR_VERSION >= 3
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 static PyObject* __pyx_pymod_create(PyObject *spec, PyModuleDef *def); /*proto*/
-static int __pyx_pymod_exec_sparse_shortest_paths(PyObject* module); /*proto*/
+static int __pyx_pymod_exec_shortest_paths(PyObject* module); /*proto*/
 static PyModuleDef_Slot __pyx_moduledef_slots[] = {
   {Py_mod_create, (void*)__pyx_pymod_create},
-  {Py_mod_exec, (void*)__pyx_pymod_exec_sparse_shortest_paths},
+  {Py_mod_exec, (void*)__pyx_pymod_exec_shortest_paths},
   {0, NULL}
 };
 #endif
 
 static struct PyModuleDef __pyx_moduledef = {
     PyModuleDef_HEAD_INIT,
-    "sparse_shortest_paths",
-    0, /* m_doc */
+    "shortest_paths",
+    __pyx_k_Routines_for_performing_shortes, /* m_doc */
   #if CYTHON_PEP489_MULTI_PHASE_INIT
     0, /* m_size */
   #else
@@ -8360,68 +9233,97 @@ static struct PyModuleDef __pyx_moduledef = {
 #endif
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {&__pyx_kp_s_, __pyx_k_, sizeof(__pyx_k_), 0, 0, 1, 0},
   {&__pyx_n_s_C, __pyx_k_C, sizeof(__pyx_k_C), 0, 0, 1, 1},
-  {&__pyx_n_s_D, __pyx_k_D, sizeof(__pyx_k_D), 0, 0, 1, 1},
   {&__pyx_n_s_DTYPE, __pyx_k_DTYPE, sizeof(__pyx_k_DTYPE), 0, 0, 1, 1},
-  {&__pyx_n_s_FW, __pyx_k_FW, sizeof(__pyx_k_FW), 0, 0, 1, 1},
   {&__pyx_kp_u_Format_string_allocated_too_shor, __pyx_k_Format_string_allocated_too_shor, sizeof(__pyx_k_Format_string_allocated_too_shor), 0, 1, 0, 0},
   {&__pyx_kp_u_Format_string_allocated_too_shor_2, __pyx_k_Format_string_allocated_too_shor_2, sizeof(__pyx_k_Format_string_allocated_too_shor_2), 0, 1, 0, 0},
+  {&__pyx_kp_s_Graph_has_negative_weights_dijks, __pyx_k_Graph_has_negative_weights_dijks, sizeof(__pyx_k_Graph_has_negative_weights_dijks), 0, 0, 1, 0},
   {&__pyx_n_s_ITYPE, __pyx_k_ITYPE, sizeof(__pyx_k_ITYPE), 0, 0, 1, 1},
   {&__pyx_n_s_ImportError, __pyx_k_ImportError, sizeof(__pyx_k_ImportError), 0, 0, 1, 1},
   {&__pyx_n_s_N, __pyx_k_N, sizeof(__pyx_k_N), 0, 0, 1, 1},
-  {&__pyx_n_s_Nk, __pyx_k_Nk, sizeof(__pyx_k_Nk), 0, 0, 1, 1},
+  {&__pyx_n_s_NegativeCycleError, __pyx_k_NegativeCycleError, sizeof(__pyx_k_NegativeCycleError), 0, 0, 1, 1},
+  {&__pyx_n_s_NegativeCycleError___init, __pyx_k_NegativeCycleError___init, sizeof(__pyx_k_NegativeCycleError___init), 0, 0, 1, 1},
   {&__pyx_kp_u_Non_native_byte_order_not_suppor, __pyx_k_Non_native_byte_order_not_suppor, sizeof(__pyx_k_Non_native_byte_order_not_suppor), 0, 1, 0, 0},
   {&__pyx_n_s_RuntimeError, __pyx_k_RuntimeError, sizeof(__pyx_k_RuntimeError), 0, 0, 1, 1},
   {&__pyx_n_s_T, __pyx_k_T, sizeof(__pyx_k_T), 0, 0, 1, 1},
   {&__pyx_n_s_ValueError, __pyx_k_ValueError, sizeof(__pyx_k_ValueError), 0, 0, 1, 1},
+  {&__pyx_n_s_algorithms_sm_shortest_paths, __pyx_k_algorithms_sm_shortest_paths, sizeof(__pyx_k_algorithms_sm_shortest_paths), 0, 0, 1, 1},
   {&__pyx_kp_s_algorithms_sm_shortest_paths_pyx, __pyx_k_algorithms_sm_shortest_paths_pyx, sizeof(__pyx_k_algorithms_sm_shortest_paths_pyx), 0, 0, 1, 0},
-  {&__pyx_n_s_algorithms_sm_sparse_shortest_pa, __pyx_k_algorithms_sm_sparse_shortest_pa, sizeof(__pyx_k_algorithms_sm_sparse_shortest_pa), 0, 0, 1, 1},
-  {&__pyx_n_s_asarray, __pyx_k_asarray, sizeof(__pyx_k_asarray), 0, 0, 1, 1},
-  {&__pyx_n_s_auto, __pyx_k_auto, sizeof(__pyx_k_auto), 0, 0, 1, 1},
+  {&__pyx_n_s_any, __pyx_k_any, sizeof(__pyx_k_any), 0, 0, 1, 1},
+  {&__pyx_n_s_arange, __pyx_k_arange, sizeof(__pyx_k_arange), 0, 0, 1, 1},
+  {&__pyx_n_s_array, __pyx_k_array, sizeof(__pyx_k_array), 0, 0, 1, 1},
+  {&__pyx_n_s_atleast_1d, __pyx_k_atleast_1d, sizeof(__pyx_k_atleast_1d), 0, 0, 1, 1},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
+  {&__pyx_n_s_copy, __pyx_k_copy, sizeof(__pyx_k_copy), 0, 0, 1, 1},
+  {&__pyx_n_s_csgraph, __pyx_k_csgraph, sizeof(__pyx_k_csgraph), 0, 0, 1, 1},
+  {&__pyx_n_s_csgraphT, __pyx_k_csgraphT, sizeof(__pyx_k_csgraphT), 0, 0, 1, 1},
+  {&__pyx_n_s_csrT_data, __pyx_k_csrT_data, sizeof(__pyx_k_csrT_data), 0, 0, 1, 1},
+  {&__pyx_n_s_csr_data, __pyx_k_csr_data, sizeof(__pyx_k_csr_data), 0, 0, 1, 1},
   {&__pyx_n_s_csr_matrix, __pyx_k_csr_matrix, sizeof(__pyx_k_csr_matrix), 0, 0, 1, 1},
   {&__pyx_n_s_data, __pyx_k_data, sizeof(__pyx_k_data), 0, 0, 1, 1},
+  {&__pyx_n_s_dense_output, __pyx_k_dense_output, sizeof(__pyx_k_dense_output), 0, 0, 1, 1},
+  {&__pyx_n_s_dijkstra, __pyx_k_dijkstra, sizeof(__pyx_k_dijkstra), 0, 0, 1, 1},
+  {&__pyx_kp_u_dijkstra_csgraph_directed_True, __pyx_k_dijkstra_csgraph_directed_True, sizeof(__pyx_k_dijkstra_csgraph_directed_True), 0, 1, 0, 0},
+  {&__pyx_kp_u_dijkstra_line_33, __pyx_k_dijkstra_line_33, sizeof(__pyx_k_dijkstra_line_33), 0, 1, 0, 0},
   {&__pyx_n_s_directed, __pyx_k_directed, sizeof(__pyx_k_directed), 0, 0, 1, 1},
   {&__pyx_n_s_dist_matrix, __pyx_k_dist_matrix, sizeof(__pyx_k_dist_matrix), 0, 0, 1, 1},
+  {&__pyx_n_s_doc, __pyx_k_doc, sizeof(__pyx_k_doc), 0, 0, 1, 1},
   {&__pyx_n_s_dtype, __pyx_k_dtype, sizeof(__pyx_k_dtype), 0, 0, 1, 1},
-  {&__pyx_n_s_flat, __pyx_k_flat, sizeof(__pyx_k_flat), 0, 0, 1, 1},
+  {&__pyx_n_s_empty, __pyx_k_empty, sizeof(__pyx_k_empty), 0, 0, 1, 1},
+  {&__pyx_n_s_fill, __pyx_k_fill, sizeof(__pyx_k_fill), 0, 0, 1, 1},
   {&__pyx_n_s_float64, __pyx_k_float64, sizeof(__pyx_k_float64), 0, 0, 1, 1},
-  {&__pyx_n_s_graph, __pyx_k_graph, sizeof(__pyx_k_graph), 0, 0, 1, 1},
-  {&__pyx_n_s_graph_shortest_path, __pyx_k_graph_shortest_path, sizeof(__pyx_k_graph_shortest_path), 0, 0, 1, 1},
   {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
   {&__pyx_n_s_indices, __pyx_k_indices, sizeof(__pyx_k_indices), 0, 0, 1, 1},
+  {&__pyx_kp_s_indices_out_of_range_0_N, __pyx_k_indices_out_of_range_0_N, sizeof(__pyx_k_indices_out_of_range_0_N), 0, 0, 1, 0},
   {&__pyx_n_s_indptr, __pyx_k_indptr, sizeof(__pyx_k_indptr), 0, 0, 1, 1},
   {&__pyx_n_s_inf, __pyx_k_inf, sizeof(__pyx_k_inf), 0, 0, 1, 1},
+  {&__pyx_n_s_init, __pyx_k_init, sizeof(__pyx_k_init), 0, 0, 1, 1},
   {&__pyx_n_s_int32, __pyx_k_int32, sizeof(__pyx_k_int32), 0, 0, 1, 1},
-  {&__pyx_n_s_isinf, __pyx_k_isinf, sizeof(__pyx_k_isinf), 0, 0, 1, 1},
   {&__pyx_n_s_isspmatrix, __pyx_k_isspmatrix, sizeof(__pyx_k_isspmatrix), 0, 0, 1, 1},
+  {&__pyx_n_s_isspmatrix_csc, __pyx_k_isspmatrix_csc, sizeof(__pyx_k_isspmatrix_csc), 0, 0, 1, 1},
   {&__pyx_n_s_isspmatrix_csr, __pyx_k_isspmatrix_csr, sizeof(__pyx_k_isspmatrix_csr), 0, 0, 1, 1},
+  {&__pyx_n_s_limit, __pyx_k_limit, sizeof(__pyx_k_limit), 0, 0, 1, 1},
+  {&__pyx_kp_s_limit_must_be_0, __pyx_k_limit_must_be_0, sizeof(__pyx_k_limit_must_be_0), 0, 0, 1, 0},
+  {&__pyx_n_s_limitf, __pyx_k_limitf, sizeof(__pyx_k_limitf), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
-  {&__pyx_n_s_method, __pyx_k_method, sizeof(__pyx_k_method), 0, 0, 1, 1},
+  {&__pyx_n_s_message, __pyx_k_message, sizeof(__pyx_k_message), 0, 0, 1, 1},
+  {&__pyx_n_s_metaclass, __pyx_k_metaclass, sizeof(__pyx_k_metaclass), 0, 0, 1, 1},
+  {&__pyx_n_s_module, __pyx_k_module, sizeof(__pyx_k_module), 0, 0, 1, 1},
   {&__pyx_kp_u_ndarray_is_not_C_contiguous, __pyx_k_ndarray_is_not_C_contiguous, sizeof(__pyx_k_ndarray_is_not_C_contiguous), 0, 1, 0, 0},
   {&__pyx_kp_u_ndarray_is_not_Fortran_contiguou, __pyx_k_ndarray_is_not_Fortran_contiguou, sizeof(__pyx_k_ndarray_is_not_Fortran_contiguou), 0, 1, 0, 0},
   {&__pyx_n_s_np, __pyx_k_np, sizeof(__pyx_k_np), 0, 0, 1, 1},
   {&__pyx_n_s_numpy, __pyx_k_numpy, sizeof(__pyx_k_numpy), 0, 0, 1, 1},
   {&__pyx_kp_s_numpy_core_multiarray_failed_to, __pyx_k_numpy_core_multiarray_failed_to, sizeof(__pyx_k_numpy_core_multiarray_failed_to), 0, 0, 1, 0},
   {&__pyx_kp_s_numpy_core_umath_failed_to_impor, __pyx_k_numpy_core_umath_failed_to_impor, sizeof(__pyx_k_numpy_core_umath_failed_to_impor), 0, 0, 1, 0},
+  {&__pyx_n_s_ones, __pyx_k_ones, sizeof(__pyx_k_ones), 0, 0, 1, 1},
   {&__pyx_n_s_order, __pyx_k_order, sizeof(__pyx_k_order), 0, 0, 1, 1},
+  {&__pyx_n_s_predecessor_matrix, __pyx_k_predecessor_matrix, sizeof(__pyx_k_predecessor_matrix), 0, 0, 1, 1},
+  {&__pyx_n_s_prepare, __pyx_k_prepare, sizeof(__pyx_k_prepare), 0, 0, 1, 1},
+  {&__pyx_n_s_qualname, __pyx_k_qualname, sizeof(__pyx_k_qualname), 0, 0, 1, 1},
   {&__pyx_n_s_range, __pyx_k_range, sizeof(__pyx_k_range), 0, 0, 1, 1},
+  {&__pyx_n_s_reshape, __pyx_k_reshape, sizeof(__pyx_k_reshape), 0, 0, 1, 1},
+  {&__pyx_n_s_return_predecessors, __pyx_k_return_predecessors, sizeof(__pyx_k_return_predecessors), 0, 0, 1, 1},
+  {&__pyx_n_s_return_shape, __pyx_k_return_shape, sizeof(__pyx_k_return_shape), 0, 0, 1, 1},
   {&__pyx_n_s_scipy_sparse, __pyx_k_scipy_sparse, sizeof(__pyx_k_scipy_sparse), 0, 0, 1, 1},
+  {&__pyx_n_s_scipy_sparse_csgraph__validation, __pyx_k_scipy_sparse_csgraph__validation, sizeof(__pyx_k_scipy_sparse_csgraph__validation), 0, 0, 1, 1},
+  {&__pyx_n_s_self, __pyx_k_self, sizeof(__pyx_k_self), 0, 0, 1, 1},
   {&__pyx_n_s_shape, __pyx_k_shape, sizeof(__pyx_k_shape), 0, 0, 1, 1},
-  {&__pyx_n_s_source, __pyx_k_source, sizeof(__pyx_k_source), 0, 0, 1, 1},
+  {&__pyx_n_s_size, __pyx_k_size, sizeof(__pyx_k_size), 0, 0, 1, 1},
   {&__pyx_n_s_target, __pyx_k_target, sizeof(__pyx_k_target), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
-  {&__pyx_n_s_toarray, __pyx_k_toarray, sizeof(__pyx_k_toarray), 0, 0, 1, 1},
   {&__pyx_n_s_tocsr, __pyx_k_tocsr, sizeof(__pyx_k_tocsr), 0, 0, 1, 1},
   {&__pyx_kp_u_unknown_dtype_code_in_numpy_pxd, __pyx_k_unknown_dtype_code_in_numpy_pxd, sizeof(__pyx_k_unknown_dtype_code_in_numpy_pxd), 0, 1, 0, 0},
-  {&__pyx_kp_s_unrecognized_method_s, __pyx_k_unrecognized_method_s, sizeof(__pyx_k_unrecognized_method_s), 0, 0, 1, 0},
-  {&__pyx_n_s_where, __pyx_k_where, sizeof(__pyx_k_where), 0, 0, 1, 1},
+  {&__pyx_n_s_unweighted, __pyx_k_unweighted, sizeof(__pyx_k_unweighted), 0, 0, 1, 1},
+  {&__pyx_n_s_validate_graph, __pyx_k_validate_graph, sizeof(__pyx_k_validate_graph), 0, 0, 1, 1},
+  {&__pyx_n_s_warn, __pyx_k_warn, sizeof(__pyx_k_warn), 0, 0, 1, 1},
+  {&__pyx_n_s_warnings, __pyx_k_warnings, sizeof(__pyx_k_warnings), 0, 0, 1, 1},
   {&__pyx_n_s_zeros, __pyx_k_zeros, sizeof(__pyx_k_zeros), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
 };
 static int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(0, 75, __pyx_L1_error)
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(1, 242, __pyx_L1_error)
+  __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(0, 136, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 207, __pyx_L1_error)
   __pyx_builtin_RuntimeError = __Pyx_GetBuiltinName(__pyx_n_s_RuntimeError); if (!__pyx_builtin_RuntimeError) __PYX_ERR(1, 810, __pyx_L1_error)
   __pyx_builtin_ImportError = __Pyx_GetBuiltinName(__pyx_n_s_ImportError); if (!__pyx_builtin_ImportError) __PYX_ERR(1, 1000, __pyx_L1_error)
   return 0;
@@ -8433,6 +9335,61 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
+  /* "algorithms/sm/shortest_paths.pyx":119
+ * 
+ *     if np.any(csgraph.data < 0):
+ *         warnings.warn("Graph has negative weights: dijkstra will give "             # <<<<<<<<<<<<<<
+ *                       "inaccurate results if the graph contains negative "
+ *                       "cycles. Consider johnson or bellman_ford.")
+ */
+  __pyx_tuple__3 = PyTuple_Pack(1, __pyx_kp_s_Graph_has_negative_weights_dijks); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 119, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__3);
+  __Pyx_GIVEREF(__pyx_tuple__3);
+
+  /* "algorithms/sm/shortest_paths.pyx":133
+ *         indices = np.array(indices, order='C', dtype=ITYPE, copy=True)
+ *         return_shape = indices.shape + (N,)
+ *         indices = np.atleast_1d(indices).reshape(-1)             # <<<<<<<<<<<<<<
+ *         indices[indices < 0] += N
+ *         if np.any(indices < 0) or np.any(indices >= N):
+ */
+  __pyx_tuple__4 = PyTuple_Pack(1, __pyx_int_neg_1); if (unlikely(!__pyx_tuple__4)) __PYX_ERR(0, 133, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__4);
+  __Pyx_GIVEREF(__pyx_tuple__4);
+
+  /* "algorithms/sm/shortest_paths.pyx":136
+ *         indices[indices < 0] += N
+ *         if np.any(indices < 0) or np.any(indices >= N):
+ *             raise ValueError("indices out of range 0...N")             # <<<<<<<<<<<<<<
+ * 
+ *     cdef DTYPE_t limitf = limit
+ */
+  __pyx_tuple__5 = PyTuple_Pack(1, __pyx_kp_s_indices_out_of_range_0_N); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 136, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__5);
+  __Pyx_GIVEREF(__pyx_tuple__5);
+
+  /* "algorithms/sm/shortest_paths.pyx":140
+ *     cdef DTYPE_t limitf = limit
+ *     if limitf < 0:
+ *         raise ValueError('limit must be >= 0')             # <<<<<<<<<<<<<<
+ * 
+ *     #------------------------------
+ */
+  __pyx_tuple__6 = PyTuple_Pack(1, __pyx_kp_s_limit_must_be_0); if (unlikely(!__pyx_tuple__6)) __PYX_ERR(0, 140, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__6);
+  __Pyx_GIVEREF(__pyx_tuple__6);
+
+  /* "algorithms/sm/shortest_paths.pyx":152
+ *     if return_predecessors:
+ *         predecessor_matrix = np.empty((len(indices), N), dtype=ITYPE)
+ *         predecessor_matrix.fill(NULL_IDX)             # <<<<<<<<<<<<<<
+ *     else:
+ *         predecessor_matrix = np.empty((0, N), dtype=ITYPE)
+ */
+  __pyx_tuple__7 = PyTuple_Pack(1, __pyx_int_neg_9999); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 152, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__7);
+  __Pyx_GIVEREF(__pyx_tuple__7);
+
   /* "../../anaconda3/envs/pcatwd2/lib/python2.7/site-packages/Cython/Includes/numpy/__init__.pxd":229
  *             if ((flags & pybuf.PyBUF_C_CONTIGUOUS == pybuf.PyBUF_C_CONTIGUOUS)
  *                 and not PyArray_CHKFLAGS(self, NPY_C_CONTIGUOUS)):
@@ -8440,9 +9397,9 @@ static int __Pyx_InitCachedConstants(void) {
  * 
  *             if ((flags & pybuf.PyBUF_F_CONTIGUOUS == pybuf.PyBUF_F_CONTIGUOUS)
  */
-  __pyx_tuple_ = PyTuple_Pack(1, __pyx_kp_u_ndarray_is_not_C_contiguous); if (unlikely(!__pyx_tuple_)) __PYX_ERR(1, 229, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple_);
-  __Pyx_GIVEREF(__pyx_tuple_);
+  __pyx_tuple__8 = PyTuple_Pack(1, __pyx_kp_u_ndarray_is_not_C_contiguous); if (unlikely(!__pyx_tuple__8)) __PYX_ERR(1, 229, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__8);
+  __Pyx_GIVEREF(__pyx_tuple__8);
 
   /* "../../anaconda3/envs/pcatwd2/lib/python2.7/site-packages/Cython/Includes/numpy/__init__.pxd":233
  *             if ((flags & pybuf.PyBUF_F_CONTIGUOUS == pybuf.PyBUF_F_CONTIGUOUS)
@@ -8451,9 +9408,9 @@ static int __Pyx_InitCachedConstants(void) {
  * 
  *             info.buf = PyArray_DATA(self)
  */
-  __pyx_tuple__2 = PyTuple_Pack(1, __pyx_kp_u_ndarray_is_not_Fortran_contiguou); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(1, 233, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__2);
-  __Pyx_GIVEREF(__pyx_tuple__2);
+  __pyx_tuple__9 = PyTuple_Pack(1, __pyx_kp_u_ndarray_is_not_Fortran_contiguou); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(1, 233, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__9);
+  __Pyx_GIVEREF(__pyx_tuple__9);
 
   /* "../../anaconda3/envs/pcatwd2/lib/python2.7/site-packages/Cython/Includes/numpy/__init__.pxd":263
  *                 if ((descr.byteorder == c'>' and little_endian) or
@@ -8462,9 +9419,9 @@ static int __Pyx_InitCachedConstants(void) {
  *                 if   t == NPY_BYTE:        f = "b"
  *                 elif t == NPY_UBYTE:       f = "B"
  */
-  __pyx_tuple__3 = PyTuple_Pack(1, __pyx_kp_u_Non_native_byte_order_not_suppor); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(1, 263, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__3);
-  __Pyx_GIVEREF(__pyx_tuple__3);
+  __pyx_tuple__10 = PyTuple_Pack(1, __pyx_kp_u_Non_native_byte_order_not_suppor); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(1, 263, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__10);
+  __Pyx_GIVEREF(__pyx_tuple__10);
 
   /* "../../anaconda3/envs/pcatwd2/lib/python2.7/site-packages/Cython/Includes/numpy/__init__.pxd":810
  * 
@@ -8473,9 +9430,9 @@ static int __Pyx_InitCachedConstants(void) {
  * 
  *         if ((child.byteorder == c'>' and little_endian) or
  */
-  __pyx_tuple__4 = PyTuple_Pack(1, __pyx_kp_u_Format_string_allocated_too_shor); if (unlikely(!__pyx_tuple__4)) __PYX_ERR(1, 810, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__4);
-  __Pyx_GIVEREF(__pyx_tuple__4);
+  __pyx_tuple__11 = PyTuple_Pack(1, __pyx_kp_u_Format_string_allocated_too_shor); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(1, 810, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__11);
+  __Pyx_GIVEREF(__pyx_tuple__11);
 
   /* "../../anaconda3/envs/pcatwd2/lib/python2.7/site-packages/Cython/Includes/numpy/__init__.pxd":814
  *         if ((child.byteorder == c'>' and little_endian) or
@@ -8484,9 +9441,9 @@ static int __Pyx_InitCachedConstants(void) {
  *             # One could encode it in the format string and have Cython
  *             # complain instead, BUT: < and > in format strings also imply
  */
-  __pyx_tuple__5 = PyTuple_Pack(1, __pyx_kp_u_Non_native_byte_order_not_suppor); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(1, 814, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__5);
-  __Pyx_GIVEREF(__pyx_tuple__5);
+  __pyx_tuple__12 = PyTuple_Pack(1, __pyx_kp_u_Non_native_byte_order_not_suppor); if (unlikely(!__pyx_tuple__12)) __PYX_ERR(1, 814, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__12);
+  __Pyx_GIVEREF(__pyx_tuple__12);
 
   /* "../../anaconda3/envs/pcatwd2/lib/python2.7/site-packages/Cython/Includes/numpy/__init__.pxd":834
  *             t = child.type_num
@@ -8495,9 +9452,9 @@ static int __Pyx_InitCachedConstants(void) {
  * 
  *             # Until ticket #99 is fixed, use integers to avoid warnings
  */
-  __pyx_tuple__6 = PyTuple_Pack(1, __pyx_kp_u_Format_string_allocated_too_shor_2); if (unlikely(!__pyx_tuple__6)) __PYX_ERR(1, 834, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__6);
-  __Pyx_GIVEREF(__pyx_tuple__6);
+  __pyx_tuple__13 = PyTuple_Pack(1, __pyx_kp_u_Format_string_allocated_too_shor_2); if (unlikely(!__pyx_tuple__13)) __PYX_ERR(1, 834, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__13);
+  __Pyx_GIVEREF(__pyx_tuple__13);
 
   /* "../../anaconda3/envs/pcatwd2/lib/python2.7/site-packages/Cython/Includes/numpy/__init__.pxd":1000
  *         _import_array()
@@ -8506,9 +9463,9 @@ static int __Pyx_InitCachedConstants(void) {
  * 
  * cdef inline int import_umath() except -1:
  */
-  __pyx_tuple__7 = PyTuple_Pack(1, __pyx_kp_s_numpy_core_multiarray_failed_to); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(1, 1000, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__7);
-  __Pyx_GIVEREF(__pyx_tuple__7);
+  __pyx_tuple__14 = PyTuple_Pack(1, __pyx_kp_s_numpy_core_multiarray_failed_to); if (unlikely(!__pyx_tuple__14)) __PYX_ERR(1, 1000, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__14);
+  __Pyx_GIVEREF(__pyx_tuple__14);
 
   /* "../../anaconda3/envs/pcatwd2/lib/python2.7/site-packages/Cython/Includes/numpy/__init__.pxd":1006
  *         _import_umath()
@@ -8517,30 +9474,45 @@ static int __Pyx_InitCachedConstants(void) {
  * 
  * cdef inline int import_ufunc() except -1:
  */
-  __pyx_tuple__8 = PyTuple_Pack(1, __pyx_kp_s_numpy_core_umath_failed_to_impor); if (unlikely(!__pyx_tuple__8)) __PYX_ERR(1, 1006, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__8);
-  __Pyx_GIVEREF(__pyx_tuple__8);
+  __pyx_tuple__15 = PyTuple_Pack(1, __pyx_kp_s_numpy_core_umath_failed_to_impor); if (unlikely(!__pyx_tuple__15)) __PYX_ERR(1, 1006, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__15);
+  __Pyx_GIVEREF(__pyx_tuple__15);
 
   /* "../../anaconda3/envs/pcatwd2/lib/python2.7/site-packages/Cython/Includes/numpy/__init__.pxd":1012
  *         _import_umath()
  *     except Exception:
  *         raise ImportError("numpy.core.umath failed to import")             # <<<<<<<<<<<<<<
  */
-  __pyx_tuple__9 = PyTuple_Pack(1, __pyx_kp_s_numpy_core_umath_failed_to_impor); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(1, 1012, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__9);
-  __Pyx_GIVEREF(__pyx_tuple__9);
+  __pyx_tuple__16 = PyTuple_Pack(1, __pyx_kp_s_numpy_core_umath_failed_to_impor); if (unlikely(!__pyx_tuple__16)) __PYX_ERR(1, 1012, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__16);
+  __Pyx_GIVEREF(__pyx_tuple__16);
 
-  /* "algorithms/sm/shortest_paths.pyx":19
+  /* "algorithms/sm/shortest_paths.pyx":30
  * 
+ * class NegativeCycleError(Exception):
+ *     def __init__(self, message=''):             # <<<<<<<<<<<<<<
+ *         Exception.__init__(self, message)
  * 
- * def graph_shortest_path(dist_matrix, source, target, directed=True, method='auto'):             # <<<<<<<<<<<<<<
- *     """
- *     Perform a shortest-path graph search on a positive directed or
  */
-  __pyx_tuple__10 = PyTuple_Pack(8, __pyx_n_s_dist_matrix, __pyx_n_s_source, __pyx_n_s_target, __pyx_n_s_directed, __pyx_n_s_method, __pyx_n_s_N, __pyx_n_s_Nk, __pyx_n_s_graph); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(0, 19, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__10);
-  __Pyx_GIVEREF(__pyx_tuple__10);
-  __pyx_codeobj__11 = (PyObject*)__Pyx_PyCode_New(5, 0, 8, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__10, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_algorithms_sm_shortest_paths_pyx, __pyx_n_s_graph_shortest_path, 19, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__11)) __PYX_ERR(0, 19, __pyx_L1_error)
+  __pyx_tuple__17 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_message); if (unlikely(!__pyx_tuple__17)) __PYX_ERR(0, 30, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__17);
+  __Pyx_GIVEREF(__pyx_tuple__17);
+  __pyx_codeobj__18 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__17, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_algorithms_sm_shortest_paths_pyx, __pyx_n_s_init, 30, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__18)) __PYX_ERR(0, 30, __pyx_L1_error)
+  __pyx_tuple__19 = PyTuple_Pack(1, ((PyObject*)__pyx_kp_s_)); if (unlikely(!__pyx_tuple__19)) __PYX_ERR(0, 30, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__19);
+  __Pyx_GIVEREF(__pyx_tuple__19);
+
+  /* "algorithms/sm/shortest_paths.pyx":33
+ *         Exception.__init__(self, message)
+ * 
+ * def dijkstra(csgraph, directed=True, indices=None,             # <<<<<<<<<<<<<<
+ *              return_predecessors=False,
+ *              unweighted=False, limit=np.inf, target=None):
+ */
+  __pyx_tuple__20 = PyTuple_Pack(15, __pyx_n_s_csgraph, __pyx_n_s_directed, __pyx_n_s_indices, __pyx_n_s_return_predecessors, __pyx_n_s_unweighted, __pyx_n_s_limit, __pyx_n_s_target, __pyx_n_s_N, __pyx_n_s_return_shape, __pyx_n_s_limitf, __pyx_n_s_dist_matrix, __pyx_n_s_predecessor_matrix, __pyx_n_s_csr_data, __pyx_n_s_csgraphT, __pyx_n_s_csrT_data); if (unlikely(!__pyx_tuple__20)) __PYX_ERR(0, 33, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__20);
+  __Pyx_GIVEREF(__pyx_tuple__20);
+  __pyx_codeobj__21 = (PyObject*)__Pyx_PyCode_New(7, 0, 15, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__20, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_algorithms_sm_shortest_paths_pyx, __pyx_n_s_dijkstra, 33, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__21)) __PYX_ERR(0, 33, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -8551,7 +9523,8 @@ static int __Pyx_InitCachedConstants(void) {
 static int __Pyx_InitGlobals(void) {
   if (__Pyx_InitStrings(__pyx_string_tab) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
   __pyx_int_0 = PyInt_FromLong(0); if (unlikely(!__pyx_int_0)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_4 = PyInt_FromLong(4); if (unlikely(!__pyx_int_4)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_neg_1 = PyInt_FromLong(-1); if (unlikely(!__pyx_int_neg_1)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_neg_9999 = PyInt_FromLong(-9999); if (unlikely(!__pyx_int_neg_9999)) __PYX_ERR(0, 1, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -8662,11 +9635,11 @@ static int __Pyx_modinit_function_import_code(void) {
 
 
 #if PY_MAJOR_VERSION < 3
-__Pyx_PyMODINIT_FUNC initsparse_shortest_paths(void) CYTHON_SMALL_CODE; /*proto*/
-__Pyx_PyMODINIT_FUNC initsparse_shortest_paths(void)
+__Pyx_PyMODINIT_FUNC initshortest_paths(void) CYTHON_SMALL_CODE; /*proto*/
+__Pyx_PyMODINIT_FUNC initshortest_paths(void)
 #else
-__Pyx_PyMODINIT_FUNC PyInit_sparse_shortest_paths(void) CYTHON_SMALL_CODE; /*proto*/
-__Pyx_PyMODINIT_FUNC PyInit_sparse_shortest_paths(void)
+__Pyx_PyMODINIT_FUNC PyInit_shortest_paths(void) CYTHON_SMALL_CODE; /*proto*/
+__Pyx_PyMODINIT_FUNC PyInit_shortest_paths(void)
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 {
   return PyModuleDef_Init(&__pyx_moduledef);
@@ -8706,13 +9679,14 @@ bad:
 }
 
 
-static int __pyx_pymod_exec_sparse_shortest_paths(PyObject *__pyx_pyinit_module)
+static int __pyx_pymod_exec_shortest_paths(PyObject *__pyx_pyinit_module)
 #endif
 #endif
 {
   PyObject *__pyx_t_1 = NULL;
   PyObject *__pyx_t_2 = NULL;
-  int __pyx_t_3;
+  PyObject *__pyx_t_3 = NULL;
+  PyObject *__pyx_t_4 = NULL;
   __Pyx_RefNannyDeclarations
   #if CYTHON_PEP489_MULTI_PHASE_INIT
   if (__pyx_m && __pyx_m == __pyx_pyinit_module) return 0;
@@ -8728,7 +9702,7 @@ if (!__Pyx_RefNanny) {
       Py_FatalError("failed to import 'refnanny' module");
 }
 #endif
-  __Pyx_RefNannySetupContext("__Pyx_PyMODINIT_FUNC PyInit_sparse_shortest_paths(void)", 0);
+  __Pyx_RefNannySetupContext("__Pyx_PyMODINIT_FUNC PyInit_shortest_paths(void)", 0);
   if (__Pyx_check_binary_version() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_empty_tuple = PyTuple_New(0); if (unlikely(!__pyx_empty_tuple)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_empty_bytes = PyBytes_FromStringAndSize("", 0); if (unlikely(!__pyx_empty_bytes)) __PYX_ERR(0, 1, __pyx_L1_error)
@@ -8764,7 +9738,7 @@ if (!__Pyx_RefNanny) {
   Py_INCREF(__pyx_m);
   #else
   #if PY_MAJOR_VERSION < 3
-  __pyx_m = Py_InitModule4("sparse_shortest_paths", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
+  __pyx_m = Py_InitModule4("shortest_paths", __pyx_methods, __pyx_k_Routines_for_performing_shortes, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
   #else
   __pyx_m = PyModule_Create(&__pyx_moduledef);
   #endif
@@ -8783,14 +9757,14 @@ if (!__Pyx_RefNanny) {
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
-  if (__pyx_module_is_main_algorithms__sm__sparse_shortest_paths) {
+  if (__pyx_module_is_main_algorithms__sm__shortest_paths) {
     if (PyObject_SetAttrString(__pyx_m, "__name__", __pyx_n_s_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "algorithms.sm.sparse_shortest_paths")) {
-      if (unlikely(PyDict_SetItemString(modules, "algorithms.sm.sparse_shortest_paths", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "algorithms.sm.shortest_paths")) {
+      if (unlikely(PyDict_SetItemString(modules, "algorithms.sm.shortest_paths", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   #endif
@@ -8811,24 +9785,38 @@ if (!__Pyx_RefNanny) {
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "algorithms/sm/shortest_paths.pyx":1
+  /* "algorithms/sm/shortest_paths.pyx":13
+ * from __future__ import absolute_import
+ * 
+ * import warnings             # <<<<<<<<<<<<<<
+ * 
+ * import numpy as np
+ */
+  __pyx_t_1 = __Pyx_Import(__pyx_n_s_warnings, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 13, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_warnings, __pyx_t_1) < 0) __PYX_ERR(0, 13, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "algorithms/sm/shortest_paths.pyx":15
+ * import warnings
+ * 
  * import numpy as np             # <<<<<<<<<<<<<<
  * cimport numpy as np
  * 
  */
-  __pyx_t_1 = __Pyx_Import(__pyx_n_s_numpy, 0, -1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_Import(__pyx_n_s_numpy, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 15, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_1) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_1) < 0) __PYX_ERR(0, 15, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "algorithms/sm/shortest_paths.pyx":4
+  /* "algorithms/sm/shortest_paths.pyx":18
  * cimport numpy as np
  * 
- * from scipy.sparse import csr_matrix, isspmatrix, isspmatrix_csr             # <<<<<<<<<<<<<<
+ * from scipy.sparse import csr_matrix, isspmatrix, isspmatrix_csr, isspmatrix_csc             # <<<<<<<<<<<<<<
+ * from scipy.sparse.csgraph._validation import validate_graph
  * 
- * cimport cython
  */
-  __pyx_t_1 = PyList_New(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 4, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 18, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_n_s_csr_matrix);
   __Pyx_GIVEREF(__pyx_n_s_csr_matrix);
@@ -8839,81 +9827,160 @@ if (!__Pyx_RefNanny) {
   __Pyx_INCREF(__pyx_n_s_isspmatrix_csr);
   __Pyx_GIVEREF(__pyx_n_s_isspmatrix_csr);
   PyList_SET_ITEM(__pyx_t_1, 2, __pyx_n_s_isspmatrix_csr);
-  __pyx_t_2 = __Pyx_Import(__pyx_n_s_scipy_sparse, __pyx_t_1, -1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 4, __pyx_L1_error)
+  __Pyx_INCREF(__pyx_n_s_isspmatrix_csc);
+  __Pyx_GIVEREF(__pyx_n_s_isspmatrix_csc);
+  PyList_SET_ITEM(__pyx_t_1, 3, __pyx_n_s_isspmatrix_csc);
+  __pyx_t_2 = __Pyx_Import(__pyx_n_s_scipy_sparse, __pyx_t_1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 18, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_csr_matrix); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 4, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_csr_matrix); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 18, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_csr_matrix, __pyx_t_1) < 0) __PYX_ERR(0, 4, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_csr_matrix, __pyx_t_1) < 0) __PYX_ERR(0, 18, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_isspmatrix); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 4, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_isspmatrix); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 18, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_isspmatrix, __pyx_t_1) < 0) __PYX_ERR(0, 4, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_isspmatrix, __pyx_t_1) < 0) __PYX_ERR(0, 18, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_isspmatrix_csr); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 4, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_isspmatrix_csr); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 18, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_isspmatrix_csr, __pyx_t_1) < 0) __PYX_ERR(0, 4, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_isspmatrix_csr, __pyx_t_1) < 0) __PYX_ERR(0, 18, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_isspmatrix_csc); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 18, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_isspmatrix_csc, __pyx_t_1) < 0) __PYX_ERR(0, 18, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "algorithms/sm/shortest_paths.pyx":10
- * from libc.stdlib cimport malloc, free
+  /* "algorithms/sm/shortest_paths.pyx":19
  * 
- * np.import_array()             # <<<<<<<<<<<<<<
+ * from scipy.sparse import csr_matrix, isspmatrix, isspmatrix_csr, isspmatrix_csc
+ * from scipy.sparse.csgraph._validation import validate_graph             # <<<<<<<<<<<<<<
  * 
- * DTYPE = np.float64
+ * cimport cython
  */
-  __pyx_t_3 = __pyx_f_5numpy_import_array(); if (unlikely(__pyx_t_3 == ((int)-1))) __PYX_ERR(0, 10, __pyx_L1_error)
+  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 19, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_INCREF(__pyx_n_s_validate_graph);
+  __Pyx_GIVEREF(__pyx_n_s_validate_graph);
+  PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_validate_graph);
+  __pyx_t_1 = __Pyx_Import(__pyx_n_s_scipy_sparse_csgraph__validation, __pyx_t_2, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 19, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_validate_graph); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 19, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_validate_graph, __pyx_t_2) < 0) __PYX_ERR(0, 19, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "algorithms/sm/shortest_paths.pyx":12
- * np.import_array()
- * 
+  /* "algorithms/sm/parameters.pxi":1
  * DTYPE = np.float64             # <<<<<<<<<<<<<<
  * ctypedef np.float64_t DTYPE_t
  * 
  */
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 12, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_float64); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 12, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(3, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_DTYPE, __pyx_t_1) < 0) __PYX_ERR(0, 12, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_float64); if (unlikely(!__pyx_t_2)) __PYX_ERR(3, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_DTYPE, __pyx_t_2) < 0) __PYX_ERR(3, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "algorithms/sm/shortest_paths.pyx":15
+  /* "algorithms/sm/parameters.pxi":4
  * ctypedef np.float64_t DTYPE_t
  * 
  * ITYPE = np.int32             # <<<<<<<<<<<<<<
  * ctypedef np.int32_t ITYPE_t
  * 
  */
-  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 15, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(3, 4, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_int32); if (unlikely(!__pyx_t_1)) __PYX_ERR(3, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_int32); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 15, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_ITYPE, __pyx_t_1) < 0) __PYX_ERR(3, 4, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "algorithms/sm/shortest_paths.pyx":29
+ * 
+ * 
+ * class NegativeCycleError(Exception):             # <<<<<<<<<<<<<<
+ *     def __init__(self, message=''):
+ *         Exception.__init__(self, message)
+ */
+  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 29, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_INCREF(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])));
+  __Pyx_GIVEREF(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])));
+  PyTuple_SET_ITEM(__pyx_t_1, 0, ((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])));
+  __pyx_t_2 = __Pyx_CalculateMetaclass(NULL, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 29, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = __Pyx_Py3MetaclassPrepare(__pyx_t_2, __pyx_t_1, __pyx_n_s_NegativeCycleError, __pyx_n_s_NegativeCycleError, (PyObject *) NULL, __pyx_n_s_algorithms_sm_shortest_paths, (PyObject *) NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 29, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+
+  /* "algorithms/sm/shortest_paths.pyx":30
+ * 
+ * class NegativeCycleError(Exception):
+ *     def __init__(self, message=''):             # <<<<<<<<<<<<<<
+ *         Exception.__init__(self, message)
+ * 
+ */
+  __pyx_t_4 = __Pyx_CyFunction_NewEx(&__pyx_mdef_10algorithms_2sm_14shortest_paths_18NegativeCycleError_1__init__, 0, __pyx_n_s_NegativeCycleError___init, NULL, __pyx_n_s_algorithms_sm_shortest_paths, __pyx_d, ((PyObject *)__pyx_codeobj__18)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 30, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_4, __pyx_tuple__19);
+  if (__Pyx_SetNameInClass(__pyx_t_3, __pyx_n_s_init, __pyx_t_4) < 0) __PYX_ERR(0, 30, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+
+  /* "algorithms/sm/shortest_paths.pyx":29
+ * 
+ * 
+ * class NegativeCycleError(Exception):             # <<<<<<<<<<<<<<
+ *     def __init__(self, message=''):
+ *         Exception.__init__(self, message)
+ */
+  __pyx_t_4 = __Pyx_Py3ClassCreate(__pyx_t_2, __pyx_n_s_NegativeCycleError, __pyx_t_1, __pyx_t_3, NULL, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 29, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_NegativeCycleError, __pyx_t_4) < 0) __PYX_ERR(0, 29, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "algorithms/sm/shortest_paths.pyx":35
+ * def dijkstra(csgraph, directed=True, indices=None,
+ *              return_predecessors=False,
+ *              unweighted=False, limit=np.inf, target=None):             # <<<<<<<<<<<<<<
+ *     """
+ *     dijkstra(csgraph, directed=True, indices=None, return_predecessors=False,
+ */
+  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 35, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_inf); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 35, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_ITYPE, __pyx_t_2) < 0) __PYX_ERR(0, 15, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_k__2 = __pyx_t_2;
+  __Pyx_GIVEREF(__pyx_t_2);
+  __pyx_t_2 = 0;
 
-  /* "algorithms/sm/shortest_paths.pyx":19
+  /* "algorithms/sm/shortest_paths.pyx":33
+ *         Exception.__init__(self, message)
  * 
- * 
- * def graph_shortest_path(dist_matrix, source, target, directed=True, method='auto'):             # <<<<<<<<<<<<<<
- *     """
- *     Perform a shortest-path graph search on a positive directed or
+ * def dijkstra(csgraph, directed=True, indices=None,             # <<<<<<<<<<<<<<
+ *              return_predecessors=False,
+ *              unweighted=False, limit=np.inf, target=None):
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_10algorithms_2sm_21sparse_shortest_paths_1graph_shortest_path, NULL, __pyx_n_s_algorithms_sm_sparse_shortest_pa); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 19, __pyx_L1_error)
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_10algorithms_2sm_14shortest_paths_1dijkstra, NULL, __pyx_n_s_algorithms_sm_shortest_paths); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 33, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_graph_shortest_path, __pyx_t_2) < 0) __PYX_ERR(0, 19, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_dijkstra, __pyx_t_2) < 0) __PYX_ERR(0, 33, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "algorithms/sm/shortest_paths.pyx":1
- * import numpy as np             # <<<<<<<<<<<<<<
- * cimport numpy as np
- * 
+ * """             # <<<<<<<<<<<<<<
+ * Routines for performing shortest-path graph searches
+ * The main interface is in the function :func:`shortest_path`.  This
  */
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_dijkstra_line_33, __pyx_kp_u_dijkstra_csgraph_directed_True) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
@@ -8931,13 +9998,15 @@ if (!__Pyx_RefNanny) {
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_4);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init algorithms.sm.sparse_shortest_paths", 0, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init algorithms.sm.shortest_paths", 0, __pyx_lineno, __pyx_filename);
     }
     Py_DECREF(__pyx_m); __pyx_m = 0;
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init algorithms.sm.sparse_shortest_paths");
+    PyErr_SetString(PyExc_ImportError, "init algorithms.sm.shortest_paths");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
@@ -8994,32 +10063,6 @@ static PyObject *__Pyx_GetBuiltinName(PyObject *name) {
 #endif
     }
     return result;
-}
-
-/* RaiseArgTupleInvalid */
-static void __Pyx_RaiseArgtupleInvalid(
-    const char* func_name,
-    int exact,
-    Py_ssize_t num_min,
-    Py_ssize_t num_max,
-    Py_ssize_t num_found)
-{
-    Py_ssize_t num_expected;
-    const char *more_or_less;
-    if (num_found < num_min) {
-        num_expected = num_min;
-        more_or_less = "at least";
-    } else {
-        num_expected = num_max;
-        more_or_less = "at most";
-    }
-    if (exact) {
-        more_or_less = "exactly";
-    }
-    PyErr_Format(PyExc_TypeError,
-                 "%.200s() takes %.8s %" CYTHON_FORMAT_SSIZE_T "d positional argument%.1s (%" CYTHON_FORMAT_SSIZE_T "d given)",
-                 func_name, more_or_less, num_expected,
-                 (num_expected == 1) ? "" : "s", num_found);
 }
 
 /* RaiseDoubleKeywords */
@@ -9138,58 +10181,34 @@ bad:
     return -1;
 }
 
-/* GetModuleGlobalName */
-static CYTHON_INLINE PyObject *__Pyx_GetModuleGlobalName(PyObject *name) {
-    PyObject *result;
-#if !CYTHON_AVOID_BORROWED_REFS
-#if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030500A1
-    result = _PyDict_GetItem_KnownHash(__pyx_d, name, ((PyASCIIObject *) name)->hash);
-    if (likely(result)) {
-        Py_INCREF(result);
-    } else if (unlikely(PyErr_Occurred())) {
-        result = NULL;
+/* RaiseArgTupleInvalid */
+static void __Pyx_RaiseArgtupleInvalid(
+    const char* func_name,
+    int exact,
+    Py_ssize_t num_min,
+    Py_ssize_t num_max,
+    Py_ssize_t num_found)
+{
+    Py_ssize_t num_expected;
+    const char *more_or_less;
+    if (num_found < num_min) {
+        num_expected = num_min;
+        more_or_less = "at least";
     } else {
-#else
-    result = PyDict_GetItem(__pyx_d, name);
-    if (likely(result)) {
-        Py_INCREF(result);
-    } else {
-#endif
-#else
-    result = PyObject_GetItem(__pyx_d, name);
-    if (!result) {
-        PyErr_Clear();
-#endif
-        result = __Pyx_GetBuiltinName(name);
+        num_expected = num_max;
+        more_or_less = "at most";
     }
-    return result;
-}
-
-/* PyCFunctionFastCall */
-    #if CYTHON_FAST_PYCCALL
-static CYTHON_INLINE PyObject * __Pyx_PyCFunction_FastCall(PyObject *func_obj, PyObject **args, Py_ssize_t nargs) {
-    PyCFunctionObject *func = (PyCFunctionObject*)func_obj;
-    PyCFunction meth = PyCFunction_GET_FUNCTION(func);
-    PyObject *self = PyCFunction_GET_SELF(func);
-    int flags = PyCFunction_GET_FLAGS(func);
-    assert(PyCFunction_Check(func));
-    assert(METH_FASTCALL == (flags & ~(METH_CLASS | METH_STATIC | METH_COEXIST | METH_KEYWORDS)));
-    assert(nargs >= 0);
-    assert(nargs == 0 || args != NULL);
-    /* _PyCFunction_FastCallDict() must not be called with an exception set,
-       because it may clear it (directly or indirectly) and so the
-       caller loses its exception */
-    assert(!PyErr_Occurred());
-    if ((PY_VERSION_HEX < 0x030700A0) || unlikely(flags & METH_KEYWORDS)) {
-        return (*((__Pyx_PyCFunctionFastWithKeywords)meth)) (self, args, nargs, NULL);
-    } else {
-        return (*((__Pyx_PyCFunctionFast)meth)) (self, args, nargs);
+    if (exact) {
+        more_or_less = "exactly";
     }
+    PyErr_Format(PyExc_TypeError,
+                 "%.200s() takes %.8s %" CYTHON_FORMAT_SSIZE_T "d positional argument%.1s (%" CYTHON_FORMAT_SSIZE_T "d given)",
+                 func_name, more_or_less, num_expected,
+                 (num_expected == 1) ? "" : "s", num_found);
 }
-#endif
 
 /* PyFunctionFastCall */
-    #if CYTHON_FAST_PYCALL
+#if CYTHON_FAST_PYCALL
 #include "frameobject.h"
 static PyObject* __Pyx_PyFunction_FastCallNoKw(PyCodeObject *co, PyObject **args, Py_ssize_t na,
                                                PyObject *globals) {
@@ -9308,8 +10327,31 @@ done:
 #endif
 #endif
 
+/* PyCFunctionFastCall */
+#if CYTHON_FAST_PYCCALL
+static CYTHON_INLINE PyObject * __Pyx_PyCFunction_FastCall(PyObject *func_obj, PyObject **args, Py_ssize_t nargs) {
+    PyCFunctionObject *func = (PyCFunctionObject*)func_obj;
+    PyCFunction meth = PyCFunction_GET_FUNCTION(func);
+    PyObject *self = PyCFunction_GET_SELF(func);
+    int flags = PyCFunction_GET_FLAGS(func);
+    assert(PyCFunction_Check(func));
+    assert(METH_FASTCALL == (flags & ~(METH_CLASS | METH_STATIC | METH_COEXIST | METH_KEYWORDS)));
+    assert(nargs >= 0);
+    assert(nargs == 0 || args != NULL);
+    /* _PyCFunction_FastCallDict() must not be called with an exception set,
+       because it may clear it (directly or indirectly) and so the
+       caller loses its exception */
+    assert(!PyErr_Occurred());
+    if ((PY_VERSION_HEX < 0x030700A0) || unlikely(flags & METH_KEYWORDS)) {
+        return (*((__Pyx_PyCFunctionFastWithKeywords)meth)) (self, args, nargs, NULL);
+    } else {
+        return (*((__Pyx_PyCFunctionFast)meth)) (self, args, nargs);
+    }
+}
+#endif
+
 /* PyObjectCall */
-    #if CYTHON_COMPILING_IN_CPYTHON
+#if CYTHON_COMPILING_IN_CPYTHON
 static CYTHON_INLINE PyObject* __Pyx_PyObject_Call(PyObject *func, PyObject *arg, PyObject *kw) {
     PyObject *result;
     ternaryfunc call = func->ob_type->tp_call;
@@ -9327,6 +10369,33 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_Call(PyObject *func, PyObject *arg
     return result;
 }
 #endif
+
+/* GetModuleGlobalName */
+static CYTHON_INLINE PyObject *__Pyx_GetModuleGlobalName(PyObject *name) {
+    PyObject *result;
+#if !CYTHON_AVOID_BORROWED_REFS
+#if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030500A1
+    result = _PyDict_GetItem_KnownHash(__pyx_d, name, ((PyASCIIObject *) name)->hash);
+    if (likely(result)) {
+        Py_INCREF(result);
+    } else if (unlikely(PyErr_Occurred())) {
+        result = NULL;
+    } else {
+#else
+    result = PyDict_GetItem(__pyx_d, name);
+    if (likely(result)) {
+        Py_INCREF(result);
+    } else {
+#endif
+#else
+    result = PyObject_GetItem(__pyx_d, name);
+    if (!result) {
+        PyErr_Clear();
+#endif
+        result = __Pyx_GetBuiltinName(name);
+    }
+    return result;
+}
 
 /* PyObjectCallMethO */
     #if CYTHON_COMPILING_IN_CPYTHON
@@ -9475,191 +10544,37 @@ static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Fast(PyObject *o, Py_ssize_t i, 
     return __Pyx_GetItemInt_Generic(o, PyInt_FromSsize_t(i));
 }
 
-/* BytesEquals */
-    static CYTHON_INLINE int __Pyx_PyBytes_Equals(PyObject* s1, PyObject* s2, int equals) {
-#if CYTHON_COMPILING_IN_PYPY
-    return PyObject_RichCompareBool(s1, s2, equals);
-#else
-    if (s1 == s2) {
-        return (equals == Py_EQ);
-    } else if (PyBytes_CheckExact(s1) & PyBytes_CheckExact(s2)) {
-        const char *ps1, *ps2;
-        Py_ssize_t length = PyBytes_GET_SIZE(s1);
-        if (length != PyBytes_GET_SIZE(s2))
-            return (equals == Py_NE);
-        ps1 = PyBytes_AS_STRING(s1);
-        ps2 = PyBytes_AS_STRING(s2);
-        if (ps1[0] != ps2[0]) {
-            return (equals == Py_NE);
-        } else if (length == 1) {
-            return (equals == Py_EQ);
-        } else {
-            int result;
-#if CYTHON_USE_UNICODE_INTERNALS
-            Py_hash_t hash1, hash2;
-            hash1 = ((PyBytesObject*)s1)->ob_shash;
-            hash2 = ((PyBytesObject*)s2)->ob_shash;
-            if (hash1 != hash2 && hash1 != -1 && hash2 != -1) {
-                return (equals == Py_NE);
-            }
-#endif
-            result = memcmp(ps1, ps2, (size_t)length);
-            return (equals == Py_EQ) ? (result == 0) : (result != 0);
-        }
-    } else if ((s1 == Py_None) & PyBytes_CheckExact(s2)) {
-        return (equals == Py_NE);
-    } else if ((s2 == Py_None) & PyBytes_CheckExact(s1)) {
-        return (equals == Py_NE);
-    } else {
-        int result;
-        PyObject* py_result = PyObject_RichCompare(s1, s2, equals);
-        if (!py_result)
-            return -1;
-        result = __Pyx_PyObject_IsTrue(py_result);
-        Py_DECREF(py_result);
-        return result;
+/* ObjectGetItem */
+    #if CYTHON_USE_TYPE_SLOTS
+static PyObject *__Pyx_PyObject_GetIndex(PyObject *obj, PyObject* index) {
+    PyObject *runerr;
+    Py_ssize_t key_value;
+    PySequenceMethods *m = Py_TYPE(obj)->tp_as_sequence;
+    if (unlikely(!(m && m->sq_item))) {
+        PyErr_Format(PyExc_TypeError, "'%.200s' object is not subscriptable", Py_TYPE(obj)->tp_name);
+        return NULL;
     }
-#endif
+    key_value = __Pyx_PyIndex_AsSsize_t(index);
+    if (likely(key_value != -1 || !(runerr = PyErr_Occurred()))) {
+        return __Pyx_GetItemInt_Fast(obj, key_value, 0, 1, 1);
+    }
+    if (PyErr_GivenExceptionMatches(runerr, PyExc_OverflowError)) {
+        PyErr_Clear();
+        PyErr_Format(PyExc_IndexError, "cannot fit '%.200s' into an index-sized integer", Py_TYPE(index)->tp_name);
+    }
+    return NULL;
 }
-
-/* UnicodeEquals */
-    static CYTHON_INLINE int __Pyx_PyUnicode_Equals(PyObject* s1, PyObject* s2, int equals) {
-#if CYTHON_COMPILING_IN_PYPY
-    return PyObject_RichCompareBool(s1, s2, equals);
-#else
-#if PY_MAJOR_VERSION < 3
-    PyObject* owned_ref = NULL;
-#endif
-    int s1_is_unicode, s2_is_unicode;
-    if (s1 == s2) {
-        goto return_eq;
+static PyObject *__Pyx_PyObject_GetItem(PyObject *obj, PyObject* key) {
+    PyMappingMethods *m = Py_TYPE(obj)->tp_as_mapping;
+    if (likely(m && m->mp_subscript)) {
+        return m->mp_subscript(obj, key);
     }
-    s1_is_unicode = PyUnicode_CheckExact(s1);
-    s2_is_unicode = PyUnicode_CheckExact(s2);
-#if PY_MAJOR_VERSION < 3
-    if ((s1_is_unicode & (!s2_is_unicode)) && PyString_CheckExact(s2)) {
-        owned_ref = PyUnicode_FromObject(s2);
-        if (unlikely(!owned_ref))
-            return -1;
-        s2 = owned_ref;
-        s2_is_unicode = 1;
-    } else if ((s2_is_unicode & (!s1_is_unicode)) && PyString_CheckExact(s1)) {
-        owned_ref = PyUnicode_FromObject(s1);
-        if (unlikely(!owned_ref))
-            return -1;
-        s1 = owned_ref;
-        s1_is_unicode = 1;
-    } else if (((!s2_is_unicode) & (!s1_is_unicode))) {
-        return __Pyx_PyBytes_Equals(s1, s2, equals);
-    }
-#endif
-    if (s1_is_unicode & s2_is_unicode) {
-        Py_ssize_t length;
-        int kind;
-        void *data1, *data2;
-        if (unlikely(__Pyx_PyUnicode_READY(s1) < 0) || unlikely(__Pyx_PyUnicode_READY(s2) < 0))
-            return -1;
-        length = __Pyx_PyUnicode_GET_LENGTH(s1);
-        if (length != __Pyx_PyUnicode_GET_LENGTH(s2)) {
-            goto return_ne;
-        }
-#if CYTHON_USE_UNICODE_INTERNALS
-        {
-            Py_hash_t hash1, hash2;
-        #if CYTHON_PEP393_ENABLED
-            hash1 = ((PyASCIIObject*)s1)->hash;
-            hash2 = ((PyASCIIObject*)s2)->hash;
-        #else
-            hash1 = ((PyUnicodeObject*)s1)->hash;
-            hash2 = ((PyUnicodeObject*)s2)->hash;
-        #endif
-            if (hash1 != hash2 && hash1 != -1 && hash2 != -1) {
-                goto return_ne;
-            }
-        }
-#endif
-        kind = __Pyx_PyUnicode_KIND(s1);
-        if (kind != __Pyx_PyUnicode_KIND(s2)) {
-            goto return_ne;
-        }
-        data1 = __Pyx_PyUnicode_DATA(s1);
-        data2 = __Pyx_PyUnicode_DATA(s2);
-        if (__Pyx_PyUnicode_READ(kind, data1, 0) != __Pyx_PyUnicode_READ(kind, data2, 0)) {
-            goto return_ne;
-        } else if (length == 1) {
-            goto return_eq;
-        } else {
-            int result = memcmp(data1, data2, (size_t)(length * kind));
-            #if PY_MAJOR_VERSION < 3
-            Py_XDECREF(owned_ref);
-            #endif
-            return (equals == Py_EQ) ? (result == 0) : (result != 0);
-        }
-    } else if ((s1 == Py_None) & s2_is_unicode) {
-        goto return_ne;
-    } else if ((s2 == Py_None) & s1_is_unicode) {
-        goto return_ne;
-    } else {
-        int result;
-        PyObject* py_result = PyObject_RichCompare(s1, s2, equals);
-        #if PY_MAJOR_VERSION < 3
-        Py_XDECREF(owned_ref);
-        #endif
-        if (!py_result)
-            return -1;
-        result = __Pyx_PyObject_IsTrue(py_result);
-        Py_DECREF(py_result);
-        return result;
-    }
-return_eq:
-    #if PY_MAJOR_VERSION < 3
-    Py_XDECREF(owned_ref);
-    #endif
-    return (equals == Py_EQ);
-return_ne:
-    #if PY_MAJOR_VERSION < 3
-    Py_XDECREF(owned_ref);
-    #endif
-    return (equals == Py_NE);
-#endif
-}
-
-/* PyObjectCallNoArg */
-    #if CYTHON_COMPILING_IN_CPYTHON
-static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func) {
-#if CYTHON_FAST_PYCALL
-    if (PyFunction_Check(func)) {
-        return __Pyx_PyFunction_FastCall(func, NULL, 0);
-    }
-#endif
-#ifdef __Pyx_CyFunction_USED
-    if (likely(PyCFunction_Check(func) || __Pyx_TypeCheck(func, __pyx_CyFunctionType))) {
-#else
-    if (likely(PyCFunction_Check(func))) {
-#endif
-        if (likely(PyCFunction_GET_FLAGS(func) & METH_NOARGS)) {
-            return __Pyx_PyObject_CallMethO(func, NULL);
-        }
-    }
-    return __Pyx_PyObject_Call(func, __pyx_empty_tuple, NULL);
+    return __Pyx_PyObject_GetIndex(obj, key);
 }
 #endif
-
-/* ExtTypeTest */
-      static CYTHON_INLINE int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type) {
-    if (unlikely(!type)) {
-        PyErr_SetString(PyExc_SystemError, "Missing type object");
-        return 0;
-    }
-    if (likely(__Pyx_TypeCheck(obj, type)))
-        return 1;
-    PyErr_Format(PyExc_TypeError, "Cannot convert %.200s to %.200s",
-                 Py_TYPE(obj)->tp_name, type->tp_name);
-    return 0;
-}
 
 /* PyErrFetchRestore */
-      #if CYTHON_FAST_THREAD_STATE
+    #if CYTHON_FAST_THREAD_STATE
 static CYTHON_INLINE void __Pyx_ErrRestoreInState(PyThreadState *tstate, PyObject *type, PyObject *value, PyObject *tb) {
     PyObject *tmp_type, *tmp_value, *tmp_tb;
     tmp_type = tstate->curexc_type;
@@ -9683,7 +10598,7 @@ static CYTHON_INLINE void __Pyx_ErrFetchInState(PyThreadState *tstate, PyObject 
 #endif
 
 /* RaiseException */
-      #if PY_MAJOR_VERSION < 3
+    #if PY_MAJOR_VERSION < 3
 static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb,
                         CYTHON_UNUSED PyObject *cause) {
     __Pyx_PyThreadState_declare
@@ -9838,6 +10753,40 @@ static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb, PyObject 
 bad:
     Py_XDECREF(owned_instance);
     return;
+}
+#endif
+
+/* ExtTypeTest */
+    static CYTHON_INLINE int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type) {
+    if (unlikely(!type)) {
+        PyErr_SetString(PyExc_SystemError, "Missing type object");
+        return 0;
+    }
+    if (likely(__Pyx_TypeCheck(obj, type)))
+        return 1;
+    PyErr_Format(PyExc_TypeError, "Cannot convert %.200s to %.200s",
+                 Py_TYPE(obj)->tp_name, type->tp_name);
+    return 0;
+}
+
+/* PyObjectCallNoArg */
+    #if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func) {
+#if CYTHON_FAST_PYCALL
+    if (PyFunction_Check(func)) {
+        return __Pyx_PyFunction_FastCall(func, NULL, 0);
+    }
+#endif
+#ifdef __Pyx_CyFunction_USED
+    if (likely(PyCFunction_Check(func) || __Pyx_TypeCheck(func, __pyx_CyFunctionType))) {
+#else
+    if (likely(PyCFunction_Check(func))) {
+#endif
+        if (likely(PyCFunction_GET_FLAGS(func) & METH_NOARGS)) {
+            return __Pyx_PyObject_CallMethO(func, NULL);
+        }
+    }
+    return __Pyx_PyObject_Call(func, __pyx_empty_tuple, NULL);
 }
 #endif
 
@@ -10401,46 +11350,10 @@ fail:;
   return -1;
 }
 
-/* WriteUnraisableException */
-        static void __Pyx_WriteUnraisable(const char *name, CYTHON_UNUSED int clineno,
-                                  CYTHON_UNUSED int lineno, CYTHON_UNUSED const char *filename,
-                                  int full_traceback, CYTHON_UNUSED int nogil) {
-    PyObject *old_exc, *old_val, *old_tb;
-    PyObject *ctx;
-    __Pyx_PyThreadState_declare
-#ifdef WITH_THREAD
-    PyGILState_STATE state;
-    if (nogil)
-        state = PyGILState_Ensure();
-#ifdef _MSC_VER
-    else state = (PyGILState_STATE)-1;
-#endif
-#endif
-    __Pyx_PyThreadState_assign
-    __Pyx_ErrFetch(&old_exc, &old_val, &old_tb);
-    if (full_traceback) {
-        Py_XINCREF(old_exc);
-        Py_XINCREF(old_val);
-        Py_XINCREF(old_tb);
-        __Pyx_ErrRestore(old_exc, old_val, old_tb);
-        PyErr_PrintEx(1);
-    }
-    #if PY_MAJOR_VERSION < 3
-    ctx = PyString_FromString(name);
-    #else
-    ctx = PyUnicode_FromString(name);
-    #endif
-    __Pyx_ErrRestore(old_exc, old_val, old_tb);
-    if (!ctx) {
-        PyErr_WriteUnraisable(Py_None);
-    } else {
-        PyErr_WriteUnraisable(ctx);
-        Py_DECREF(ctx);
-    }
-#ifdef WITH_THREAD
-    if (nogil)
-        PyGILState_Release(state);
-#endif
+/* BufferIndexError */
+        static void __Pyx_RaiseBufferIndexError(int axis) {
+  PyErr_Format(PyExc_IndexError,
+     "Out of bounds on buffer access (axis %d)", axis);
 }
 
 /* DictGetItem */
@@ -10693,8 +11606,747 @@ bad:
     return value;
 }
 
+/* CalculateMetaclass */
+          static PyObject *__Pyx_CalculateMetaclass(PyTypeObject *metaclass, PyObject *bases) {
+    Py_ssize_t i, nbases = PyTuple_GET_SIZE(bases);
+    for (i=0; i < nbases; i++) {
+        PyTypeObject *tmptype;
+        PyObject *tmp = PyTuple_GET_ITEM(bases, i);
+        tmptype = Py_TYPE(tmp);
+#if PY_MAJOR_VERSION < 3
+        if (tmptype == &PyClass_Type)
+            continue;
+#endif
+        if (!metaclass) {
+            metaclass = tmptype;
+            continue;
+        }
+        if (PyType_IsSubtype(metaclass, tmptype))
+            continue;
+        if (PyType_IsSubtype(tmptype, metaclass)) {
+            metaclass = tmptype;
+            continue;
+        }
+        PyErr_SetString(PyExc_TypeError,
+                        "metaclass conflict: "
+                        "the metaclass of a derived class "
+                        "must be a (non-strict) subclass "
+                        "of the metaclasses of all its bases");
+        return NULL;
+    }
+    if (!metaclass) {
+#if PY_MAJOR_VERSION < 3
+        metaclass = &PyClass_Type;
+#else
+        metaclass = &PyType_Type;
+#endif
+    }
+    Py_INCREF((PyObject*) metaclass);
+    return (PyObject*) metaclass;
+}
+
+/* FetchCommonType */
+          static PyTypeObject* __Pyx_FetchCommonType(PyTypeObject* type) {
+    PyObject* fake_module;
+    PyTypeObject* cached_type = NULL;
+    fake_module = PyImport_AddModule((char*) "_cython_" CYTHON_ABI);
+    if (!fake_module) return NULL;
+    Py_INCREF(fake_module);
+    cached_type = (PyTypeObject*) PyObject_GetAttrString(fake_module, type->tp_name);
+    if (cached_type) {
+        if (!PyType_Check((PyObject*)cached_type)) {
+            PyErr_Format(PyExc_TypeError,
+                "Shared Cython type %.200s is not a type object",
+                type->tp_name);
+            goto bad;
+        }
+        if (cached_type->tp_basicsize != type->tp_basicsize) {
+            PyErr_Format(PyExc_TypeError,
+                "Shared Cython type %.200s has the wrong size, try recompiling",
+                type->tp_name);
+            goto bad;
+        }
+    } else {
+        if (!PyErr_ExceptionMatches(PyExc_AttributeError)) goto bad;
+        PyErr_Clear();
+        if (PyType_Ready(type) < 0) goto bad;
+        if (PyObject_SetAttrString(fake_module, type->tp_name, (PyObject*) type) < 0)
+            goto bad;
+        Py_INCREF(type);
+        cached_type = type;
+    }
+done:
+    Py_DECREF(fake_module);
+    return cached_type;
+bad:
+    Py_XDECREF(cached_type);
+    cached_type = NULL;
+    goto done;
+}
+
+/* CythonFunction */
+          #include <structmember.h>
+static PyObject *
+__Pyx_CyFunction_get_doc(__pyx_CyFunctionObject *op, CYTHON_UNUSED void *closure)
+{
+    if (unlikely(op->func_doc == NULL)) {
+        if (op->func.m_ml->ml_doc) {
+#if PY_MAJOR_VERSION >= 3
+            op->func_doc = PyUnicode_FromString(op->func.m_ml->ml_doc);
+#else
+            op->func_doc = PyString_FromString(op->func.m_ml->ml_doc);
+#endif
+            if (unlikely(op->func_doc == NULL))
+                return NULL;
+        } else {
+            Py_INCREF(Py_None);
+            return Py_None;
+        }
+    }
+    Py_INCREF(op->func_doc);
+    return op->func_doc;
+}
+static int
+__Pyx_CyFunction_set_doc(__pyx_CyFunctionObject *op, PyObject *value)
+{
+    PyObject *tmp = op->func_doc;
+    if (value == NULL) {
+        value = Py_None;
+    }
+    Py_INCREF(value);
+    op->func_doc = value;
+    Py_XDECREF(tmp);
+    return 0;
+}
+static PyObject *
+__Pyx_CyFunction_get_name(__pyx_CyFunctionObject *op)
+{
+    if (unlikely(op->func_name == NULL)) {
+#if PY_MAJOR_VERSION >= 3
+        op->func_name = PyUnicode_InternFromString(op->func.m_ml->ml_name);
+#else
+        op->func_name = PyString_InternFromString(op->func.m_ml->ml_name);
+#endif
+        if (unlikely(op->func_name == NULL))
+            return NULL;
+    }
+    Py_INCREF(op->func_name);
+    return op->func_name;
+}
+static int
+__Pyx_CyFunction_set_name(__pyx_CyFunctionObject *op, PyObject *value)
+{
+    PyObject *tmp;
+#if PY_MAJOR_VERSION >= 3
+    if (unlikely(value == NULL || !PyUnicode_Check(value))) {
+#else
+    if (unlikely(value == NULL || !PyString_Check(value))) {
+#endif
+        PyErr_SetString(PyExc_TypeError,
+                        "__name__ must be set to a string object");
+        return -1;
+    }
+    tmp = op->func_name;
+    Py_INCREF(value);
+    op->func_name = value;
+    Py_XDECREF(tmp);
+    return 0;
+}
+static PyObject *
+__Pyx_CyFunction_get_qualname(__pyx_CyFunctionObject *op)
+{
+    Py_INCREF(op->func_qualname);
+    return op->func_qualname;
+}
+static int
+__Pyx_CyFunction_set_qualname(__pyx_CyFunctionObject *op, PyObject *value)
+{
+    PyObject *tmp;
+#if PY_MAJOR_VERSION >= 3
+    if (unlikely(value == NULL || !PyUnicode_Check(value))) {
+#else
+    if (unlikely(value == NULL || !PyString_Check(value))) {
+#endif
+        PyErr_SetString(PyExc_TypeError,
+                        "__qualname__ must be set to a string object");
+        return -1;
+    }
+    tmp = op->func_qualname;
+    Py_INCREF(value);
+    op->func_qualname = value;
+    Py_XDECREF(tmp);
+    return 0;
+}
+static PyObject *
+__Pyx_CyFunction_get_self(__pyx_CyFunctionObject *m, CYTHON_UNUSED void *closure)
+{
+    PyObject *self;
+    self = m->func_closure;
+    if (self == NULL)
+        self = Py_None;
+    Py_INCREF(self);
+    return self;
+}
+static PyObject *
+__Pyx_CyFunction_get_dict(__pyx_CyFunctionObject *op)
+{
+    if (unlikely(op->func_dict == NULL)) {
+        op->func_dict = PyDict_New();
+        if (unlikely(op->func_dict == NULL))
+            return NULL;
+    }
+    Py_INCREF(op->func_dict);
+    return op->func_dict;
+}
+static int
+__Pyx_CyFunction_set_dict(__pyx_CyFunctionObject *op, PyObject *value)
+{
+    PyObject *tmp;
+    if (unlikely(value == NULL)) {
+        PyErr_SetString(PyExc_TypeError,
+               "function's dictionary may not be deleted");
+        return -1;
+    }
+    if (unlikely(!PyDict_Check(value))) {
+        PyErr_SetString(PyExc_TypeError,
+               "setting function's dictionary to a non-dict");
+        return -1;
+    }
+    tmp = op->func_dict;
+    Py_INCREF(value);
+    op->func_dict = value;
+    Py_XDECREF(tmp);
+    return 0;
+}
+static PyObject *
+__Pyx_CyFunction_get_globals(__pyx_CyFunctionObject *op)
+{
+    Py_INCREF(op->func_globals);
+    return op->func_globals;
+}
+static PyObject *
+__Pyx_CyFunction_get_closure(CYTHON_UNUSED __pyx_CyFunctionObject *op)
+{
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+static PyObject *
+__Pyx_CyFunction_get_code(__pyx_CyFunctionObject *op)
+{
+    PyObject* result = (op->func_code) ? op->func_code : Py_None;
+    Py_INCREF(result);
+    return result;
+}
+static int
+__Pyx_CyFunction_init_defaults(__pyx_CyFunctionObject *op) {
+    int result = 0;
+    PyObject *res = op->defaults_getter((PyObject *) op);
+    if (unlikely(!res))
+        return -1;
+    #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+    op->defaults_tuple = PyTuple_GET_ITEM(res, 0);
+    Py_INCREF(op->defaults_tuple);
+    op->defaults_kwdict = PyTuple_GET_ITEM(res, 1);
+    Py_INCREF(op->defaults_kwdict);
+    #else
+    op->defaults_tuple = PySequence_ITEM(res, 0);
+    if (unlikely(!op->defaults_tuple)) result = -1;
+    else {
+        op->defaults_kwdict = PySequence_ITEM(res, 1);
+        if (unlikely(!op->defaults_kwdict)) result = -1;
+    }
+    #endif
+    Py_DECREF(res);
+    return result;
+}
+static int
+__Pyx_CyFunction_set_defaults(__pyx_CyFunctionObject *op, PyObject* value) {
+    PyObject* tmp;
+    if (!value) {
+        value = Py_None;
+    } else if (value != Py_None && !PyTuple_Check(value)) {
+        PyErr_SetString(PyExc_TypeError,
+                        "__defaults__ must be set to a tuple object");
+        return -1;
+    }
+    Py_INCREF(value);
+    tmp = op->defaults_tuple;
+    op->defaults_tuple = value;
+    Py_XDECREF(tmp);
+    return 0;
+}
+static PyObject *
+__Pyx_CyFunction_get_defaults(__pyx_CyFunctionObject *op) {
+    PyObject* result = op->defaults_tuple;
+    if (unlikely(!result)) {
+        if (op->defaults_getter) {
+            if (__Pyx_CyFunction_init_defaults(op) < 0) return NULL;
+            result = op->defaults_tuple;
+        } else {
+            result = Py_None;
+        }
+    }
+    Py_INCREF(result);
+    return result;
+}
+static int
+__Pyx_CyFunction_set_kwdefaults(__pyx_CyFunctionObject *op, PyObject* value) {
+    PyObject* tmp;
+    if (!value) {
+        value = Py_None;
+    } else if (value != Py_None && !PyDict_Check(value)) {
+        PyErr_SetString(PyExc_TypeError,
+                        "__kwdefaults__ must be set to a dict object");
+        return -1;
+    }
+    Py_INCREF(value);
+    tmp = op->defaults_kwdict;
+    op->defaults_kwdict = value;
+    Py_XDECREF(tmp);
+    return 0;
+}
+static PyObject *
+__Pyx_CyFunction_get_kwdefaults(__pyx_CyFunctionObject *op) {
+    PyObject* result = op->defaults_kwdict;
+    if (unlikely(!result)) {
+        if (op->defaults_getter) {
+            if (__Pyx_CyFunction_init_defaults(op) < 0) return NULL;
+            result = op->defaults_kwdict;
+        } else {
+            result = Py_None;
+        }
+    }
+    Py_INCREF(result);
+    return result;
+}
+static int
+__Pyx_CyFunction_set_annotations(__pyx_CyFunctionObject *op, PyObject* value) {
+    PyObject* tmp;
+    if (!value || value == Py_None) {
+        value = NULL;
+    } else if (!PyDict_Check(value)) {
+        PyErr_SetString(PyExc_TypeError,
+                        "__annotations__ must be set to a dict object");
+        return -1;
+    }
+    Py_XINCREF(value);
+    tmp = op->func_annotations;
+    op->func_annotations = value;
+    Py_XDECREF(tmp);
+    return 0;
+}
+static PyObject *
+__Pyx_CyFunction_get_annotations(__pyx_CyFunctionObject *op) {
+    PyObject* result = op->func_annotations;
+    if (unlikely(!result)) {
+        result = PyDict_New();
+        if (unlikely(!result)) return NULL;
+        op->func_annotations = result;
+    }
+    Py_INCREF(result);
+    return result;
+}
+static PyGetSetDef __pyx_CyFunction_getsets[] = {
+    {(char *) "func_doc", (getter)__Pyx_CyFunction_get_doc, (setter)__Pyx_CyFunction_set_doc, 0, 0},
+    {(char *) "__doc__",  (getter)__Pyx_CyFunction_get_doc, (setter)__Pyx_CyFunction_set_doc, 0, 0},
+    {(char *) "func_name", (getter)__Pyx_CyFunction_get_name, (setter)__Pyx_CyFunction_set_name, 0, 0},
+    {(char *) "__name__", (getter)__Pyx_CyFunction_get_name, (setter)__Pyx_CyFunction_set_name, 0, 0},
+    {(char *) "__qualname__", (getter)__Pyx_CyFunction_get_qualname, (setter)__Pyx_CyFunction_set_qualname, 0, 0},
+    {(char *) "__self__", (getter)__Pyx_CyFunction_get_self, 0, 0, 0},
+    {(char *) "func_dict", (getter)__Pyx_CyFunction_get_dict, (setter)__Pyx_CyFunction_set_dict, 0, 0},
+    {(char *) "__dict__", (getter)__Pyx_CyFunction_get_dict, (setter)__Pyx_CyFunction_set_dict, 0, 0},
+    {(char *) "func_globals", (getter)__Pyx_CyFunction_get_globals, 0, 0, 0},
+    {(char *) "__globals__", (getter)__Pyx_CyFunction_get_globals, 0, 0, 0},
+    {(char *) "func_closure", (getter)__Pyx_CyFunction_get_closure, 0, 0, 0},
+    {(char *) "__closure__", (getter)__Pyx_CyFunction_get_closure, 0, 0, 0},
+    {(char *) "func_code", (getter)__Pyx_CyFunction_get_code, 0, 0, 0},
+    {(char *) "__code__", (getter)__Pyx_CyFunction_get_code, 0, 0, 0},
+    {(char *) "func_defaults", (getter)__Pyx_CyFunction_get_defaults, (setter)__Pyx_CyFunction_set_defaults, 0, 0},
+    {(char *) "__defaults__", (getter)__Pyx_CyFunction_get_defaults, (setter)__Pyx_CyFunction_set_defaults, 0, 0},
+    {(char *) "__kwdefaults__", (getter)__Pyx_CyFunction_get_kwdefaults, (setter)__Pyx_CyFunction_set_kwdefaults, 0, 0},
+    {(char *) "__annotations__", (getter)__Pyx_CyFunction_get_annotations, (setter)__Pyx_CyFunction_set_annotations, 0, 0},
+    {0, 0, 0, 0, 0}
+};
+static PyMemberDef __pyx_CyFunction_members[] = {
+    {(char *) "__module__", T_OBJECT, offsetof(PyCFunctionObject, m_module), PY_WRITE_RESTRICTED, 0},
+    {0, 0, 0,  0, 0}
+};
+static PyObject *
+__Pyx_CyFunction_reduce(__pyx_CyFunctionObject *m, CYTHON_UNUSED PyObject *args)
+{
+#if PY_MAJOR_VERSION >= 3
+    return PyUnicode_FromString(m->func.m_ml->ml_name);
+#else
+    return PyString_FromString(m->func.m_ml->ml_name);
+#endif
+}
+static PyMethodDef __pyx_CyFunction_methods[] = {
+    {"__reduce__", (PyCFunction)__Pyx_CyFunction_reduce, METH_VARARGS, 0},
+    {0, 0, 0, 0}
+};
+#if PY_VERSION_HEX < 0x030500A0
+#define __Pyx_CyFunction_weakreflist(cyfunc) ((cyfunc)->func_weakreflist)
+#else
+#define __Pyx_CyFunction_weakreflist(cyfunc) ((cyfunc)->func.m_weakreflist)
+#endif
+static PyObject *__Pyx_CyFunction_New(PyTypeObject *type, PyMethodDef *ml, int flags, PyObject* qualname,
+                                      PyObject *closure, PyObject *module, PyObject* globals, PyObject* code) {
+    __pyx_CyFunctionObject *op = PyObject_GC_New(__pyx_CyFunctionObject, type);
+    if (op == NULL)
+        return NULL;
+    op->flags = flags;
+    __Pyx_CyFunction_weakreflist(op) = NULL;
+    op->func.m_ml = ml;
+    op->func.m_self = (PyObject *) op;
+    Py_XINCREF(closure);
+    op->func_closure = closure;
+    Py_XINCREF(module);
+    op->func.m_module = module;
+    op->func_dict = NULL;
+    op->func_name = NULL;
+    Py_INCREF(qualname);
+    op->func_qualname = qualname;
+    op->func_doc = NULL;
+    op->func_classobj = NULL;
+    op->func_globals = globals;
+    Py_INCREF(op->func_globals);
+    Py_XINCREF(code);
+    op->func_code = code;
+    op->defaults_pyobjects = 0;
+    op->defaults = NULL;
+    op->defaults_tuple = NULL;
+    op->defaults_kwdict = NULL;
+    op->defaults_getter = NULL;
+    op->func_annotations = NULL;
+    PyObject_GC_Track(op);
+    return (PyObject *) op;
+}
+static int
+__Pyx_CyFunction_clear(__pyx_CyFunctionObject *m)
+{
+    Py_CLEAR(m->func_closure);
+    Py_CLEAR(m->func.m_module);
+    Py_CLEAR(m->func_dict);
+    Py_CLEAR(m->func_name);
+    Py_CLEAR(m->func_qualname);
+    Py_CLEAR(m->func_doc);
+    Py_CLEAR(m->func_globals);
+    Py_CLEAR(m->func_code);
+    Py_CLEAR(m->func_classobj);
+    Py_CLEAR(m->defaults_tuple);
+    Py_CLEAR(m->defaults_kwdict);
+    Py_CLEAR(m->func_annotations);
+    if (m->defaults) {
+        PyObject **pydefaults = __Pyx_CyFunction_Defaults(PyObject *, m);
+        int i;
+        for (i = 0; i < m->defaults_pyobjects; i++)
+            Py_XDECREF(pydefaults[i]);
+        PyObject_Free(m->defaults);
+        m->defaults = NULL;
+    }
+    return 0;
+}
+static void __Pyx__CyFunction_dealloc(__pyx_CyFunctionObject *m)
+{
+    if (__Pyx_CyFunction_weakreflist(m) != NULL)
+        PyObject_ClearWeakRefs((PyObject *) m);
+    __Pyx_CyFunction_clear(m);
+    PyObject_GC_Del(m);
+}
+static void __Pyx_CyFunction_dealloc(__pyx_CyFunctionObject *m)
+{
+    PyObject_GC_UnTrack(m);
+    __Pyx__CyFunction_dealloc(m);
+}
+static int __Pyx_CyFunction_traverse(__pyx_CyFunctionObject *m, visitproc visit, void *arg)
+{
+    Py_VISIT(m->func_closure);
+    Py_VISIT(m->func.m_module);
+    Py_VISIT(m->func_dict);
+    Py_VISIT(m->func_name);
+    Py_VISIT(m->func_qualname);
+    Py_VISIT(m->func_doc);
+    Py_VISIT(m->func_globals);
+    Py_VISIT(m->func_code);
+    Py_VISIT(m->func_classobj);
+    Py_VISIT(m->defaults_tuple);
+    Py_VISIT(m->defaults_kwdict);
+    if (m->defaults) {
+        PyObject **pydefaults = __Pyx_CyFunction_Defaults(PyObject *, m);
+        int i;
+        for (i = 0; i < m->defaults_pyobjects; i++)
+            Py_VISIT(pydefaults[i]);
+    }
+    return 0;
+}
+static PyObject *__Pyx_CyFunction_descr_get(PyObject *func, PyObject *obj, PyObject *type)
+{
+    __pyx_CyFunctionObject *m = (__pyx_CyFunctionObject *) func;
+    if (m->flags & __Pyx_CYFUNCTION_STATICMETHOD) {
+        Py_INCREF(func);
+        return func;
+    }
+    if (m->flags & __Pyx_CYFUNCTION_CLASSMETHOD) {
+        if (type == NULL)
+            type = (PyObject *)(Py_TYPE(obj));
+        return __Pyx_PyMethod_New(func, type, (PyObject *)(Py_TYPE(type)));
+    }
+    if (obj == Py_None)
+        obj = NULL;
+    return __Pyx_PyMethod_New(func, obj, type);
+}
+static PyObject*
+__Pyx_CyFunction_repr(__pyx_CyFunctionObject *op)
+{
+#if PY_MAJOR_VERSION >= 3
+    return PyUnicode_FromFormat("<cyfunction %U at %p>",
+                                op->func_qualname, (void *)op);
+#else
+    return PyString_FromFormat("<cyfunction %s at %p>",
+                               PyString_AsString(op->func_qualname), (void *)op);
+#endif
+}
+static PyObject * __Pyx_CyFunction_CallMethod(PyObject *func, PyObject *self, PyObject *arg, PyObject *kw) {
+    PyCFunctionObject* f = (PyCFunctionObject*)func;
+    PyCFunction meth = f->m_ml->ml_meth;
+    Py_ssize_t size;
+    switch (f->m_ml->ml_flags & (METH_VARARGS | METH_KEYWORDS | METH_NOARGS | METH_O)) {
+    case METH_VARARGS:
+        if (likely(kw == NULL || PyDict_Size(kw) == 0))
+            return (*meth)(self, arg);
+        break;
+    case METH_VARARGS | METH_KEYWORDS:
+        return (*(PyCFunctionWithKeywords)meth)(self, arg, kw);
+    case METH_NOARGS:
+        if (likely(kw == NULL || PyDict_Size(kw) == 0)) {
+            size = PyTuple_GET_SIZE(arg);
+            if (likely(size == 0))
+                return (*meth)(self, NULL);
+            PyErr_Format(PyExc_TypeError,
+                "%.200s() takes no arguments (%" CYTHON_FORMAT_SSIZE_T "d given)",
+                f->m_ml->ml_name, size);
+            return NULL;
+        }
+        break;
+    case METH_O:
+        if (likely(kw == NULL || PyDict_Size(kw) == 0)) {
+            size = PyTuple_GET_SIZE(arg);
+            if (likely(size == 1)) {
+                PyObject *result, *arg0;
+                #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+                arg0 = PyTuple_GET_ITEM(arg, 0);
+                #else
+                arg0 = PySequence_ITEM(arg, 0); if (unlikely(!arg0)) return NULL;
+                #endif
+                result = (*meth)(self, arg0);
+                #if !(CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS)
+                Py_DECREF(arg0);
+                #endif
+                return result;
+            }
+            PyErr_Format(PyExc_TypeError,
+                "%.200s() takes exactly one argument (%" CYTHON_FORMAT_SSIZE_T "d given)",
+                f->m_ml->ml_name, size);
+            return NULL;
+        }
+        break;
+    default:
+        PyErr_SetString(PyExc_SystemError, "Bad call flags in "
+                        "__Pyx_CyFunction_Call. METH_OLDARGS is no "
+                        "longer supported!");
+        return NULL;
+    }
+    PyErr_Format(PyExc_TypeError, "%.200s() takes no keyword arguments",
+                 f->m_ml->ml_name);
+    return NULL;
+}
+static CYTHON_INLINE PyObject *__Pyx_CyFunction_Call(PyObject *func, PyObject *arg, PyObject *kw) {
+    return __Pyx_CyFunction_CallMethod(func, ((PyCFunctionObject*)func)->m_self, arg, kw);
+}
+static PyObject *__Pyx_CyFunction_CallAsMethod(PyObject *func, PyObject *args, PyObject *kw) {
+    PyObject *result;
+    __pyx_CyFunctionObject *cyfunc = (__pyx_CyFunctionObject *) func;
+    if ((cyfunc->flags & __Pyx_CYFUNCTION_CCLASS) && !(cyfunc->flags & __Pyx_CYFUNCTION_STATICMETHOD)) {
+        Py_ssize_t argc;
+        PyObject *new_args;
+        PyObject *self;
+        argc = PyTuple_GET_SIZE(args);
+        new_args = PyTuple_GetSlice(args, 1, argc);
+        if (unlikely(!new_args))
+            return NULL;
+        self = PyTuple_GetItem(args, 0);
+        if (unlikely(!self)) {
+            Py_DECREF(new_args);
+            return NULL;
+        }
+        result = __Pyx_CyFunction_CallMethod(func, self, new_args, kw);
+        Py_DECREF(new_args);
+    } else {
+        result = __Pyx_CyFunction_Call(func, args, kw);
+    }
+    return result;
+}
+static PyTypeObject __pyx_CyFunctionType_type = {
+    PyVarObject_HEAD_INIT(0, 0)
+    "cython_function_or_method",
+    sizeof(__pyx_CyFunctionObject),
+    0,
+    (destructor) __Pyx_CyFunction_dealloc,
+    0,
+    0,
+    0,
+#if PY_MAJOR_VERSION < 3
+    0,
+#else
+    0,
+#endif
+    (reprfunc) __Pyx_CyFunction_repr,
+    0,
+    0,
+    0,
+    0,
+    __Pyx_CyFunction_CallAsMethod,
+    0,
+    0,
+    0,
+    0,
+    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_HAVE_GC,
+    0,
+    (traverseproc) __Pyx_CyFunction_traverse,
+    (inquiry) __Pyx_CyFunction_clear,
+    0,
+#if PY_VERSION_HEX < 0x030500A0
+    offsetof(__pyx_CyFunctionObject, func_weakreflist),
+#else
+    offsetof(PyCFunctionObject, m_weakreflist),
+#endif
+    0,
+    0,
+    __pyx_CyFunction_methods,
+    __pyx_CyFunction_members,
+    __pyx_CyFunction_getsets,
+    0,
+    0,
+    __Pyx_CyFunction_descr_get,
+    0,
+    offsetof(__pyx_CyFunctionObject, func_dict),
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+#if PY_VERSION_HEX >= 0x030400a1
+    0,
+#endif
+};
+static int __pyx_CyFunction_init(void) {
+    __pyx_CyFunctionType = __Pyx_FetchCommonType(&__pyx_CyFunctionType_type);
+    if (unlikely(__pyx_CyFunctionType == NULL)) {
+        return -1;
+    }
+    return 0;
+}
+static CYTHON_INLINE void *__Pyx_CyFunction_InitDefaults(PyObject *func, size_t size, int pyobjects) {
+    __pyx_CyFunctionObject *m = (__pyx_CyFunctionObject *) func;
+    m->defaults = PyObject_Malloc(size);
+    if (unlikely(!m->defaults))
+        return PyErr_NoMemory();
+    memset(m->defaults, 0, size);
+    m->defaults_pyobjects = pyobjects;
+    return m->defaults;
+}
+static CYTHON_INLINE void __Pyx_CyFunction_SetDefaultsTuple(PyObject *func, PyObject *tuple) {
+    __pyx_CyFunctionObject *m = (__pyx_CyFunctionObject *) func;
+    m->defaults_tuple = tuple;
+    Py_INCREF(tuple);
+}
+static CYTHON_INLINE void __Pyx_CyFunction_SetDefaultsKwDict(PyObject *func, PyObject *dict) {
+    __pyx_CyFunctionObject *m = (__pyx_CyFunctionObject *) func;
+    m->defaults_kwdict = dict;
+    Py_INCREF(dict);
+}
+static CYTHON_INLINE void __Pyx_CyFunction_SetAnnotationsDict(PyObject *func, PyObject *dict) {
+    __pyx_CyFunctionObject *m = (__pyx_CyFunctionObject *) func;
+    m->func_annotations = dict;
+    Py_INCREF(dict);
+}
+
+/* Py3ClassCreate */
+              static PyObject *__Pyx_Py3MetaclassPrepare(PyObject *metaclass, PyObject *bases, PyObject *name,
+                                           PyObject *qualname, PyObject *mkw, PyObject *modname, PyObject *doc) {
+    PyObject *ns;
+    if (metaclass) {
+        PyObject *prep = __Pyx_PyObject_GetAttrStr(metaclass, __pyx_n_s_prepare);
+        if (prep) {
+            PyObject *pargs = PyTuple_Pack(2, name, bases);
+            if (unlikely(!pargs)) {
+                Py_DECREF(prep);
+                return NULL;
+            }
+            ns = PyObject_Call(prep, pargs, mkw);
+            Py_DECREF(prep);
+            Py_DECREF(pargs);
+        } else {
+            if (unlikely(!PyErr_ExceptionMatches(PyExc_AttributeError)))
+                return NULL;
+            PyErr_Clear();
+            ns = PyDict_New();
+        }
+    } else {
+        ns = PyDict_New();
+    }
+    if (unlikely(!ns))
+        return NULL;
+    if (unlikely(PyObject_SetItem(ns, __pyx_n_s_module, modname) < 0)) goto bad;
+    if (unlikely(PyObject_SetItem(ns, __pyx_n_s_qualname, qualname) < 0)) goto bad;
+    if (unlikely(doc && PyObject_SetItem(ns, __pyx_n_s_doc, doc) < 0)) goto bad;
+    return ns;
+bad:
+    Py_DECREF(ns);
+    return NULL;
+}
+static PyObject *__Pyx_Py3ClassCreate(PyObject *metaclass, PyObject *name, PyObject *bases,
+                                      PyObject *dict, PyObject *mkw,
+                                      int calculate_metaclass, int allow_py2_metaclass) {
+    PyObject *result, *margs;
+    PyObject *owned_metaclass = NULL;
+    if (allow_py2_metaclass) {
+        owned_metaclass = PyObject_GetItem(dict, __pyx_n_s_metaclass);
+        if (owned_metaclass) {
+            metaclass = owned_metaclass;
+        } else if (likely(PyErr_ExceptionMatches(PyExc_KeyError))) {
+            PyErr_Clear();
+        } else {
+            return NULL;
+        }
+    }
+    if (calculate_metaclass && (!metaclass || PyType_Check(metaclass))) {
+        metaclass = __Pyx_CalculateMetaclass((PyTypeObject*) metaclass, bases);
+        Py_XDECREF(owned_metaclass);
+        if (unlikely(!metaclass))
+            return NULL;
+        owned_metaclass = metaclass;
+    }
+    margs = PyTuple_Pack(3, name, bases, dict);
+    if (unlikely(!margs)) {
+        result = NULL;
+    } else {
+        result = PyObject_Call(metaclass, margs, mkw);
+        Py_DECREF(margs);
+    }
+    Py_XDECREF(owned_metaclass);
+    return result;
+}
+
 /* CLineInTraceback */
-          #ifndef CYTHON_CLINE_IN_TRACEBACK
+              #ifndef CYTHON_CLINE_IN_TRACEBACK
 static int __Pyx_CLineForTraceback(CYTHON_UNUSED PyThreadState *tstate, int c_line) {
     PyObject *use_cline;
     PyObject *ptype, *pvalue, *ptraceback;
@@ -10734,7 +12386,7 @@ static int __Pyx_CLineForTraceback(CYTHON_UNUSED PyThreadState *tstate, int c_li
 #endif
 
 /* CodeObjectCache */
-          static int __pyx_bisect_code_objects(__Pyx_CodeObjectCacheEntry* entries, int count, int code_line) {
+              static int __pyx_bisect_code_objects(__Pyx_CodeObjectCacheEntry* entries, int count, int code_line) {
     int start = 0, mid = 0, end = count - 1;
     if (end >= 0 && code_line > entries[end].code_line) {
         return count;
@@ -10814,7 +12466,7 @@ static void __pyx_insert_code_object(int code_line, PyCodeObject* code_object) {
 }
 
 /* AddTraceback */
-          #include "compile.h"
+              #include "compile.h"
 #include "frameobject.h"
 #include "traceback.h"
 static PyCodeObject* __Pyx_CreateCodeObjectForTraceback(
@@ -10920,8 +12572,8 @@ static void __Pyx_ReleaseBuffer(Py_buffer *view) {
 #endif
 
 
-          /* CIntToPy */
-          static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value) {
+              /* CIntToPy */
+              static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value) {
     const long neg_one = (long) -1, const_zero = (long) 0;
     const int is_unsigned = neg_one > const_zero;
     if (is_unsigned) {
@@ -10952,7 +12604,7 @@ static void __Pyx_ReleaseBuffer(Py_buffer *view) {
 }
 
 /* CIntFromPyVerify */
-          #define __PYX_VERIFY_RETURN_INT(target_type, func_type, func_value)\
+              #define __PYX_VERIFY_RETURN_INT(target_type, func_type, func_value)\
     __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 0)
 #define __PYX_VERIFY_RETURN_INT_EXC(target_type, func_type, func_value)\
     __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 1)
@@ -10973,8 +12625,70 @@ static void __Pyx_ReleaseBuffer(Py_buffer *view) {
         return (target_type) value;\
     }
 
+/* CIntToPy */
+              static CYTHON_INLINE PyObject* __Pyx_PyInt_From_unsigned_int(unsigned int value) {
+    const unsigned int neg_one = (unsigned int) -1, const_zero = (unsigned int) 0;
+    const int is_unsigned = neg_one > const_zero;
+    if (is_unsigned) {
+        if (sizeof(unsigned int) < sizeof(long)) {
+            return PyInt_FromLong((long) value);
+        } else if (sizeof(unsigned int) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(unsigned int) <= sizeof(unsigned PY_LONG_LONG)) {
+            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
+#endif
+        }
+    } else {
+        if (sizeof(unsigned int) <= sizeof(long)) {
+            return PyInt_FromLong((long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(unsigned int) <= sizeof(PY_LONG_LONG)) {
+            return PyLong_FromLongLong((PY_LONG_LONG) value);
+#endif
+        }
+    }
+    {
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        unsigned char *bytes = (unsigned char *)&value;
+        return _PyLong_FromByteArray(bytes, sizeof(unsigned int),
+                                     little, !is_unsigned);
+    }
+}
+
+/* CIntToPy */
+              static CYTHON_INLINE PyObject* __Pyx_PyInt_From_npy_int32(npy_int32 value) {
+    const npy_int32 neg_one = (npy_int32) -1, const_zero = (npy_int32) 0;
+    const int is_unsigned = neg_one > const_zero;
+    if (is_unsigned) {
+        if (sizeof(npy_int32) < sizeof(long)) {
+            return PyInt_FromLong((long) value);
+        } else if (sizeof(npy_int32) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(npy_int32) <= sizeof(unsigned PY_LONG_LONG)) {
+            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
+#endif
+        }
+    } else {
+        if (sizeof(npy_int32) <= sizeof(long)) {
+            return PyInt_FromLong((long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(npy_int32) <= sizeof(PY_LONG_LONG)) {
+            return PyLong_FromLongLong((PY_LONG_LONG) value);
+#endif
+        }
+    }
+    {
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        unsigned char *bytes = (unsigned char *)&value;
+        return _PyLong_FromByteArray(bytes, sizeof(npy_int32),
+                                     little, !is_unsigned);
+    }
+}
+
 /* Declarations */
-          #if CYTHON_CCOMPLEX
+              #if CYTHON_CCOMPLEX
   #ifdef __cplusplus
     static CYTHON_INLINE __pyx_t_float_complex __pyx_t_float_complex_from_parts(float x, float y) {
       return ::std::complex< float >(x, y);
@@ -10994,7 +12708,7 @@ static void __Pyx_ReleaseBuffer(Py_buffer *view) {
 #endif
 
 /* Arithmetic */
-          #if CYTHON_CCOMPLEX
+              #if CYTHON_CCOMPLEX
 #else
     static CYTHON_INLINE int __Pyx_c_eq_float(__pyx_t_float_complex a, __pyx_t_float_complex b) {
        return (a.real == b.real) && (a.imag == b.imag);
@@ -11129,7 +12843,7 @@ static void __Pyx_ReleaseBuffer(Py_buffer *view) {
 #endif
 
 /* Declarations */
-          #if CYTHON_CCOMPLEX
+              #if CYTHON_CCOMPLEX
   #ifdef __cplusplus
     static CYTHON_INLINE __pyx_t_double_complex __pyx_t_double_complex_from_parts(double x, double y) {
       return ::std::complex< double >(x, y);
@@ -11149,7 +12863,7 @@ static void __Pyx_ReleaseBuffer(Py_buffer *view) {
 #endif
 
 /* Arithmetic */
-          #if CYTHON_CCOMPLEX
+              #if CYTHON_CCOMPLEX
 #else
     static CYTHON_INLINE int __Pyx_c_eq_double(__pyx_t_double_complex a, __pyx_t_double_complex b) {
        return (a.real == b.real) && (a.imag == b.imag);
@@ -11284,7 +12998,7 @@ static void __Pyx_ReleaseBuffer(Py_buffer *view) {
 #endif
 
 /* CIntToPy */
-          static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value) {
+              static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value) {
     const int neg_one = (int) -1, const_zero = (int) 0;
     const int is_unsigned = neg_one > const_zero;
     if (is_unsigned) {
@@ -11315,7 +13029,7 @@ static void __Pyx_ReleaseBuffer(Py_buffer *view) {
 }
 
 /* CIntToPy */
-          static CYTHON_INLINE PyObject* __Pyx_PyInt_From_enum__NPY_TYPES(enum NPY_TYPES value) {
+              static CYTHON_INLINE PyObject* __Pyx_PyInt_From_enum__NPY_TYPES(enum NPY_TYPES value) {
     const enum NPY_TYPES neg_one = (enum NPY_TYPES) -1, const_zero = (enum NPY_TYPES) 0;
     const int is_unsigned = neg_one > const_zero;
     if (is_unsigned) {
@@ -11346,7 +13060,196 @@ static void __Pyx_ReleaseBuffer(Py_buffer *view) {
 }
 
 /* CIntFromPy */
-          static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *x) {
+              static CYTHON_INLINE npy_int32 __Pyx_PyInt_As_npy_int32(PyObject *x) {
+    const npy_int32 neg_one = (npy_int32) -1, const_zero = (npy_int32) 0;
+    const int is_unsigned = neg_one > const_zero;
+#if PY_MAJOR_VERSION < 3
+    if (likely(PyInt_Check(x))) {
+        if (sizeof(npy_int32) < sizeof(long)) {
+            __PYX_VERIFY_RETURN_INT(npy_int32, long, PyInt_AS_LONG(x))
+        } else {
+            long val = PyInt_AS_LONG(x);
+            if (is_unsigned && unlikely(val < 0)) {
+                goto raise_neg_overflow;
+            }
+            return (npy_int32) val;
+        }
+    } else
+#endif
+    if (likely(PyLong_Check(x))) {
+        if (is_unsigned) {
+#if CYTHON_USE_PYLONG_INTERNALS
+            const digit* digits = ((PyLongObject*)x)->ob_digit;
+            switch (Py_SIZE(x)) {
+                case  0: return (npy_int32) 0;
+                case  1: __PYX_VERIFY_RETURN_INT(npy_int32, digit, digits[0])
+                case 2:
+                    if (8 * sizeof(npy_int32) > 1 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(npy_int32, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(npy_int32) >= 2 * PyLong_SHIFT) {
+                            return (npy_int32) (((((npy_int32)digits[1]) << PyLong_SHIFT) | (npy_int32)digits[0]));
+                        }
+                    }
+                    break;
+                case 3:
+                    if (8 * sizeof(npy_int32) > 2 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(npy_int32, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(npy_int32) >= 3 * PyLong_SHIFT) {
+                            return (npy_int32) (((((((npy_int32)digits[2]) << PyLong_SHIFT) | (npy_int32)digits[1]) << PyLong_SHIFT) | (npy_int32)digits[0]));
+                        }
+                    }
+                    break;
+                case 4:
+                    if (8 * sizeof(npy_int32) > 3 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(npy_int32, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(npy_int32) >= 4 * PyLong_SHIFT) {
+                            return (npy_int32) (((((((((npy_int32)digits[3]) << PyLong_SHIFT) | (npy_int32)digits[2]) << PyLong_SHIFT) | (npy_int32)digits[1]) << PyLong_SHIFT) | (npy_int32)digits[0]));
+                        }
+                    }
+                    break;
+            }
+#endif
+#if CYTHON_COMPILING_IN_CPYTHON
+            if (unlikely(Py_SIZE(x) < 0)) {
+                goto raise_neg_overflow;
+            }
+#else
+            {
+                int result = PyObject_RichCompareBool(x, Py_False, Py_LT);
+                if (unlikely(result < 0))
+                    return (npy_int32) -1;
+                if (unlikely(result == 1))
+                    goto raise_neg_overflow;
+            }
+#endif
+            if (sizeof(npy_int32) <= sizeof(unsigned long)) {
+                __PYX_VERIFY_RETURN_INT_EXC(npy_int32, unsigned long, PyLong_AsUnsignedLong(x))
+#ifdef HAVE_LONG_LONG
+            } else if (sizeof(npy_int32) <= sizeof(unsigned PY_LONG_LONG)) {
+                __PYX_VERIFY_RETURN_INT_EXC(npy_int32, unsigned PY_LONG_LONG, PyLong_AsUnsignedLongLong(x))
+#endif
+            }
+        } else {
+#if CYTHON_USE_PYLONG_INTERNALS
+            const digit* digits = ((PyLongObject*)x)->ob_digit;
+            switch (Py_SIZE(x)) {
+                case  0: return (npy_int32) 0;
+                case -1: __PYX_VERIFY_RETURN_INT(npy_int32, sdigit, (sdigit) (-(sdigit)digits[0]))
+                case  1: __PYX_VERIFY_RETURN_INT(npy_int32,  digit, +digits[0])
+                case -2:
+                    if (8 * sizeof(npy_int32) - 1 > 1 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(npy_int32, long, -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(npy_int32) - 1 > 2 * PyLong_SHIFT) {
+                            return (npy_int32) (((npy_int32)-1)*(((((npy_int32)digits[1]) << PyLong_SHIFT) | (npy_int32)digits[0])));
+                        }
+                    }
+                    break;
+                case 2:
+                    if (8 * sizeof(npy_int32) > 1 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(npy_int32, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(npy_int32) - 1 > 2 * PyLong_SHIFT) {
+                            return (npy_int32) ((((((npy_int32)digits[1]) << PyLong_SHIFT) | (npy_int32)digits[0])));
+                        }
+                    }
+                    break;
+                case -3:
+                    if (8 * sizeof(npy_int32) - 1 > 2 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(npy_int32, long, -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(npy_int32) - 1 > 3 * PyLong_SHIFT) {
+                            return (npy_int32) (((npy_int32)-1)*(((((((npy_int32)digits[2]) << PyLong_SHIFT) | (npy_int32)digits[1]) << PyLong_SHIFT) | (npy_int32)digits[0])));
+                        }
+                    }
+                    break;
+                case 3:
+                    if (8 * sizeof(npy_int32) > 2 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(npy_int32, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(npy_int32) - 1 > 3 * PyLong_SHIFT) {
+                            return (npy_int32) ((((((((npy_int32)digits[2]) << PyLong_SHIFT) | (npy_int32)digits[1]) << PyLong_SHIFT) | (npy_int32)digits[0])));
+                        }
+                    }
+                    break;
+                case -4:
+                    if (8 * sizeof(npy_int32) - 1 > 3 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(npy_int32, long, -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(npy_int32) - 1 > 4 * PyLong_SHIFT) {
+                            return (npy_int32) (((npy_int32)-1)*(((((((((npy_int32)digits[3]) << PyLong_SHIFT) | (npy_int32)digits[2]) << PyLong_SHIFT) | (npy_int32)digits[1]) << PyLong_SHIFT) | (npy_int32)digits[0])));
+                        }
+                    }
+                    break;
+                case 4:
+                    if (8 * sizeof(npy_int32) > 3 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(npy_int32, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(npy_int32) - 1 > 4 * PyLong_SHIFT) {
+                            return (npy_int32) ((((((((((npy_int32)digits[3]) << PyLong_SHIFT) | (npy_int32)digits[2]) << PyLong_SHIFT) | (npy_int32)digits[1]) << PyLong_SHIFT) | (npy_int32)digits[0])));
+                        }
+                    }
+                    break;
+            }
+#endif
+            if (sizeof(npy_int32) <= sizeof(long)) {
+                __PYX_VERIFY_RETURN_INT_EXC(npy_int32, long, PyLong_AsLong(x))
+#ifdef HAVE_LONG_LONG
+            } else if (sizeof(npy_int32) <= sizeof(PY_LONG_LONG)) {
+                __PYX_VERIFY_RETURN_INT_EXC(npy_int32, PY_LONG_LONG, PyLong_AsLongLong(x))
+#endif
+            }
+        }
+        {
+#if CYTHON_COMPILING_IN_PYPY && !defined(_PyLong_AsByteArray)
+            PyErr_SetString(PyExc_RuntimeError,
+                            "_PyLong_AsByteArray() not available in PyPy, cannot convert large numbers");
+#else
+            npy_int32 val;
+            PyObject *v = __Pyx_PyNumber_IntOrLong(x);
+ #if PY_MAJOR_VERSION < 3
+            if (likely(v) && !PyLong_Check(v)) {
+                PyObject *tmp = v;
+                v = PyNumber_Long(tmp);
+                Py_DECREF(tmp);
+            }
+ #endif
+            if (likely(v)) {
+                int one = 1; int is_little = (int)*(unsigned char *)&one;
+                unsigned char *bytes = (unsigned char *)&val;
+                int ret = _PyLong_AsByteArray((PyLongObject *)v,
+                                              bytes, sizeof(val),
+                                              is_little, !is_unsigned);
+                Py_DECREF(v);
+                if (likely(!ret))
+                    return val;
+            }
+#endif
+            return (npy_int32) -1;
+        }
+    } else {
+        npy_int32 val;
+        PyObject *tmp = __Pyx_PyNumber_IntOrLong(x);
+        if (!tmp) return (npy_int32) -1;
+        val = __Pyx_PyInt_As_npy_int32(tmp);
+        Py_DECREF(tmp);
+        return val;
+    }
+raise_overflow:
+    PyErr_SetString(PyExc_OverflowError,
+        "value too large to convert to npy_int32");
+    return (npy_int32) -1;
+raise_neg_overflow:
+    PyErr_SetString(PyExc_OverflowError,
+        "can't convert negative value to npy_int32");
+    return (npy_int32) -1;
+}
+
+/* CIntFromPy */
+              static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *x) {
     const int neg_one = (int) -1, const_zero = (int) 0;
     const int is_unsigned = neg_one > const_zero;
 #if PY_MAJOR_VERSION < 3
@@ -11535,7 +13438,7 @@ raise_neg_overflow:
 }
 
 /* CIntFromPy */
-          static CYTHON_INLINE unsigned int __Pyx_PyInt_As_unsigned_int(PyObject *x) {
+              static CYTHON_INLINE unsigned int __Pyx_PyInt_As_unsigned_int(PyObject *x) {
     const unsigned int neg_one = (unsigned int) -1, const_zero = (unsigned int) 0;
     const int is_unsigned = neg_one > const_zero;
 #if PY_MAJOR_VERSION < 3
@@ -11724,7 +13627,7 @@ raise_neg_overflow:
 }
 
 /* CIntFromPy */
-          static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *x) {
+              static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *x) {
     const long neg_one = (long) -1, const_zero = (long) 0;
     const int is_unsigned = neg_one > const_zero;
 #if PY_MAJOR_VERSION < 3
@@ -11913,7 +13816,7 @@ raise_neg_overflow:
 }
 
 /* FastTypeChecks */
-          #if CYTHON_COMPILING_IN_CPYTHON
+              #if CYTHON_COMPILING_IN_CPYTHON
 static int __Pyx_InBases(PyTypeObject *a, PyTypeObject *b) {
     while (a) {
         a = a->tp_base;
@@ -12013,7 +13916,7 @@ static CYTHON_INLINE int __Pyx_PyErr_GivenExceptionMatches2(PyObject *err, PyObj
 #endif
 
 /* CheckBinaryVersion */
-          static int __Pyx_check_binary_version(void) {
+              static int __Pyx_check_binary_version(void) {
     char ctversion[4], rtversion[4];
     PyOS_snprintf(ctversion, 4, "%d.%d", PY_MAJOR_VERSION, PY_MINOR_VERSION);
     PyOS_snprintf(rtversion, 4, "%s", Py_GetVersion());
@@ -12029,7 +13932,7 @@ static CYTHON_INLINE int __Pyx_PyErr_GivenExceptionMatches2(PyObject *err, PyObj
 }
 
 /* ModuleImport */
-          #ifndef __PYX_HAVE_RT_ImportModule
+              #ifndef __PYX_HAVE_RT_ImportModule
 #define __PYX_HAVE_RT_ImportModule
 static PyObject *__Pyx_ImportModule(const char *name) {
     PyObject *py_name = 0;
@@ -12047,7 +13950,7 @@ bad:
 #endif
 
 /* TypeImport */
-          #ifndef __PYX_HAVE_RT_ImportType
+              #ifndef __PYX_HAVE_RT_ImportType
 #define __PYX_HAVE_RT_ImportType
 static PyTypeObject *__Pyx_ImportType(const char *module_name, const char *class_name,
     size_t size, int strict)
@@ -12112,7 +14015,7 @@ bad:
 #endif
 
 /* InitStrings */
-          static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
+              static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
     while (t->p) {
         #if PY_MAJOR_VERSION < 3
         if (t->is_unicode) {
