@@ -3619,7 +3619,7 @@ static PyObject *__pyx_pf_10algorithms_2sm_13rel_closure_2_relational_closure_sm
  * 		int source, int predicate, int target, Closure closure
  */
 
-static PyObject *__pyx_f_10algorithms_2sm_13rel_closure_2_cclosuress(__Pyx_memviewslice __pyx_v_data, __Pyx_memviewslice __pyx_v_data_rel, __Pyx_memviewslice __pyx_v_indices, __Pyx_memviewslice __pyx_v_indptr, CYTHON_UNUSED int __pyx_v_source, CYTHON_UNUSED int __pyx_v_predicate, int __pyx_v_target, __pyx_t_10algorithms_2sm_13rel_closure_2_Closure __pyx_v_closure) {
+static PyObject *__pyx_f_10algorithms_2sm_13rel_closure_2_cclosuress(__Pyx_memviewslice __pyx_v_data, __Pyx_memviewslice __pyx_v_data_rel, __Pyx_memviewslice __pyx_v_indices, __Pyx_memviewslice __pyx_v_indptr, int __pyx_v_source, CYTHON_UNUSED int __pyx_v_predicate, int __pyx_v_target, __pyx_t_10algorithms_2sm_13rel_closure_2_Closure __pyx_v_closure) {
   struct __pyx_obj_14datastructures_4heap_FastUpdateBinaryHeap *__pyx_v_Q = 0;
   int __pyx_v_N;
   int __pyx_v_node;
@@ -3663,8 +3663,8 @@ static PyObject *__pyx_f_10algorithms_2sm_13rel_closure_2_cclosuress(__Pyx_memvi
   int __pyx_t_10;
   int __pyx_t_11;
   int __pyx_t_12;
-  Py_ssize_t __pyx_t_13;
-  int __pyx_t_14;
+  int __pyx_t_13;
+  Py_ssize_t __pyx_t_14;
   Py_ssize_t __pyx_t_15;
   Py_ssize_t __pyx_t_16;
   Py_ssize_t __pyx_t_17;
@@ -3954,35 +3954,67 @@ static PyObject *__pyx_f_10algorithms_2sm_13rel_closure_2_cclosuress(__Pyx_memvi
  * 
  * 	# populate the queue
  * 	for node in range(N):             # <<<<<<<<<<<<<<
- * 		# if node == source:
- * 		# 	cap = 1.0
+ * 		if node == source:
+ * 			cap = 1.0
  */
   __pyx_t_10 = __pyx_v_N;
   __pyx_t_11 = __pyx_t_10;
   for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_11; __pyx_t_12+=1) {
     __pyx_v_node = __pyx_t_12;
 
+    /* "algorithms/sm/rel_closure_2.pyx":161
+ * 	# populate the queue
+ * 	for node in range(N):
+ * 		if node == source:             # <<<<<<<<<<<<<<
+ * 			cap = 1.0
+ * 			# value, node, predecessor, relation index
+ */
+    __pyx_t_13 = ((__pyx_v_node == __pyx_v_source) != 0);
+    if (__pyx_t_13) {
+
+      /* "algorithms/sm/rel_closure_2.pyx":162
+ * 	for node in range(N):
+ * 		if node == source:
+ * 			cap = 1.0             # <<<<<<<<<<<<<<
+ * 			# value, node, predecessor, relation index
+ * 		else:
+ */
+      __pyx_v_cap = 1.0;
+
+      /* "algorithms/sm/rel_closure_2.pyx":161
+ * 	# populate the queue
+ * 	for node in range(N):
+ * 		if node == source:             # <<<<<<<<<<<<<<
+ * 			cap = 1.0
+ * 			# value, node, predecessor, relation index
+ */
+      goto __pyx_L5;
+    }
+
     /* "algorithms/sm/rel_closure_2.pyx":165
- * 		# 	# value, node, predecessor, relation index
- * 		# else:
- * 		cap = 0.0             # <<<<<<<<<<<<<<
+ * 			# value, node, predecessor, relation index
+ * 		else:
+ * 			cap = 0.0             # <<<<<<<<<<<<<<
  * 		capacities[node] = cap
  * 		Q.push_fast(-cap, node)
  */
-    __pyx_v_cap = 0.0;
+    /*else*/ {
+      __pyx_v_cap = 0.0;
+    }
+    __pyx_L5:;
 
     /* "algorithms/sm/rel_closure_2.pyx":166
- * 		# else:
- * 		cap = 0.0
+ * 		else:
+ * 			cap = 0.0
  * 		capacities[node] = cap             # <<<<<<<<<<<<<<
  * 		Q.push_fast(-cap, node)
  * 
  */
-    __pyx_t_13 = __pyx_v_node;
-    *((double *) ( /* dim=0 */ (__pyx_v_capacities.data + __pyx_t_13 * __pyx_v_capacities.strides[0]) )) = __pyx_v_cap;
+    __pyx_t_14 = __pyx_v_node;
+    *((double *) ( /* dim=0 */ (__pyx_v_capacities.data + __pyx_t_14 * __pyx_v_capacities.strides[0]) )) = __pyx_v_cap;
 
     /* "algorithms/sm/rel_closure_2.pyx":167
- * 		cap = 0.0
+ * 			cap = 0.0
  * 		capacities[node] = cap
  * 		Q.push_fast(-cap, node)             # <<<<<<<<<<<<<<
  * 
@@ -3999,8 +4031,8 @@ static PyObject *__pyx_f_10algorithms_2sm_13rel_closure_2_cclosuress(__Pyx_memvi
  * 		node = Q._popped_ref
  */
   while (1) {
-    __pyx_t_14 = (__pyx_v_Q->__pyx_base.count != 0);
-    if (!__pyx_t_14) break;
+    __pyx_t_13 = (__pyx_v_Q->__pyx_base.count != 0);
+    if (!__pyx_t_13) break;
 
     /* "algorithms/sm/rel_closure_2.pyx":171
  * 	# compute path
@@ -4029,8 +4061,8 @@ static PyObject *__pyx_f_10algorithms_2sm_13rel_closure_2_cclosuress(__Pyx_memvi
  * 		if node == target:
  */
     __pyx_t_15 = __pyx_v_node;
-    __pyx_t_14 = (((*((int *) ( /* dim=0 */ (__pyx_v_found.data + __pyx_t_15 * __pyx_v_found.strides[0]) ))) == 0) != 0);
-    if (__pyx_t_14) {
+    __pyx_t_13 = (((*((int *) ( /* dim=0 */ (__pyx_v_found.data + __pyx_t_15 * __pyx_v_found.strides[0]) ))) == 0) != 0);
+    if (__pyx_t_13) {
 
       /* "algorithms/sm/rel_closure_2.pyx":174
  * 		node = Q._popped_ref
@@ -4058,8 +4090,8 @@ static PyObject *__pyx_f_10algorithms_2sm_13rel_closure_2_cclosuress(__Pyx_memvi
  * 			break # break when target has been extracted from the heap
  * 
  */
-    __pyx_t_14 = ((__pyx_v_node == __pyx_v_target) != 0);
-    if (__pyx_t_14) {
+    __pyx_t_13 = ((__pyx_v_node == __pyx_v_target) != 0);
+    if (__pyx_t_13) {
 
       /* "algorithms/sm/rel_closure_2.pyx":176
  * 			found[node] = 1
@@ -4068,7 +4100,7 @@ static PyObject *__pyx_f_10algorithms_2sm_13rel_closure_2_cclosuress(__Pyx_memvi
  * 
  * 		# continue search to node's neighbors
  */
-      goto __pyx_L6_break;
+      goto __pyx_L7_break;
 
       /* "algorithms/sm/rel_closure_2.pyx":175
  * 		if found[node] == 0:
@@ -4263,8 +4295,8 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __p
  * 				neigh_curr_rel = relations[neighbor] # relation through which neighbor is connected to its predecessor
  */
       __pyx_t_22 = __pyx_v_neighbor;
-      __pyx_t_14 = (((*((int *) ( /* dim=0 */ (__pyx_v_found.data + __pyx_t_22 * __pyx_v_found.strides[0]) ))) == 0) != 0);
-      if (__pyx_t_14) {
+      __pyx_t_13 = (((*((int *) ( /* dim=0 */ (__pyx_v_found.data + __pyx_t_22 * __pyx_v_found.strides[0]) ))) == 0) != 0);
+      if (__pyx_t_13) {
 
         /* "algorithms/sm/rel_closure_2.pyx":190
  * 			relational_cap = nbr_caps[i] # weight of current edge (node, neighbor, neigh_cand_rel)
@@ -4311,8 +4343,8 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __p
  * 					capacities[neighbor] = new_cap
  * 					predecessors[neighbor] = node
  */
-        __pyx_t_14 = ((__pyx_v_new_cap > __pyx_v_neigh_curr_cap) != 0);
-        if (__pyx_t_14) {
+        __pyx_t_13 = ((__pyx_v_new_cap > __pyx_v_neigh_curr_cap) != 0);
+        if (__pyx_t_13) {
 
           /* "algorithms/sm/rel_closure_2.pyx":195
  * 				new_cap = closure.disjf(neigh_cand_cap, neigh_curr_cap)
@@ -4372,7 +4404,7 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __p
       }
     }
   }
-  __pyx_L6_break:;
+  __pyx_L7_break:;
 
   /* "algorithms/sm/rel_closure_2.pyx":199
  * 					relations[neighbor] = neigh_cand_rel # candidate relation
