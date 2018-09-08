@@ -1275,7 +1275,7 @@ struct __pyx_obj_14datastructures_4heap_FastUpdateBinaryHeap {
 };
 
 
-/* "algorithms/sm/rel_closure_2.pyx":210
+/* "algorithms/sm/rel_closure_2.pyx":209
  * 
  * ## =========== Code to free up memory to avoid memory leaks ===========
  * cdef class _finalizer:             # <<<<<<<<<<<<<<
@@ -3619,7 +3619,7 @@ static PyObject *__pyx_pf_10algorithms_2sm_13rel_closure_2_relational_closure_sm
  * 		int source, int predicate, int target, Closure closure
  */
 
-static PyObject *__pyx_f_10algorithms_2sm_13rel_closure_2_cclosuress(__Pyx_memviewslice __pyx_v_data, __Pyx_memviewslice __pyx_v_data_rel, __Pyx_memviewslice __pyx_v_indices, __Pyx_memviewslice __pyx_v_indptr, int __pyx_v_source, CYTHON_UNUSED int __pyx_v_predicate, int __pyx_v_target, __pyx_t_10algorithms_2sm_13rel_closure_2_Closure __pyx_v_closure) {
+static PyObject *__pyx_f_10algorithms_2sm_13rel_closure_2_cclosuress(__Pyx_memviewslice __pyx_v_data, __Pyx_memviewslice __pyx_v_data_rel, __Pyx_memviewslice __pyx_v_indices, __Pyx_memviewslice __pyx_v_indptr, CYTHON_UNUSED int __pyx_v_source, CYTHON_UNUSED int __pyx_v_predicate, int __pyx_v_target, __pyx_t_10algorithms_2sm_13rel_closure_2_Closure __pyx_v_closure) {
   struct __pyx_obj_14datastructures_4heap_FastUpdateBinaryHeap *__pyx_v_Q = 0;
   int __pyx_v_N;
   int __pyx_v_node;
@@ -3663,8 +3663,8 @@ static PyObject *__pyx_f_10algorithms_2sm_13rel_closure_2_cclosuress(__Pyx_memvi
   int __pyx_t_10;
   int __pyx_t_11;
   int __pyx_t_12;
-  int __pyx_t_13;
-  Py_ssize_t __pyx_t_14;
+  Py_ssize_t __pyx_t_13;
+  int __pyx_t_14;
   Py_ssize_t __pyx_t_15;
   Py_ssize_t __pyx_t_16;
   Py_ssize_t __pyx_t_17;
@@ -3954,67 +3954,35 @@ static PyObject *__pyx_f_10algorithms_2sm_13rel_closure_2_cclosuress(__Pyx_memvi
  * 
  * 	# populate the queue
  * 	for node in range(N):             # <<<<<<<<<<<<<<
- * 		if node == source:
- * 
+ * 		# if node == source:
+ * 		# 	cap = 1.0
  */
   __pyx_t_10 = __pyx_v_N;
   __pyx_t_11 = __pyx_t_10;
   for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_11; __pyx_t_12+=1) {
     __pyx_v_node = __pyx_t_12;
 
-    /* "algorithms/sm/rel_closure_2.pyx":161
- * 	# populate the queue
- * 	for node in range(N):
- * 		if node == source:             # <<<<<<<<<<<<<<
- * 
- * 			cap = 1.0
- */
-    __pyx_t_13 = ((__pyx_v_node == __pyx_v_source) != 0);
-    if (__pyx_t_13) {
-
-      /* "algorithms/sm/rel_closure_2.pyx":163
- * 		if node == source:
- * 
- * 			cap = 1.0             # <<<<<<<<<<<<<<
- * 			# value, node, predecessor, relation index
- * 		else:
- */
-      __pyx_v_cap = 1.0;
-
-      /* "algorithms/sm/rel_closure_2.pyx":161
- * 	# populate the queue
- * 	for node in range(N):
- * 		if node == source:             # <<<<<<<<<<<<<<
- * 
- * 			cap = 1.0
- */
-      goto __pyx_L5;
-    }
-
-    /* "algorithms/sm/rel_closure_2.pyx":166
- * 			# value, node, predecessor, relation index
- * 		else:
- * 			cap = 0.0             # <<<<<<<<<<<<<<
+    /* "algorithms/sm/rel_closure_2.pyx":165
+ * 		# 	# value, node, predecessor, relation index
+ * 		# else:
+ * 		cap = 0.0             # <<<<<<<<<<<<<<
  * 		capacities[node] = cap
  * 		Q.push_fast(-cap, node)
  */
-    /*else*/ {
-      __pyx_v_cap = 0.0;
-    }
-    __pyx_L5:;
+    __pyx_v_cap = 0.0;
 
-    /* "algorithms/sm/rel_closure_2.pyx":167
- * 		else:
- * 			cap = 0.0
+    /* "algorithms/sm/rel_closure_2.pyx":166
+ * 		# else:
+ * 		cap = 0.0
  * 		capacities[node] = cap             # <<<<<<<<<<<<<<
  * 		Q.push_fast(-cap, node)
  * 
  */
-    __pyx_t_14 = __pyx_v_node;
-    *((double *) ( /* dim=0 */ (__pyx_v_capacities.data + __pyx_t_14 * __pyx_v_capacities.strides[0]) )) = __pyx_v_cap;
+    __pyx_t_13 = __pyx_v_node;
+    *((double *) ( /* dim=0 */ (__pyx_v_capacities.data + __pyx_t_13 * __pyx_v_capacities.strides[0]) )) = __pyx_v_cap;
 
-    /* "algorithms/sm/rel_closure_2.pyx":168
- * 			cap = 0.0
+    /* "algorithms/sm/rel_closure_2.pyx":167
+ * 		cap = 0.0
  * 		capacities[node] = cap
  * 		Q.push_fast(-cap, node)             # <<<<<<<<<<<<<<
  * 
@@ -4023,7 +3991,7 @@ static PyObject *__pyx_f_10algorithms_2sm_13rel_closure_2_cclosuress(__Pyx_memvi
     (void)(((struct __pyx_vtabstruct_14datastructures_4heap_FastUpdateBinaryHeap *)__pyx_v_Q->__pyx_base.__pyx_vtab)->__pyx_base.push_fast(((struct __pyx_obj_14datastructures_4heap_BinaryHeap *)__pyx_v_Q), (-__pyx_v_cap), __pyx_v_node));
   }
 
-  /* "algorithms/sm/rel_closure_2.pyx":171
+  /* "algorithms/sm/rel_closure_2.pyx":170
  * 
  * 	# compute path
  * 	while Q.count:             # <<<<<<<<<<<<<<
@@ -4031,10 +3999,10 @@ static PyObject *__pyx_f_10algorithms_2sm_13rel_closure_2_cclosuress(__Pyx_memvi
  * 		node = Q._popped_ref
  */
   while (1) {
-    __pyx_t_13 = (__pyx_v_Q->__pyx_base.count != 0);
-    if (!__pyx_t_13) break;
+    __pyx_t_14 = (__pyx_v_Q->__pyx_base.count != 0);
+    if (!__pyx_t_14) break;
 
-    /* "algorithms/sm/rel_closure_2.pyx":172
+    /* "algorithms/sm/rel_closure_2.pyx":171
  * 	# compute path
  * 	while Q.count:
  * 		cap = - Q.pop_fast() # +ve             # <<<<<<<<<<<<<<
@@ -4043,7 +4011,7 @@ static PyObject *__pyx_f_10algorithms_2sm_13rel_closure_2_cclosuress(__Pyx_memvi
  */
     __pyx_v_cap = (-((struct __pyx_vtabstruct_14datastructures_4heap_FastUpdateBinaryHeap *)__pyx_v_Q->__pyx_base.__pyx_vtab)->__pyx_base.pop_fast(((struct __pyx_obj_14datastructures_4heap_BinaryHeap *)__pyx_v_Q)));
 
-    /* "algorithms/sm/rel_closure_2.pyx":173
+    /* "algorithms/sm/rel_closure_2.pyx":172
  * 	while Q.count:
  * 		cap = - Q.pop_fast() # +ve
  * 		node = Q._popped_ref             # <<<<<<<<<<<<<<
@@ -4053,7 +4021,7 @@ static PyObject *__pyx_f_10algorithms_2sm_13rel_closure_2_cclosuress(__Pyx_memvi
     __pyx_t_10 = __pyx_v_Q->__pyx_base._popped_ref;
     __pyx_v_node = __pyx_t_10;
 
-    /* "algorithms/sm/rel_closure_2.pyx":174
+    /* "algorithms/sm/rel_closure_2.pyx":173
  * 		cap = - Q.pop_fast() # +ve
  * 		node = Q._popped_ref
  * 		if found[node] == 0:             # <<<<<<<<<<<<<<
@@ -4061,10 +4029,10 @@ static PyObject *__pyx_f_10algorithms_2sm_13rel_closure_2_cclosuress(__Pyx_memvi
  * 		if node == target:
  */
     __pyx_t_15 = __pyx_v_node;
-    __pyx_t_13 = (((*((int *) ( /* dim=0 */ (__pyx_v_found.data + __pyx_t_15 * __pyx_v_found.strides[0]) ))) == 0) != 0);
-    if (__pyx_t_13) {
+    __pyx_t_14 = (((*((int *) ( /* dim=0 */ (__pyx_v_found.data + __pyx_t_15 * __pyx_v_found.strides[0]) ))) == 0) != 0);
+    if (__pyx_t_14) {
 
-      /* "algorithms/sm/rel_closure_2.pyx":175
+      /* "algorithms/sm/rel_closure_2.pyx":174
  * 		node = Q._popped_ref
  * 		if found[node] == 0:
  * 			found[node] = 1             # <<<<<<<<<<<<<<
@@ -4074,7 +4042,7 @@ static PyObject *__pyx_f_10algorithms_2sm_13rel_closure_2_cclosuress(__Pyx_memvi
       __pyx_t_16 = __pyx_v_node;
       *((int *) ( /* dim=0 */ (__pyx_v_found.data + __pyx_t_16 * __pyx_v_found.strides[0]) )) = 1;
 
-      /* "algorithms/sm/rel_closure_2.pyx":174
+      /* "algorithms/sm/rel_closure_2.pyx":173
  * 		cap = - Q.pop_fast() # +ve
  * 		node = Q._popped_ref
  * 		if found[node] == 0:             # <<<<<<<<<<<<<<
@@ -4083,26 +4051,26 @@ static PyObject *__pyx_f_10algorithms_2sm_13rel_closure_2_cclosuress(__Pyx_memvi
  */
     }
 
-    /* "algorithms/sm/rel_closure_2.pyx":176
+    /* "algorithms/sm/rel_closure_2.pyx":175
  * 		if found[node] == 0:
  * 			found[node] = 1
  * 		if node == target:             # <<<<<<<<<<<<<<
  * 			break # break when target has been extracted from the heap
  * 
  */
-    __pyx_t_13 = ((__pyx_v_node == __pyx_v_target) != 0);
-    if (__pyx_t_13) {
+    __pyx_t_14 = ((__pyx_v_node == __pyx_v_target) != 0);
+    if (__pyx_t_14) {
 
-      /* "algorithms/sm/rel_closure_2.pyx":177
+      /* "algorithms/sm/rel_closure_2.pyx":176
  * 			found[node] = 1
  * 		if node == target:
  * 			break # break when target has been extracted from the heap             # <<<<<<<<<<<<<<
  * 
  * 		# continue search to node's neighbors
  */
-      goto __pyx_L7_break;
+      goto __pyx_L6_break;
 
-      /* "algorithms/sm/rel_closure_2.pyx":176
+      /* "algorithms/sm/rel_closure_2.pyx":175
  * 		if found[node] == 0:
  * 			found[node] = 1
  * 		if node == target:             # <<<<<<<<<<<<<<
@@ -4111,7 +4079,7 @@ static PyObject *__pyx_f_10algorithms_2sm_13rel_closure_2_cclosuress(__Pyx_memvi
  */
     }
 
-    /* "algorithms/sm/rel_closure_2.pyx":180
+    /* "algorithms/sm/rel_closure_2.pyx":179
  * 
  * 		# continue search to node's neighbors
  * 		start = indptr[node]             # <<<<<<<<<<<<<<
@@ -4121,7 +4089,7 @@ static PyObject *__pyx_f_10algorithms_2sm_13rel_closure_2_cclosuress(__Pyx_memvi
     __pyx_t_17 = __pyx_v_node;
     __pyx_v_start = (*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_17 * __pyx_v_indptr.strides[0]) )));
 
-    /* "algorithms/sm/rel_closure_2.pyx":181
+    /* "algorithms/sm/rel_closure_2.pyx":180
  * 		# continue search to node's neighbors
  * 		start = indptr[node]
  * 		end = indptr[node + 1]             # <<<<<<<<<<<<<<
@@ -4131,7 +4099,7 @@ static PyObject *__pyx_f_10algorithms_2sm_13rel_closure_2_cclosuress(__Pyx_memvi
     __pyx_t_18 = (__pyx_v_node + 1);
     __pyx_v_end = (*((int *) ( /* dim=0 */ (__pyx_v_indptr.data + __pyx_t_18 * __pyx_v_indptr.strides[0]) )));
 
-    /* "algorithms/sm/rel_closure_2.pyx":182
+    /* "algorithms/sm/rel_closure_2.pyx":181
  * 		start = indptr[node]
  * 		end = indptr[node + 1]
  * 		neighbors = indices[start:end] # nbrs in wide-CSR             # <<<<<<<<<<<<<<
@@ -4156,7 +4124,7 @@ static PyObject *__pyx_f_10algorithms_2sm_13rel_closure_2_cclosuress(__Pyx_memvi
     0,
     1) < 0))
 {
-    __PYX_ERR(0, 182, __pyx_L1_error)
+    __PYX_ERR(0, 181, __pyx_L1_error)
 }
 
 __PYX_XDEC_MEMVIEW(&__pyx_v_neighbors, 1);
@@ -4164,7 +4132,7 @@ __PYX_XDEC_MEMVIEW(&__pyx_v_neighbors, 1);
     __pyx_t_7.memview = NULL;
     __pyx_t_7.data = NULL;
 
-    /* "algorithms/sm/rel_closure_2.pyx":183
+    /* "algorithms/sm/rel_closure_2.pyx":182
  * 		end = indptr[node + 1]
  * 		neighbors = indices[start:end] # nbrs in wide-CSR
  * 		nbr_caps = data[start:end]             # <<<<<<<<<<<<<<
@@ -4189,7 +4157,7 @@ __PYX_XDEC_MEMVIEW(&__pyx_v_neighbors, 1);
     0,
     1) < 0))
 {
-    __PYX_ERR(0, 183, __pyx_L1_error)
+    __PYX_ERR(0, 182, __pyx_L1_error)
 }
 
 __PYX_XDEC_MEMVIEW(&__pyx_v_nbr_caps, 1);
@@ -4197,7 +4165,7 @@ __PYX_XDEC_MEMVIEW(&__pyx_v_nbr_caps, 1);
     __pyx_t_6.memview = NULL;
     __pyx_t_6.data = NULL;
 
-    /* "algorithms/sm/rel_closure_2.pyx":184
+    /* "algorithms/sm/rel_closure_2.pyx":183
  * 		neighbors = indices[start:end] # nbrs in wide-CSR
  * 		nbr_caps = data[start:end]
  * 		nbr_rels = data_rel[start:end]             # <<<<<<<<<<<<<<
@@ -4222,10 +4190,10 @@ __PYX_XDEC_MEMVIEW(&__pyx_v_nbr_caps, 1);
     0,
     1) < 0))
 {
-    __PYX_ERR(0, 184, __pyx_L1_error)
+    __PYX_ERR(0, 183, __pyx_L1_error)
 }
 
-__pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __pyx_memview_get_int, (int (*)(char *, PyObject *)) __pyx_memview_set_int, 0);; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 184, __pyx_L1_error)
+__pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __pyx_memview_get_int, (int (*)(char *, PyObject *)) __pyx_memview_set_int, 0);; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 183, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
     __pyx_t_8.memview = NULL;
@@ -4233,7 +4201,7 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __p
     __Pyx_XDECREF_SET(__pyx_v_nbr_rels, __pyx_t_3);
     __pyx_t_3 = 0;
 
-    /* "algorithms/sm/rel_closure_2.pyx":185
+    /* "algorithms/sm/rel_closure_2.pyx":184
  * 		nbr_caps = data[start:end]
  * 		nbr_rels = data_rel[start:end]
  * 		N_neigh = end - start             # <<<<<<<<<<<<<<
@@ -4242,7 +4210,7 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __p
  */
     __pyx_v_N_neigh = (__pyx_v_end - __pyx_v_start);
 
-    /* "algorithms/sm/rel_closure_2.pyx":186
+    /* "algorithms/sm/rel_closure_2.pyx":185
  * 		nbr_rels = data_rel[start:end]
  * 		N_neigh = end - start
  * 		for i in xrange(N_neigh):             # <<<<<<<<<<<<<<
@@ -4254,7 +4222,7 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __p
     for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_11; __pyx_t_12+=1) {
       __pyx_v_i = __pyx_t_12;
 
-      /* "algorithms/sm/rel_closure_2.pyx":187
+      /* "algorithms/sm/rel_closure_2.pyx":186
  * 		N_neigh = end - start
  * 		for i in xrange(N_neigh):
  * 			neighbor = neighbors[i]             # <<<<<<<<<<<<<<
@@ -4264,20 +4232,20 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __p
       __pyx_t_19 = __pyx_v_i;
       __pyx_v_neighbor = (*((long *) ( /* dim=0 */ (__pyx_v_neighbors.data + __pyx_t_19 * __pyx_v_neighbors.strides[0]) )));
 
-      /* "algorithms/sm/rel_closure_2.pyx":188
+      /* "algorithms/sm/rel_closure_2.pyx":187
  * 		for i in xrange(N_neigh):
  * 			neighbor = neighbors[i]
  * 			neigh_cand_rel = nbr_rels[i] # relation vec             # <<<<<<<<<<<<<<
  * 			relational_cap = nbr_caps[i] # weight of current edge (node, neighbor, neigh_cand_rel)
  * 			if found[neighbor] == 0:
  */
-      __pyx_t_3 = __Pyx_GetItemInt(__pyx_v_nbr_rels, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 188, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_GetItemInt(__pyx_v_nbr_rels, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 187, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_20 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_20 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 188, __pyx_L1_error)
+      __pyx_t_20 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_20 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 187, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __pyx_v_neigh_cand_rel = __pyx_t_20;
 
-      /* "algorithms/sm/rel_closure_2.pyx":189
+      /* "algorithms/sm/rel_closure_2.pyx":188
  * 			neighbor = neighbors[i]
  * 			neigh_cand_rel = nbr_rels[i] # relation vec
  * 			relational_cap = nbr_caps[i] # weight of current edge (node, neighbor, neigh_cand_rel)             # <<<<<<<<<<<<<<
@@ -4287,7 +4255,7 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __p
       __pyx_t_21 = __pyx_v_i;
       __pyx_v_relational_cap = (*((double *) ( /* dim=0 */ (__pyx_v_nbr_caps.data + __pyx_t_21 * __pyx_v_nbr_caps.strides[0]) )));
 
-      /* "algorithms/sm/rel_closure_2.pyx":190
+      /* "algorithms/sm/rel_closure_2.pyx":189
  * 			neigh_cand_rel = nbr_rels[i] # relation vec
  * 			relational_cap = nbr_caps[i] # weight of current edge (node, neighbor, neigh_cand_rel)
  * 			if found[neighbor] == 0:             # <<<<<<<<<<<<<<
@@ -4295,10 +4263,10 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __p
  * 				neigh_curr_rel = relations[neighbor] # relation through which neighbor is connected to its predecessor
  */
       __pyx_t_22 = __pyx_v_neighbor;
-      __pyx_t_13 = (((*((int *) ( /* dim=0 */ (__pyx_v_found.data + __pyx_t_22 * __pyx_v_found.strides[0]) ))) == 0) != 0);
-      if (__pyx_t_13) {
+      __pyx_t_14 = (((*((int *) ( /* dim=0 */ (__pyx_v_found.data + __pyx_t_22 * __pyx_v_found.strides[0]) ))) == 0) != 0);
+      if (__pyx_t_14) {
 
-        /* "algorithms/sm/rel_closure_2.pyx":191
+        /* "algorithms/sm/rel_closure_2.pyx":190
  * 			relational_cap = nbr_caps[i] # weight of current edge (node, neighbor, neigh_cand_rel)
  * 			if found[neighbor] == 0:
  * 				neigh_curr_cap = capacities[neighbor] # current cap/dist to source             # <<<<<<<<<<<<<<
@@ -4308,7 +4276,7 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __p
         __pyx_t_23 = __pyx_v_neighbor;
         __pyx_v_neigh_curr_cap = (*((double *) ( /* dim=0 */ (__pyx_v_capacities.data + __pyx_t_23 * __pyx_v_capacities.strides[0]) )));
 
-        /* "algorithms/sm/rel_closure_2.pyx":192
+        /* "algorithms/sm/rel_closure_2.pyx":191
  * 			if found[neighbor] == 0:
  * 				neigh_curr_cap = capacities[neighbor] # current cap/dist to source
  * 				neigh_curr_rel = relations[neighbor] # relation through which neighbor is connected to its predecessor             # <<<<<<<<<<<<<<
@@ -4318,7 +4286,7 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __p
         __pyx_t_24 = __pyx_v_neighbor;
         __pyx_v_neigh_curr_rel = (*((int *) ( /* dim=0 */ (__pyx_v_relations.data + __pyx_t_24 * __pyx_v_relations.strides[0]) )));
 
-        /* "algorithms/sm/rel_closure_2.pyx":193
+        /* "algorithms/sm/rel_closure_2.pyx":192
  * 				neigh_curr_cap = capacities[neighbor] # current cap/dist to source
  * 				neigh_curr_rel = relations[neighbor] # relation through which neighbor is connected to its predecessor
  * 				neigh_cand_cap = closure.conjf(cap, relational_cap) # candidate capacity             # <<<<<<<<<<<<<<
@@ -4327,7 +4295,7 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __p
  */
         __pyx_v_neigh_cand_cap = __pyx_v_closure.conjf(__pyx_v_cap, __pyx_v_relational_cap);
 
-        /* "algorithms/sm/rel_closure_2.pyx":194
+        /* "algorithms/sm/rel_closure_2.pyx":193
  * 				neigh_curr_rel = relations[neighbor] # relation through which neighbor is connected to its predecessor
  * 				neigh_cand_cap = closure.conjf(cap, relational_cap) # candidate capacity
  * 				new_cap = closure.disjf(neigh_cand_cap, neigh_curr_cap)             # <<<<<<<<<<<<<<
@@ -4336,17 +4304,17 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __p
  */
         __pyx_v_new_cap = __pyx_v_closure.disjf(__pyx_v_neigh_cand_cap, __pyx_v_neigh_curr_cap);
 
-        /* "algorithms/sm/rel_closure_2.pyx":195
+        /* "algorithms/sm/rel_closure_2.pyx":194
  * 				neigh_cand_cap = closure.conjf(cap, relational_cap) # candidate capacity
  * 				new_cap = closure.disjf(neigh_cand_cap, neigh_curr_cap)
  * 				if new_cap > neigh_curr_cap:             # <<<<<<<<<<<<<<
  * 					capacities[neighbor] = new_cap
  * 					predecessors[neighbor] = node
  */
-        __pyx_t_13 = ((__pyx_v_new_cap > __pyx_v_neigh_curr_cap) != 0);
-        if (__pyx_t_13) {
+        __pyx_t_14 = ((__pyx_v_new_cap > __pyx_v_neigh_curr_cap) != 0);
+        if (__pyx_t_14) {
 
-          /* "algorithms/sm/rel_closure_2.pyx":196
+          /* "algorithms/sm/rel_closure_2.pyx":195
  * 				new_cap = closure.disjf(neigh_cand_cap, neigh_curr_cap)
  * 				if new_cap > neigh_curr_cap:
  * 					capacities[neighbor] = new_cap             # <<<<<<<<<<<<<<
@@ -4356,7 +4324,7 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __p
           __pyx_t_25 = __pyx_v_neighbor;
           *((double *) ( /* dim=0 */ (__pyx_v_capacities.data + __pyx_t_25 * __pyx_v_capacities.strides[0]) )) = __pyx_v_new_cap;
 
-          /* "algorithms/sm/rel_closure_2.pyx":197
+          /* "algorithms/sm/rel_closure_2.pyx":196
  * 				if new_cap > neigh_curr_cap:
  * 					capacities[neighbor] = new_cap
  * 					predecessors[neighbor] = node             # <<<<<<<<<<<<<<
@@ -4366,7 +4334,7 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __p
           __pyx_t_26 = __pyx_v_neighbor;
           *((long *) ( /* dim=0 */ (__pyx_v_predecessors.data + __pyx_t_26 * __pyx_v_predecessors.strides[0]) )) = __pyx_v_node;
 
-          /* "algorithms/sm/rel_closure_2.pyx":198
+          /* "algorithms/sm/rel_closure_2.pyx":197
  * 					capacities[neighbor] = new_cap
  * 					predecessors[neighbor] = node
  * 					relations[neighbor] = neigh_cand_rel # candidate relation             # <<<<<<<<<<<<<<
@@ -4376,7 +4344,7 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __p
           __pyx_t_27 = __pyx_v_neighbor;
           *((int *) ( /* dim=0 */ (__pyx_v_relations.data + __pyx_t_27 * __pyx_v_relations.strides[0]) )) = __pyx_v_neigh_cand_rel;
 
-          /* "algorithms/sm/rel_closure_2.pyx":199
+          /* "algorithms/sm/rel_closure_2.pyx":198
  * 					predecessors[neighbor] = node
  * 					relations[neighbor] = neigh_cand_rel # candidate relation
  * 					Q.push_if_lower_fast(-new_cap, neighbor) # heapify             # <<<<<<<<<<<<<<
@@ -4385,7 +4353,7 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __p
  */
           (void)(((struct __pyx_vtabstruct_14datastructures_4heap_FastUpdateBinaryHeap *)__pyx_v_Q->__pyx_base.__pyx_vtab)->push_if_lower_fast(__pyx_v_Q, (-__pyx_v_new_cap), __pyx_v_neighbor));
 
-          /* "algorithms/sm/rel_closure_2.pyx":195
+          /* "algorithms/sm/rel_closure_2.pyx":194
  * 				neigh_cand_cap = closure.conjf(cap, relational_cap) # candidate capacity
  * 				new_cap = closure.disjf(neigh_cand_cap, neigh_curr_cap)
  * 				if new_cap > neigh_curr_cap:             # <<<<<<<<<<<<<<
@@ -4394,7 +4362,7 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __p
  */
         }
 
-        /* "algorithms/sm/rel_closure_2.pyx":190
+        /* "algorithms/sm/rel_closure_2.pyx":189
  * 			neigh_cand_rel = nbr_rels[i] # relation vec
  * 			relational_cap = nbr_caps[i] # weight of current edge (node, neighbor, neigh_cand_rel)
  * 			if found[neighbor] == 0:             # <<<<<<<<<<<<<<
@@ -4404,21 +4372,21 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __p
       }
     }
   }
-  __pyx_L7_break:;
+  __pyx_L6_break:;
 
-  /* "algorithms/sm/rel_closure_2.pyx":200
+  /* "algorithms/sm/rel_closure_2.pyx":199
  * 					relations[neighbor] = neigh_cand_rel # candidate relation
  * 					Q.push_if_lower_fast(-new_cap, neighbor) # heapify
  * 	caps_arr = np.asarray(capacities)             # <<<<<<<<<<<<<<
  * 	preds_arr = np.asarray(predecessors)
  * 	rels_arr = np.asarray(relations)
  */
-  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 200, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 199, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_asarray); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 200, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_asarray); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 199, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __pyx_memoryview_fromslice(__pyx_v_capacities, 1, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 200, __pyx_L1_error)
+  __pyx_t_4 = __pyx_memoryview_fromslice(__pyx_v_capacities, 1, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 199, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_28 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -4431,14 +4399,14 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __p
     }
   }
   if (!__pyx_t_28) {
-    __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 200, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 199, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_GOTREF(__pyx_t_3);
   } else {
     #if CYTHON_FAST_PYCALL
     if (PyFunction_Check(__pyx_t_2)) {
       PyObject *__pyx_temp[2] = {__pyx_t_28, __pyx_t_4};
-      __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 200, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 199, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_28); __pyx_t_28 = 0;
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -4447,42 +4415,42 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __p
     #if CYTHON_FAST_PYCCALL
     if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
       PyObject *__pyx_temp[2] = {__pyx_t_28, __pyx_t_4};
-      __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 200, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 199, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_28); __pyx_t_28 = 0;
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     } else
     #endif
     {
-      __pyx_t_29 = PyTuple_New(1+1); if (unlikely(!__pyx_t_29)) __PYX_ERR(0, 200, __pyx_L1_error)
+      __pyx_t_29 = PyTuple_New(1+1); if (unlikely(!__pyx_t_29)) __PYX_ERR(0, 199, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_29);
       __Pyx_GIVEREF(__pyx_t_28); PyTuple_SET_ITEM(__pyx_t_29, 0, __pyx_t_28); __pyx_t_28 = NULL;
       __Pyx_GIVEREF(__pyx_t_4);
       PyTuple_SET_ITEM(__pyx_t_29, 0+1, __pyx_t_4);
       __pyx_t_4 = 0;
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_29, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 200, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_29, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 199, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_29); __pyx_t_29 = 0;
     }
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (!(likely(((__pyx_t_3) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_3, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 200, __pyx_L1_error)
+  if (!(likely(((__pyx_t_3) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_3, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 199, __pyx_L1_error)
   __pyx_v_caps_arr = ((PyArrayObject *)__pyx_t_3);
   __pyx_t_3 = 0;
 
-  /* "algorithms/sm/rel_closure_2.pyx":201
+  /* "algorithms/sm/rel_closure_2.pyx":200
  * 					Q.push_if_lower_fast(-new_cap, neighbor) # heapify
  * 	caps_arr = np.asarray(capacities)
  * 	preds_arr = np.asarray(predecessors)             # <<<<<<<<<<<<<<
  * 	rels_arr = np.asarray(relations)
  * 	set_base(caps_arr, _caps)
  */
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 201, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 200, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_29 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_asarray); if (unlikely(!__pyx_t_29)) __PYX_ERR(0, 201, __pyx_L1_error)
+  __pyx_t_29 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_asarray); if (unlikely(!__pyx_t_29)) __PYX_ERR(0, 200, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_29);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __pyx_memoryview_fromslice(__pyx_v_predecessors, 1, (PyObject *(*)(char *)) __pyx_memview_get_long, (int (*)(char *, PyObject *)) __pyx_memview_set_long, 0);; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 201, __pyx_L1_error)
+  __pyx_t_2 = __pyx_memoryview_fromslice(__pyx_v_predecessors, 1, (PyObject *(*)(char *)) __pyx_memview_get_long, (int (*)(char *, PyObject *)) __pyx_memview_set_long, 0);; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 200, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_29))) {
@@ -4495,14 +4463,14 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __p
     }
   }
   if (!__pyx_t_4) {
-    __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_29, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 201, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_29, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 200, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_GOTREF(__pyx_t_3);
   } else {
     #if CYTHON_FAST_PYCALL
     if (PyFunction_Check(__pyx_t_29)) {
       PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_t_2};
-      __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_29, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 201, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_29, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 200, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -4511,42 +4479,42 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __p
     #if CYTHON_FAST_PYCCALL
     if (__Pyx_PyFastCFunction_Check(__pyx_t_29)) {
       PyObject *__pyx_temp[2] = {__pyx_t_4, __pyx_t_2};
-      __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_29, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 201, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_29, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 200, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     } else
     #endif
     {
-      __pyx_t_28 = PyTuple_New(1+1); if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 201, __pyx_L1_error)
+      __pyx_t_28 = PyTuple_New(1+1); if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 200, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_28);
       __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_28, 0, __pyx_t_4); __pyx_t_4 = NULL;
       __Pyx_GIVEREF(__pyx_t_2);
       PyTuple_SET_ITEM(__pyx_t_28, 0+1, __pyx_t_2);
       __pyx_t_2 = 0;
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_29, __pyx_t_28, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 201, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_29, __pyx_t_28, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 200, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_28); __pyx_t_28 = 0;
     }
   }
   __Pyx_DECREF(__pyx_t_29); __pyx_t_29 = 0;
-  if (!(likely(((__pyx_t_3) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_3, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 201, __pyx_L1_error)
+  if (!(likely(((__pyx_t_3) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_3, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 200, __pyx_L1_error)
   __pyx_v_preds_arr = ((PyArrayObject *)__pyx_t_3);
   __pyx_t_3 = 0;
 
-  /* "algorithms/sm/rel_closure_2.pyx":202
+  /* "algorithms/sm/rel_closure_2.pyx":201
  * 	caps_arr = np.asarray(capacities)
  * 	preds_arr = np.asarray(predecessors)
  * 	rels_arr = np.asarray(relations)             # <<<<<<<<<<<<<<
  * 	set_base(caps_arr, _caps)
  * 	set_base(preds_arr, _preds)
  */
-  __pyx_t_29 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_29)) __PYX_ERR(0, 202, __pyx_L1_error)
+  __pyx_t_29 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_29)) __PYX_ERR(0, 201, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_29);
-  __pyx_t_28 = __Pyx_PyObject_GetAttrStr(__pyx_t_29, __pyx_n_s_asarray); if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 202, __pyx_L1_error)
+  __pyx_t_28 = __Pyx_PyObject_GetAttrStr(__pyx_t_29, __pyx_n_s_asarray); if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 201, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_28);
   __Pyx_DECREF(__pyx_t_29); __pyx_t_29 = 0;
-  __pyx_t_29 = __pyx_memoryview_fromslice(__pyx_v_relations, 1, (PyObject *(*)(char *)) __pyx_memview_get_int, (int (*)(char *, PyObject *)) __pyx_memview_set_int, 0);; if (unlikely(!__pyx_t_29)) __PYX_ERR(0, 202, __pyx_L1_error)
+  __pyx_t_29 = __pyx_memoryview_fromslice(__pyx_v_relations, 1, (PyObject *(*)(char *)) __pyx_memview_get_int, (int (*)(char *, PyObject *)) __pyx_memview_set_int, 0);; if (unlikely(!__pyx_t_29)) __PYX_ERR(0, 201, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_29);
   __pyx_t_2 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_28))) {
@@ -4559,14 +4527,14 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __p
     }
   }
   if (!__pyx_t_2) {
-    __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_28, __pyx_t_29); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 202, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_28, __pyx_t_29); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 201, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_29); __pyx_t_29 = 0;
     __Pyx_GOTREF(__pyx_t_3);
   } else {
     #if CYTHON_FAST_PYCALL
     if (PyFunction_Check(__pyx_t_28)) {
       PyObject *__pyx_temp[2] = {__pyx_t_2, __pyx_t_29};
-      __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_28, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 202, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_28, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 201, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_29); __pyx_t_29 = 0;
@@ -4575,30 +4543,30 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __p
     #if CYTHON_FAST_PYCCALL
     if (__Pyx_PyFastCFunction_Check(__pyx_t_28)) {
       PyObject *__pyx_temp[2] = {__pyx_t_2, __pyx_t_29};
-      __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_28, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 202, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_28, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 201, __pyx_L1_error)
       __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_29); __pyx_t_29 = 0;
     } else
     #endif
     {
-      __pyx_t_4 = PyTuple_New(1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 202, __pyx_L1_error)
+      __pyx_t_4 = PyTuple_New(1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 201, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_GIVEREF(__pyx_t_2); PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_2); __pyx_t_2 = NULL;
       __Pyx_GIVEREF(__pyx_t_29);
       PyTuple_SET_ITEM(__pyx_t_4, 0+1, __pyx_t_29);
       __pyx_t_29 = 0;
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_28, __pyx_t_4, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 202, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_28, __pyx_t_4, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 201, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     }
   }
   __Pyx_DECREF(__pyx_t_28); __pyx_t_28 = 0;
-  if (!(likely(((__pyx_t_3) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_3, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 202, __pyx_L1_error)
+  if (!(likely(((__pyx_t_3) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_3, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 201, __pyx_L1_error)
   __pyx_v_rels_arr = ((PyArrayObject *)__pyx_t_3);
   __pyx_t_3 = 0;
 
-  /* "algorithms/sm/rel_closure_2.pyx":203
+  /* "algorithms/sm/rel_closure_2.pyx":202
  * 	preds_arr = np.asarray(predecessors)
  * 	rels_arr = np.asarray(relations)
  * 	set_base(caps_arr, _caps)             # <<<<<<<<<<<<<<
@@ -4607,7 +4575,7 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __p
  */
   __pyx_f_10algorithms_2sm_13rel_closure_2_set_base(__pyx_v_caps_arr, __pyx_v__caps);
 
-  /* "algorithms/sm/rel_closure_2.pyx":204
+  /* "algorithms/sm/rel_closure_2.pyx":203
  * 	rels_arr = np.asarray(relations)
  * 	set_base(caps_arr, _caps)
  * 	set_base(preds_arr, _preds)             # <<<<<<<<<<<<<<
@@ -4616,7 +4584,7 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __p
  */
   __pyx_f_10algorithms_2sm_13rel_closure_2_set_base(__pyx_v_preds_arr, __pyx_v__preds);
 
-  /* "algorithms/sm/rel_closure_2.pyx":205
+  /* "algorithms/sm/rel_closure_2.pyx":204
  * 	set_base(caps_arr, _caps)
  * 	set_base(preds_arr, _preds)
  * 	set_base(rels_arr, _rels)             # <<<<<<<<<<<<<<
@@ -4625,7 +4593,7 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __p
  */
   __pyx_f_10algorithms_2sm_13rel_closure_2_set_base(__pyx_v_rels_arr, __pyx_v__rels);
 
-  /* "algorithms/sm/rel_closure_2.pyx":206
+  /* "algorithms/sm/rel_closure_2.pyx":205
  * 	set_base(preds_arr, _preds)
  * 	set_base(rels_arr, _rels)
  * 	return caps_arr, preds_arr, rels_arr             # <<<<<<<<<<<<<<
@@ -4633,7 +4601,7 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __p
  * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 206, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 205, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_INCREF(((PyObject *)__pyx_v_caps_arr));
   __Pyx_GIVEREF(((PyObject *)__pyx_v_caps_arr));
@@ -4686,7 +4654,7 @@ __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_t_8, 1, (PyObject *(*)(char *)) __p
   return __pyx_r;
 }
 
-/* "algorithms/sm/rel_closure_2.pyx":212
+/* "algorithms/sm/rel_closure_2.pyx":211
  * cdef class _finalizer:
  * 	cdef void *_data
  * 	def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -4710,7 +4678,7 @@ static void __pyx_pf_10algorithms_2sm_13rel_closure_2_10_finalizer___dealloc__(s
   int __pyx_t_1;
   __Pyx_RefNannySetupContext("__dealloc__", 0);
 
-  /* "algorithms/sm/rel_closure_2.pyx":213
+  /* "algorithms/sm/rel_closure_2.pyx":212
  * 	cdef void *_data
  * 	def __dealloc__(self):
  * 		if self._data is not NULL:             # <<<<<<<<<<<<<<
@@ -4720,7 +4688,7 @@ static void __pyx_pf_10algorithms_2sm_13rel_closure_2_10_finalizer___dealloc__(s
   __pyx_t_1 = ((__pyx_v_self->_data != NULL) != 0);
   if (__pyx_t_1) {
 
-    /* "algorithms/sm/rel_closure_2.pyx":214
+    /* "algorithms/sm/rel_closure_2.pyx":213
  * 	def __dealloc__(self):
  * 		if self._data is not NULL:
  * 			free(self._data)             # <<<<<<<<<<<<<<
@@ -4729,7 +4697,7 @@ static void __pyx_pf_10algorithms_2sm_13rel_closure_2_10_finalizer___dealloc__(s
  */
     free(__pyx_v_self->_data);
 
-    /* "algorithms/sm/rel_closure_2.pyx":213
+    /* "algorithms/sm/rel_closure_2.pyx":212
  * 	cdef void *_data
  * 	def __dealloc__(self):
  * 		if self._data is not NULL:             # <<<<<<<<<<<<<<
@@ -4738,7 +4706,7 @@ static void __pyx_pf_10algorithms_2sm_13rel_closure_2_10_finalizer___dealloc__(s
  */
   }
 
-  /* "algorithms/sm/rel_closure_2.pyx":212
+  /* "algorithms/sm/rel_closure_2.pyx":211
  * cdef class _finalizer:
  * 	cdef void *_data
  * 	def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -4857,7 +4825,7 @@ static PyObject *__pyx_pf_10algorithms_2sm_13rel_closure_2_10_finalizer_4__setst
   return __pyx_r;
 }
 
-/* "algorithms/sm/rel_closure_2.pyx":216
+/* "algorithms/sm/rel_closure_2.pyx":215
  * 			free(self._data)
  * 
  * cdef void set_base(np.ndarray arr, void *carr):             # <<<<<<<<<<<<<<
@@ -4871,19 +4839,19 @@ static void __pyx_f_10algorithms_2sm_13rel_closure_2_set_base(PyArrayObject *__p
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("set_base", 0);
 
-  /* "algorithms/sm/rel_closure_2.pyx":217
+  /* "algorithms/sm/rel_closure_2.pyx":216
  * 
  * cdef void set_base(np.ndarray arr, void *carr):
  * 	cdef _finalizer f = _finalizer()             # <<<<<<<<<<<<<<
  * 	f._data = <void*>carr
  * 	np.set_array_base(arr, f)
  */
-  __pyx_t_1 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_10algorithms_2sm_13rel_closure_2__finalizer)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 217, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_CallNoArg(((PyObject *)__pyx_ptype_10algorithms_2sm_13rel_closure_2__finalizer)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 216, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_f = ((struct __pyx_obj_10algorithms_2sm_13rel_closure_2__finalizer *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "algorithms/sm/rel_closure_2.pyx":218
+  /* "algorithms/sm/rel_closure_2.pyx":217
  * cdef void set_base(np.ndarray arr, void *carr):
  * 	cdef _finalizer f = _finalizer()
  * 	f._data = <void*>carr             # <<<<<<<<<<<<<<
@@ -4891,14 +4859,14 @@ static void __pyx_f_10algorithms_2sm_13rel_closure_2_set_base(PyArrayObject *__p
  */
   __pyx_v_f->_data = ((void *)__pyx_v_carr);
 
-  /* "algorithms/sm/rel_closure_2.pyx":219
+  /* "algorithms/sm/rel_closure_2.pyx":218
  * 	cdef _finalizer f = _finalizer()
  * 	f._data = <void*>carr
  * 	np.set_array_base(arr, f)             # <<<<<<<<<<<<<<
  */
   __pyx_f_5numpy_set_array_base(__pyx_v_arr, ((PyObject *)__pyx_v_f));
 
-  /* "algorithms/sm/rel_closure_2.pyx":216
+  /* "algorithms/sm/rel_closure_2.pyx":215
  * 			free(self._data)
  * 
  * cdef void set_base(np.ndarray arr, void *carr):             # <<<<<<<<<<<<<<
@@ -21668,9 +21636,9 @@ static int __Pyx_InitCachedBuiltins(void) {
   __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(0, 55, __pyx_L1_error)
   __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 160, __pyx_L1_error)
   #if PY_MAJOR_VERSION >= 3
-  __pyx_builtin_xrange = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_xrange) __PYX_ERR(0, 186, __pyx_L1_error)
+  __pyx_builtin_xrange = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_xrange) __PYX_ERR(0, 185, __pyx_L1_error)
   #else
-  __pyx_builtin_xrange = __Pyx_GetBuiltinName(__pyx_n_s_xrange); if (!__pyx_builtin_xrange) __PYX_ERR(0, 186, __pyx_L1_error)
+  __pyx_builtin_xrange = __Pyx_GetBuiltinName(__pyx_n_s_xrange); if (!__pyx_builtin_xrange) __PYX_ERR(0, 185, __pyx_L1_error)
   #endif
   __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_n_s_TypeError); if (!__pyx_builtin_TypeError) __PYX_ERR(1, 2, __pyx_L1_error)
   __pyx_builtin_RuntimeError = __Pyx_GetBuiltinName(__pyx_n_s_RuntimeError); if (!__pyx_builtin_RuntimeError) __PYX_ERR(3, 810, __pyx_L1_error)
@@ -22173,13 +22141,13 @@ static int __Pyx_modinit_type_init_code(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_modinit_type_init_code", 0);
   /*--- Type init code ---*/
-  if (PyType_Ready(&__pyx_type_10algorithms_2sm_13rel_closure_2__finalizer) < 0) __PYX_ERR(0, 210, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_10algorithms_2sm_13rel_closure_2__finalizer) < 0) __PYX_ERR(0, 209, __pyx_L1_error)
   __pyx_type_10algorithms_2sm_13rel_closure_2__finalizer.tp_print = 0;
   if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_10algorithms_2sm_13rel_closure_2__finalizer.tp_dictoffset && __pyx_type_10algorithms_2sm_13rel_closure_2__finalizer.tp_getattro == PyObject_GenericGetAttr)) {
     __pyx_type_10algorithms_2sm_13rel_closure_2__finalizer.tp_getattro = __Pyx_PyObject_GenericGetAttr;
   }
-  if (PyObject_SetAttrString(__pyx_m, "_finalizer", (PyObject *)&__pyx_type_10algorithms_2sm_13rel_closure_2__finalizer) < 0) __PYX_ERR(0, 210, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_10algorithms_2sm_13rel_closure_2__finalizer) < 0) __PYX_ERR(0, 210, __pyx_L1_error)
+  if (PyObject_SetAttrString(__pyx_m, "_finalizer", (PyObject *)&__pyx_type_10algorithms_2sm_13rel_closure_2__finalizer) < 0) __PYX_ERR(0, 209, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject*)&__pyx_type_10algorithms_2sm_13rel_closure_2__finalizer) < 0) __PYX_ERR(0, 209, __pyx_L1_error)
   __pyx_ptype_10algorithms_2sm_13rel_closure_2__finalizer = &__pyx_type_10algorithms_2sm_13rel_closure_2__finalizer;
   __pyx_vtabptr_array = &__pyx_vtable_array;
   __pyx_vtable_array.get_memview = (PyObject *(*)(struct __pyx_array_obj *))__pyx_array_get_memview;
