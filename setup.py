@@ -55,8 +55,16 @@ ext = [
 	),
 
 	Extension(
-		name='algorithms.sm.sparse_shortest_paths',
+		name='algorithms.sm.shortest_paths',
 		sources=['algorithms/sm/shortest_paths.pyx'],
+		include_dirs=_incl,
+		extra_compile_args=['-w'],
+		extra_link_args=['-w']
+	),
+
+	Extension(
+		name='algorithms.sm.rel_closure_2',
+		sources=['algorithms/sm/rel_closure_2.pyx'],
 		include_dirs=_incl,
 		extra_compile_args=['-w'],
 		extra_link_args=['-w']
