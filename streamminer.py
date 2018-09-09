@@ -61,7 +61,7 @@ from pathenum import get_paths_sm as c_get_paths_sm
 ##############################################
 from algorithms.mincostflow.ssp import succ_shortest_path, disable_logging
 from algorithms.relklinker.rel_closure import relational_closure as relclosure
-from algorithms.sm.rel_closure import relational_closure_sm as relclosure_sm
+from algorithms.sm.rel_closure_2 import relational_closure_sm as relclosure_sm
 from algorithms.klinker.closure import closure
 # from algorithms.sm.ksp import k_shortest_paths
 ##############################################
@@ -291,23 +291,28 @@ def extract_paths_sm(G, relsim_wt, triples, y, features=None):
 	tmp_data = G.csr.data.copy()
 	tmp_indices = G.csr.indices.copy()
 	tmp_indptr = G.csr.indptr.copy()
-	number_of_triples = len(triples)
+
+	# Testing
+	################################################################
+	G_fil_rel = load_npz(join(HOME, 'sm', 'G_fil_rel.npz'))
+	G_fil_val = load_npz(join(HOME, 'sm', 'G_fil_val.npz'))
+	################################################################
 
 	for idx, triple in enumerate(tqdm.tqdm(triples)):
 		sid, pid, oid = triple['sid'], triple['pid'], triple['oid']
 		label = y[idx]
 		triple_feature = dict()
 
-		targets = G.csr.indices % G.N
-		G.csr.data[targets == oid] = 1 # no cost for target t => max. specificity.
-		G.csr.data = np.multiply(relsim_wt, G.csr.data)
+		# targets = G.csr.indices % G.N
+		# G.csr.data[targets == oid] = 1 # no cost for target t => max. specificity.
+		# G.csr.data = np.multiply(relsim_wt, G.csr.data)
 		# log.debug("(extract_paths_sm, Before YenKSP4) indices: {}, data: {}".format(tmp_indices, tmp_data))
 		# log.debug("(extract_paths_sm, Before YenKSP4) The number of masked edges for {}: {}".format(pid, np.sum(((tmp_indices - (tmp_indices % G.N)) / G.N) == pid)) )
 		# paths = get_paths_sm(G, sid, pid, oid, relsim_wt, \
 								# weight = weight, maxpaths=20)
 		# paths = get_paths_sm_limited(G, sid, pid, oid, relsim_wt, \
 		# 				weight = weight, maxpaths=20, top_n_neighbors=5)
-		paths = yenKSP4(G, sid, pid, oid)
+		paths = yenKSP4(G_fil_rel, G, sid, pid, oid)
 		# log.debug("Completed path extraction: {}/{}".format(idx+1, number_of_triples))
 		# log.debug("(extract_paths_sm, After YenKSP4) indices: {}, data: {}".format(tmp_indices, tmp_data))
 		# log.debug("(extract_paths_sm, After YenKSP4) The number of masked edges for {}: {}".format(pid, np.sum(((tmp_indices - (tmp_indices % G.N)) / G.N) == pid)) )
@@ -448,7 +453,6 @@ def yenKSP4(G, sid, pid, oid, K = 5):
 	removed_edges = []
 	removed_nodes = []
 	for k in xrange(1, K): #for the k-th path, it assumes all paths 1..k-1 are available
-
 		for i in xrange(0, len(A[-1]['path'])-1):
 			spurNode = A[-1]['path'][i]
 			rootPath = A[-1]['path'][:i+1]
