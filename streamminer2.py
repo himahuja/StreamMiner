@@ -402,6 +402,56 @@ def yenKSP5(Gv, Gr, sid, pid, oid, K = 5):
 		discovered_paths.append(RelationalPathSM(sid, pid, oid, path_dict['path_total_cost'], len(path_dict['path'])-1, path_dict['path'], path_dict['path_rel'], path_dict['path_weights']))
 	return discovered_paths
 
+
+# ███████ ██ ███    ██ ██████      ██████  ███████ ███████ ████████
+# ██      ██ ████   ██ ██   ██     ██   ██ ██      ██         ██
+# █████   ██ ██ ██  ██ ██   ██     ██████  █████   ███████    ██
+# ██      ██ ██  ██ ██ ██   ██     ██   ██ ██           ██    ██
+# ██      ██ ██   ████ ██████      ██████  ███████ ███████    ██
+
+
+def find_best_model(X, y, scoring='roc_auc', cv=10):
+	"""
+	Fits a logistic regression classifier to the input data (X, y),
+	and returns the best model that maximizes `scoring` (e.g. AUROC).
+
+	Parameters:
+	-----------
+	X: sparse matrix
+		Feature matrix.
+	y: array
+		A vector of ground truth labels.
+	scoring: str
+		A string indicating the evaluation criteria to use. e.g. ROC curve.
+	cv: int
+		No. of folds in cross-validation.
+
+	Returns:
+	--------
+	best: dict
+		Best model key-value pairs. e.g. classifier, best score on
+		left out data, optimal parameter.
+	"""
+	steps = [('clf', LogisticRegression())]
+	pipe = Pipeline(steps)
+	params = {'clf__C': [1, 5, 10, 15, 20]}
+	grid_search = GridSearchCV(pipe, param_grid=params, cv=cv, refit=True, scoring=scoring)
+	grid_search.fit(X, y)
+	best = {
+		'clf': grid_search.best_estimator_,
+		'best_score': grid_search.best_score_,
+		'best_param': grid_search.best_params_
+	}
+	return best
+
+# ███    ███  █████  ██ ███    ██
+# ████  ████ ██   ██ ██ ████   ██
+# ██ ████ ██ ███████ ██ ██ ██  ██
+# ██  ██  ██ ██   ██ ██ ██  ██ ██
+# ██      ██ ██   ██ ██ ██   ████
+
+
+
 def main(args=None):
 	parser = argparse.ArgumentParser(
 		description=__doc__,
