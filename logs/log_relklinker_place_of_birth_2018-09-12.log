@@ -1,0 +1,10 @@
+[09/12/2018 09:33:15 AM] Launching relklinker..
+[09/12/2018 09:33:15 AM] Dataset: place_of_birth.csv
+[09/12/2018 09:33:15 AM] Output dir: /home/galois/Documents/streamminer/output
+[09/12/2018 09:33:15 AM] Read data: (1092, 7) place_of_birth.csv
+[09/12/2018 09:33:15 AM] Note: Found non-NA records: (1092, 7)
+[09/12/2018 09:33:16 AM] Computing KL-REL for 1092 triples..
+[09/12/2018 10:43:57 AM] 
+[09/12/2018 10:43:58 AM] * Saved results: /home/galois/Documents/streamminer/output/out_relklinker_place_of_birth_2018-09-12.csv
+[09/12/2018 10:43:58 AM] Relatioanal KL computation complete. Time taken: 4242.23 secs.
+

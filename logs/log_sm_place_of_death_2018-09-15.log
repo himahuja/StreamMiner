@@ -1,0 +1,23 @@
+[09/15/2018 22:59:49 PM] Launching sm..
+[09/15/2018 22:59:49 PM] Dataset: place_of_death.csv
+[09/15/2018 22:59:49 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/15/2018 22:59:49 PM] Read data: (504, 7) place_of_death.csv
+[09/15/2018 22:59:49 PM] Note: Found non-NA records: (504, 7)
+[09/15/2018 22:59:53 PM] PID is: 167, with type: int64
+[09/15/2018 22:59:59 PM] => Removing predicate 167 from KG.
+
+[09/15/2018 23:00:04 PM] Constructing adjacency matrix for: 167
+[09/15/2018 23:08:12 PM] => Path extraction..(this can take a while)
+[09/16/2018 11:34:32 AM] P: +:508, -:22, unique tot:530
+[09/16/2018 11:34:32 AM] Time taken: 44779.55s
+
+[09/16/2018 11:34:32 AM] => Path selection..
+[09/16/2018 11:34:34 AM] D: +:100, -:0, tot:100
+[09/16/2018 11:34:34 AM] Time taken: 1.96s
+
+[09/16/2018 11:34:34 AM] => Model building..
+[09/16/2018 11:34:35 AM] #Features: 100, best-AUROC: 0.68581
+[09/16/2018 11:34:35 AM] Time taken: 1.26s
+
+[09/16/2018 11:38:25 AM] Time taken: 45512.04s
+

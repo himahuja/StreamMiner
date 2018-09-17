@@ -1,0 +1,5 @@
+[09/12/2018 13:58:41 PM] Launching klinker..
+[09/12/2018 13:58:41 PM] Dataset: Player_vs_Team_NBA.csv
+[09/12/2018 13:58:41 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/12/2018 13:58:41 PM] Read data: (164, 7) Player_vs_Team_NBA.csv
+[09/12/2018 13:58:41 PM] Note: Found non-NA records: (164, 7)

@@ -1,0 +1,61 @@
+[09/11/2018 21:06:30 PM] Launching sm..
+[09/11/2018 21:06:30 PM] Dataset: sample.csv
+[09/11/2018 21:06:30 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/11/2018 21:06:30 PM] Read data: (104, 7) sample.csv
+[09/11/2018 21:06:30 PM] Note: Found non-NA records: (104, 7)
+[09/11/2018 21:06:30 PM] PID is: 599.0, with type: float64
+[09/11/2018 21:06:33 PM] => Removing predicate 599.0 from KG.
+
+[09/11/2018 21:06:36 PM] Constructing adjacency matrix for: 599.0
+[09/11/2018 21:10:32 PM] Launching sm..
+[09/11/2018 21:10:32 PM] Dataset: sample.csv
+[09/11/2018 21:10:32 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/11/2018 21:10:32 PM] Read data: (104, 7) sample.csv
+[09/11/2018 21:10:32 PM] Note: Found non-NA records: (104, 7)
+[09/11/2018 21:10:33 PM] PID is: 599.0, with type: float64
+[09/11/2018 21:10:35 PM] => Removing predicate 599.0 from KG.
+
+[09/11/2018 21:10:38 PM] Constructing adjacency matrix for: 599.0
+[09/11/2018 21:13:55 PM] => Path extraction..(this can take a while)
+[09/11/2018 22:01:30 PM] Launching sm..
+[09/11/2018 22:01:30 PM] Dataset: sample.csv
+[09/11/2018 22:01:30 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/11/2018 22:01:30 PM] Read data: (104, 7) sample.csv
+[09/11/2018 22:01:30 PM] Note: Found non-NA records: (104, 7)
+[09/11/2018 22:01:34 PM] PID is: 599.0, with type: float64
+[09/11/2018 22:01:40 PM] => Path extraction..(this can take a while)
+[09/11/2018 22:30:10 PM] Launching sm..
+[09/11/2018 22:30:10 PM] Dataset: sample.csv
+[09/11/2018 22:30:10 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/11/2018 22:30:10 PM] Read data: (104, 7) sample.csv
+[09/11/2018 22:30:10 PM] Note: Found non-NA records: (104, 7)
+[09/11/2018 22:30:10 PM] PID is: 599.0, with type: float64
+[09/11/2018 22:30:16 PM] => Path extraction..(this can take a while)
+[09/11/2018 23:22:29 PM] P: +:61, -:0, unique tot:61
+[09/11/2018 23:22:29 PM] Time taken: 3133.32s
+
+[09/11/2018 23:22:29 PM] => Path selection..
+[09/11/2018 23:22:29 PM] D: +:61, -:0, tot:61
+[09/11/2018 23:22:29 PM] Time taken: 0.07s
+
+[09/11/2018 23:22:29 PM] => Model building..
+[09/11/2018 23:28:59 PM] Launching sm..
+[09/11/2018 23:28:59 PM] Dataset: sample.csv
+[09/11/2018 23:28:59 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/11/2018 23:28:59 PM] Read data: (104, 7) sample.csv
+[09/11/2018 23:28:59 PM] Note: Found non-NA records: (104, 7)
+[09/11/2018 23:29:00 PM] PID is: 599.0, with type: float64
+[09/11/2018 23:29:06 PM] => Path extraction..(this can take a while)
+[09/12/2018 00:21:38 AM] P: +:61, -:0, unique tot:61
+[09/12/2018 00:21:38 AM] Time taken: 3152.44s
+
+[09/12/2018 00:21:38 AM] => Path selection..
+[09/12/2018 00:21:38 AM] D: +:61, -:0, tot:61
+[09/12/2018 00:21:38 AM] Time taken: 0.07s
+
+[09/12/2018 00:21:38 AM] => Model building..
+[09/12/2018 00:21:38 AM] #Features: 61, best-AUROC: 0.95673
+[09/12/2018 00:21:38 AM] Time taken: 0.33s
+
+[09/12/2018 00:21:38 AM] Time taken: 3158.41s
+

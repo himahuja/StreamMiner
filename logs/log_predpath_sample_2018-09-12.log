@@ -1,0 +1,10 @@
+[09/12/2018 00:48:30 AM] Launching predpath..
+[09/12/2018 00:48:30 AM] Dataset: sample.csv
+[09/12/2018 00:48:30 AM] Output dir: /home/galois/Documents/streamminer/output
+[09/12/2018 00:48:30 AM] Read data: (104, 7) sample.csv
+[09/12/2018 00:48:30 AM] Note: Found non-NA records: (104, 7)
+[09/12/2018 20:42:47 PM] Launching predpath..
+[09/12/2018 20:42:47 PM] Dataset: sample.csv
+[09/12/2018 20:42:47 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/12/2018 20:42:47 PM] Read data: (104, 7) sample.csv
+[09/12/2018 20:42:47 PM] Note: Found non-NA records: (104, 7)

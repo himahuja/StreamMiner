@@ -1,0 +1,10 @@
+[09/12/2018 10:45:03 AM] Launching sm..
+[09/12/2018 10:45:03 AM] Dataset: place_of_birth.csv
+[09/12/2018 10:45:03 AM] Output dir: /home/galois/Documents/streamminer/output
+[09/12/2018 10:45:03 AM] Read data: (1092, 7) place_of_birth.csv
+[09/12/2018 10:45:03 AM] Note: Found non-NA records: (1092, 7)
+[09/12/2018 10:45:06 AM] PID is: 65, with type: int64
+[09/12/2018 10:45:09 AM] => Removing predicate 65 from KG.
+
+[09/12/2018 10:45:11 AM] Constructing adjacency matrix for: 65
+[09/12/2018 10:48:22 AM] => Path extraction..(this can take a while)
