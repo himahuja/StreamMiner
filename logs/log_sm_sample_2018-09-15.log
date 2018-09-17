@@ -1,0 +1,23 @@
+[09/15/2018 17:36:47 PM] Launching sm..
+[09/15/2018 17:36:47 PM] Dataset: sample.csv
+[09/15/2018 17:36:47 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/15/2018 17:36:47 PM] Read data: (104, 7) sample.csv
+[09/15/2018 17:36:47 PM] Note: Found non-NA records: (104, 7)
+[09/15/2018 17:36:51 PM] PID is: 599.0, with type: float64
+[09/15/2018 17:36:57 PM] => Removing predicate 599.0 from KG.
+
+[09/15/2018 17:37:02 PM] Constructing adjacency matrix for: 599.0
+[09/15/2018 17:44:33 PM] => Path extraction..(this can take a while)
+[09/15/2018 19:37:04 PM] P: +:61, -:0, unique tot:61
+[09/15/2018 19:37:04 PM] Time taken: 6750.78s
+
+[09/15/2018 19:37:04 PM] => Path selection..
+[09/15/2018 19:37:04 PM] D: +:61, -:0, tot:61
+[09/15/2018 19:37:04 PM] Time taken: 0.29s
+
+[09/15/2018 19:37:04 PM] => Model building..
+[09/15/2018 19:37:05 PM] #Features: 61, best-AUROC: 0.95673
+[09/15/2018 19:37:05 PM] Time taken: 1.20s
+
+[09/15/2018 19:37:26 PM] Time taken: 7234.59s
+
