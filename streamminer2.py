@@ -409,8 +409,6 @@ def yenKSP5(Gv, Gr, sid, pid, oid, K = 5):
 # ██      ██ ██   ████ ██████      ██████  ███████ ███████    ██
 
 
-
-
 def find_best_model(X, y, scoring='roc_auc', cv=10):
 	"""
 	Fits a logistic regression classifier to the input data (X, y),
