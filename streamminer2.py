@@ -300,8 +300,6 @@ def train_model_sm(G, triples, relsim, use_interpretable_features=False, cv=10):
 	log.info('#Features: {}, best-AUROC: {:.5f}'.format(X_select.shape[1], model['best_score']))
 	#print '#Features: {}, best-AUROC: {:.5f}'.format(X_select.shape[1], model['best_score'])
 	log.info('Time taken: {:.2f}s\n'.format(time() - t1))
-	#print 'Time taken: {:.2f}s'.format(time() - t1)
-	#print ''
 
 	return vec, model
 
@@ -324,7 +322,7 @@ def extract_paths_sm(Gv, Gr, triples, y, features=None):
         triple_feature = dict()
         discovered_paths = yenKSP5(Gv, Gr, sid, pid, oid, K = 5)
         for path in discovered_paths:
-            print path
+            log.info(path)
             ff = tuple(path.relational_path)
             if ff not in features:
                 features.add(ff)
@@ -500,7 +498,6 @@ def main(args=None):
 
 	if args.method == 'sm':
 		vec, model = train_model_sm(G, spo_df, relsim) # train
-		print 'Time taken: {:.2f}s\n'.format(time() - t1)
 		log.info('Time taken: {:.2f}s\n'.format(time() - t1))
 		# save model
 		predictor = { 'dictvectorizer': vec, 'model': model }
@@ -508,10 +505,10 @@ def main(args=None):
 			outpkl = join(args.outdir, 'out_streamminer_{}_{}.pkl'.format(base, DATE))
 			with open(outpkl, 'wb') as g:
 				pkl.dump(predictor, g, protocol=pkl.HIGHEST_PROTOCOL)
-			print 'Saved: {}'.format(outpkl)
+			log.info('Saved: {}'.format(outpkl))
 		except IOError, e:
 			raise e
-	print '\nDone!\n'
+	log.info('\nDone!\n')
 
 if __name__ == '__main__':
 	main()
