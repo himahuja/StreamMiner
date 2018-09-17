@@ -595,9 +595,8 @@ def predpath_train_model(G, triples, use_interpretable_features=False, cv=10):
 	print '=> Model building..'
 	t1 = time()
 	model = find_best_model(X_select, y, cv=cv)
-	print '#Features: {}, best-AUROC: {:.5f}'.format(X_select.shape[1], model['best_score'])
-	print 'Time taken: {:.2f}s'.format(time() - t1)
-	print ''
+	log.info('#Features: {}, best-AUROC: {:.5f}'.format(X_select.shape[1], model['best_score']))
+	log.info('Time taken: {:.2f}s\n'.format(time() - t1))
 
 	return vec, model
 
