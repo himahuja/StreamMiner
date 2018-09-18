@@ -1,0 +1,8 @@
+[09/17/2018 18:33:14 PM] Launching stream..
+[09/17/2018 18:33:14 PM] Dataset: cross_US_Presidents_vs_First_Lady.csv
+[09/17/2018 18:33:14 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 18:33:14 PM] Read data: (256, 7) cross_US_Presidents_vs_First_Lady.csv
+[09/17/2018 18:33:14 PM] Note: Found non-NA records: (256, 7)
+[09/17/2018 18:33:20 PM] 
+Done!
+

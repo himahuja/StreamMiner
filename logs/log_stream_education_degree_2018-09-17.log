@@ -1,0 +1,8 @@
+[09/17/2018 18:36:47 PM] Launching stream..
+[09/17/2018 18:36:47 PM] Dataset: education_degree.csv
+[09/17/2018 18:36:47 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 18:36:47 PM] Read data: (1861, 7) education_degree.csv
+[09/17/2018 18:36:47 PM] Note: Found non-NA records: (1861, 7)
+[09/17/2018 18:36:52 PM] 
+Done!
+

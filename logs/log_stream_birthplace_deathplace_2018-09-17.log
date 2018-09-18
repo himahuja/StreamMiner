@@ -1,0 +1,21 @@
+[09/17/2018 18:27:31 PM] Launching stream..
+[09/17/2018 18:27:31 PM] Dataset: birthplace_deathplace.csv
+[09/17/2018 18:27:31 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 18:27:31 PM] Read data: (500, 8) birthplace_deathplace.csv
+[09/17/2018 18:27:31 PM] Note: Found non-NA records: (500, 8)
+[09/17/2018 18:27:35 PM] 
+Done!
+
+[09/17/2018 21:39:23 PM] Launching stream..
+[09/17/2018 21:39:23 PM] Dataset: birthplace_deathplace.csv
+[09/17/2018 21:39:23 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 21:39:23 PM] Read data: (500, 8) birthplace_deathplace.csv
+[09/17/2018 21:39:23 PM] Note: Found non-NA records: (500, 8)
+[09/17/2018 22:03:01 PM] Launching stream..
+[09/17/2018 22:03:01 PM] Dataset: birthplace_deathplace.csv
+[09/17/2018 22:03:01 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 22:03:01 PM] Read data: (500, 8) birthplace_deathplace.csv
+[09/17/2018 22:03:01 PM] Note: Found non-NA records: (500, 8)
+[09/17/2018 22:07:32 PM] 
+Done!
+

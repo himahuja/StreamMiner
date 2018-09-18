@@ -1,0 +1,21 @@
+[09/17/2018 18:31:02 PM] Launching stream..
+[09/17/2018 18:31:02 PM] Dataset: sample.csv
+[09/17/2018 18:31:02 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 18:31:02 PM] Read data: (104, 7) sample.csv
+[09/17/2018 18:31:02 PM] Note: Found non-NA records: (104, 7)
+[09/17/2018 18:31:06 PM] 
+Done!
+
+[09/17/2018 18:42:45 PM] Launching stream..
+[09/17/2018 18:42:45 PM] Dataset: sample.csv
+[09/17/2018 18:42:45 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 18:42:45 PM] Read data: (104, 7) sample.csv
+[09/17/2018 18:42:45 PM] Note: Found non-NA records: (104, 7)
+[09/17/2018 18:44:55 PM] 
+Done!
+
+[09/17/2018 21:42:29 PM] Launching stream..
+[09/17/2018 21:42:29 PM] Dataset: sample.csv
+[09/17/2018 21:42:29 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 21:42:29 PM] Read data: (104, 7) sample.csv
+[09/17/2018 21:42:29 PM] Note: Found non-NA records: (104, 7)

@@ -1,0 +1,8 @@
+[09/17/2018 18:45:57 PM] Launching stream..
+[09/17/2018 18:45:57 PM] Dataset: Player_vs_Team_NBA.csv
+[09/17/2018 18:45:57 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 18:45:57 PM] Read data: (164, 7) Player_vs_Team_NBA.csv
+[09/17/2018 18:45:57 PM] Note: Found non-NA records: (164, 7)
+[09/17/2018 18:46:00 PM] 
+Done!
+

@@ -1,0 +1,32 @@
+[09/17/2018 17:50:27 PM] Launching relklinker..
+[09/17/2018 17:50:27 PM] Dataset: cross_Movies_vs_Directors.csv
+[09/17/2018 17:50:27 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 17:50:27 PM] Read data: (4680, 8) cross_Movies_vs_Directors.csv
+[09/17/2018 17:50:27 PM] Note: Found non-NA records: (4680, 8)
+[09/17/2018 17:50:33 PM] 
+Done!
+
+[09/17/2018 18:10:49 PM] Launching relklinker..
+[09/17/2018 18:10:49 PM] Dataset: cross_Movies_vs_Directors.csv
+[09/17/2018 18:10:49 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 18:10:49 PM] Read data: (4680, 8) cross_Movies_vs_Directors.csv
+[09/17/2018 18:10:49 PM] Note: Found non-NA records: (4680, 8)
+[09/17/2018 18:10:51 PM] 
+Done!
+
+[09/17/2018 21:46:50 PM] Launching relklinker..
+[09/17/2018 21:46:50 PM] Dataset: cross_Movies_vs_Directors.csv
+[09/17/2018 21:46:50 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 21:46:50 PM] Read data: (4680, 8) cross_Movies_vs_Directors.csv
+[09/17/2018 21:46:50 PM] Note: Found non-NA records: (4680, 8)
+[09/17/2018 21:46:50 PM] 
+Done!
+
+[09/17/2018 22:20:07 PM] Launching relklinker..
+[09/17/2018 22:20:07 PM] Dataset: cross_Movies_vs_Directors.csv
+[09/17/2018 22:20:07 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 22:20:07 PM] Read data: (4680, 8) cross_Movies_vs_Directors.csv
+[09/17/2018 22:20:07 PM] Note: Found non-NA records: (4680, 8)
+[09/17/2018 22:20:08 PM] 
+Done!
+

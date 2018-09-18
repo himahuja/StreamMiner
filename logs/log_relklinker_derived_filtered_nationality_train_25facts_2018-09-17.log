@@ -1,0 +1,42 @@
+[09/17/2018 17:52:44 PM] Launching relklinker..
+[09/17/2018 17:52:44 PM] Dataset: derived_filtered_nationality_train_25facts.csv
+[09/17/2018 17:52:44 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 17:52:44 PM] Read data: (200, 8) derived_filtered_nationality_train_25facts.csv
+[09/17/2018 17:52:44 PM] Note: Found non-NA records: (200, 8)
+[09/17/2018 17:52:50 PM] 
+Done!
+
+[09/17/2018 18:12:57 PM] Launching relklinker..
+[09/17/2018 18:12:57 PM] Dataset: derived_filtered_nationality_train_25facts.csv
+[09/17/2018 18:12:57 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 18:12:57 PM] Read data: (200, 8) derived_filtered_nationality_train_25facts.csv
+[09/17/2018 18:12:57 PM] Note: Found non-NA records: (200, 8)
+[09/17/2018 18:13:00 PM] 
+Done!
+
+[09/17/2018 21:37:17 PM] Launching relklinker..
+[09/17/2018 21:37:17 PM] Dataset: derived_filtered_nationality_train_25facts.csv
+[09/17/2018 21:37:17 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 21:37:17 PM] Read data: (200, 8) derived_filtered_nationality_train_25facts.csv
+[09/17/2018 21:37:17 PM] Note: Found non-NA records: (200, 8)
+[09/17/2018 21:39:21 PM] Launching relklinker..
+[09/17/2018 21:39:21 PM] Dataset: derived_filtered_nationality_train_25facts.csv
+[09/17/2018 21:39:21 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 21:39:21 PM] Read data: (200, 8) derived_filtered_nationality_train_25facts.csv
+[09/17/2018 21:39:21 PM] Note: Found non-NA records: (200, 8)
+[09/17/2018 21:48:53 PM] Launching relklinker..
+[09/17/2018 21:48:53 PM] Dataset: derived_filtered_nationality_train_25facts.csv
+[09/17/2018 21:48:53 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 21:48:53 PM] Read data: (200, 8) derived_filtered_nationality_train_25facts.csv
+[09/17/2018 21:48:53 PM] Note: Found non-NA records: (200, 8)
+[09/17/2018 21:48:54 PM] 
+Done!
+
+[09/17/2018 22:22:10 PM] Launching relklinker..
+[09/17/2018 22:22:11 PM] Dataset: derived_filtered_nationality_train_25facts.csv
+[09/17/2018 22:22:11 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 22:22:11 PM] Read data: (200, 8) derived_filtered_nationality_train_25facts.csv
+[09/17/2018 22:22:11 PM] Note: Found non-NA records: (200, 8)
+[09/17/2018 22:22:12 PM] 
+Done!
+

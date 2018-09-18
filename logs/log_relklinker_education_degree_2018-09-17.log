@@ -1,0 +1,37 @@
+[09/17/2018 17:57:19 PM] Launching relklinker..
+[09/17/2018 17:57:19 PM] Dataset: education_degree.csv
+[09/17/2018 17:57:19 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 17:57:19 PM] Read data: (1861, 7) education_degree.csv
+[09/17/2018 17:57:19 PM] Note: Found non-NA records: (1861, 7)
+[09/17/2018 17:57:23 PM] 
+Done!
+
+[09/17/2018 18:17:19 PM] Launching relklinker..
+[09/17/2018 18:17:19 PM] Dataset: education_degree.csv
+[09/17/2018 18:17:19 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 18:17:19 PM] Read data: (1861, 7) education_degree.csv
+[09/17/2018 18:17:19 PM] Note: Found non-NA records: (1861, 7)
+[09/17/2018 18:17:22 PM] 
+Done!
+
+[09/17/2018 21:41:25 PM] Launching relklinker..
+[09/17/2018 21:41:25 PM] Dataset: education_degree.csv
+[09/17/2018 21:41:25 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 21:41:25 PM] Read data: (1861, 7) education_degree.csv
+[09/17/2018 21:41:25 PM] Note: Found non-NA records: (1861, 7)
+[09/17/2018 21:53:06 PM] Launching relklinker..
+[09/17/2018 21:53:06 PM] Dataset: education_degree.csv
+[09/17/2018 21:53:06 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 21:53:06 PM] Read data: (1861, 7) education_degree.csv
+[09/17/2018 21:53:06 PM] Note: Found non-NA records: (1861, 7)
+[09/17/2018 21:53:08 PM] 
+Done!
+
+[09/17/2018 22:26:17 PM] Launching relklinker..
+[09/17/2018 22:26:17 PM] Dataset: education_degree.csv
+[09/17/2018 22:26:17 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 22:26:17 PM] Read data: (1861, 7) education_degree.csv
+[09/17/2018 22:26:17 PM] Note: Found non-NA records: (1861, 7)
+[09/17/2018 22:26:18 PM] 
+Done!
+
