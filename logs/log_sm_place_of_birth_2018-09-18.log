@@ -1,0 +1,19 @@
+[09/18/2018 16:53:10 PM] Launching sm..
+[09/18/2018 16:53:10 PM] Dataset: place_of_birth.csv
+[09/18/2018 16:53:10 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/18/2018 16:53:10 PM] Read data: (1092, 7) place_of_birth.csv
+[09/18/2018 16:53:10 PM] Note: Found non-NA records: (1092, 7)
+[09/18/2018 16:53:12 PM] PID is: 65, with type: int64
+[09/18/2018 16:53:16 PM] => Removing predicate 65 from KG.
+
+[09/18/2018 16:53:23 PM] Constructing adjacency matrix for: 65
+[09/18/2018 16:57:00 PM] Launching sm..
+[09/18/2018 16:57:00 PM] Dataset: place_of_birth.csv
+[09/18/2018 16:57:00 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/18/2018 16:57:00 PM] Read data: (1092, 7) place_of_birth.csv
+[09/18/2018 16:57:00 PM] Note: Found non-NA records: (1092, 7)
+[09/18/2018 16:57:02 PM] PID is: 65, with type: int64
+[09/18/2018 16:57:04 PM] => Removing predicate 65 from KG.
+
+[09/18/2018 16:57:06 PM] Constructing adjacency matrix for: 65
+[09/18/2018 16:59:53 PM] => Path extraction..(this can take a while)

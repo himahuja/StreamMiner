@@ -10,6 +10,7 @@ import ujson as json
 import logging as log
 from copy import copy
 from tqdm import tqdm
+import gc
 ###### Cython benign warning ignore ##########################
 warnings.filterwarnings("ignore", message="numpy.dtype size changed")
 warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
@@ -360,6 +361,7 @@ def yenKSP5(Gv, Gr, sid, pid, oid, K = 5):
 	removed_nodes = []
 	for k in xrange(1, K): #for the k-th path, it assumes all paths 1..k-1 are available
 		for i in xrange(0, len(A[-1]['path'])-1):
+			gc.collect()
 			# the spurnode ranges from first node of the previous (k-1) shortest path to its next to last node.
 			spurNode = A[-1]['path'][i]
 			rootPath = A[-1]['path'][:i+1]
@@ -398,6 +400,7 @@ def yenKSP5(Gv, Gr, sid, pid, oid, K = 5):
 			break
 	for path_dict in A:
 		discovered_paths.append(RelationalPathSM(sid, pid, oid, path_dict['path_total_cost'], len(path_dict['path'])-1, path_dict['path'], path_dict['path_rel'], path_dict['path_weights']))
+	gc.collect()
 	return discovered_paths
 
 
