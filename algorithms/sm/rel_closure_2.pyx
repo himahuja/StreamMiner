@@ -58,14 +58,8 @@ cpdef relational_closure_sm(G, G_rel, s, p, o, kind='metric', linkpred=True):
 	if linkpred and G[s, o, p] != 0:
 		G[s, o, p] = 0.
 
-	# graph vectors
-	data = G.data.astype(_float)
-	indices = G.indices.astype(_int64)
-	indptr = G.indptr.astype(_int)
-	data_rel = G_rel.data.astype(_int)
-
 	# closure
-	caps, preds, rels = cclosuress(data, data_rel, indices, indptr, s, p, o, closure)
+	caps, preds, rels = cclosuress(G.data.astype(_float), G_rel.data.astype(_int), G.indices.astype(_int64), G.indptr.astype(_int), s, p, o, closure)
 
 	path = []
 	rel_path = []
