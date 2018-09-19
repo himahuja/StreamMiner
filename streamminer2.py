@@ -249,12 +249,14 @@ def train_model_sm(G, triples, relsim, use_interpretable_features=False, cv=10):
 	log.info('=> Path extraction..(this can take a while)')
 	t1 = time()
 	features, pos_features, neg_features, measurements = extract_paths_sm(Gv, Gr, triples, y)
+	del Gr
+	del Gv
+	gc.collect()
 	log.info('P: +:{}, -:{}, unique tot:{}'.format(len(pos_features), len(neg_features), len(features)))
 	vec = DictVectorizer()
 	X = vec.fit_transform(measurements)
 	n, m = X.shape
-	log.info('Time taken: {:.2f}s\n'.format(time() - t1))
-	print ''
+	log.info('Time taken: {:.2f}s\n\n'.format(time() - t1))
 
 	########### Path selection ###############
 	log.info('=> Path selection..')
@@ -332,9 +334,11 @@ def extract_paths_sm(Gv, Gr, triples, y, features=None):
                     neg_features.add(ff)
                 else:
                     raise Exception("Unknown class label: {}".format(label))
-            triple_feature[ff] = triple_feature.get(ff, 0) + 1
+        	triple_feature[ff] = triple_feature.get(ff, 0) + 1
+		gc.collect()
         measurements.append(triple_feature)
-    print ''
+
+    log.info("\n")
     if return_features:
         return features, pos_features, neg_features, measurements
     return measurements
@@ -360,7 +364,6 @@ def yenKSP5(Gv, Gr, sid, pid, oid, K = 5):
 	removed_nodes = []
 	for k in xrange(1, K): #for the k-th path, it assumes all paths 1..k-1 are available
 		for i in xrange(0, len(A[-1]['path'])-1):
-			gc.collect()
 			# the spurnode ranges from first node of the previous (k-1) shortest path to its next to last node.
 			#spurNode = A[-1]['path'][i]
 			#rootPath = A[-1]['path'][:i+1]
@@ -375,14 +378,14 @@ def yenKSP5(Gv, Gr, sid, pid, oid, K = 5):
 				removed_nodes.extend( delete_node(Gv, Gr, rootPathNode) )
 			spurPathWeights, spurPath, spurPathRel = relclosure_sm(Gv, Gr, int(A[-1]['path'][i]), int(pid), int(oid), kind='metric', linkpred = False)
 			if spurPath and spurPathRel != [-1]:
-				totalPath = A[-1]['path'][:i+1][:-1] + spurPath
-				totalDist = np.sum(A[-1]['path_weights'][:i+1][:-1]) + np.sum(spurPathWeights[:-1])
-				totalWeights = A[-1]['path_weights'][:i+1][:-1] + spurPathWeights[:]
-				totalPathRel = A[-1]['path_rel'][:i+1][:] + spurPathRel[1:]
-				potential_k = {'path_total_cost': totalDist,
-								'path': totalPath,
-								'path_rel': totalPathRel,
-								'path_weights': totalWeights}
+				#totalPath = A[-1]['path'][:i+1][:-1] + spurPath
+				#totalDist = np.sum(A[-1]['path_weights'][:i+1][:-1]) + np.sum(spurPathWeights[:-1])
+				#totalWeights = A[-1]['path_weights'][:i+1][:-1] + spurPathWeights[:]
+				#totalPathRel = A[-1]['path_rel'][:i+1][:] + spurPathRel[1:]
+				potential_k = {'path_total_cost': (np.sum(A[-1]['path_weights'][:i+1][:-1]) + np.sum(spurPathWeights[:-1])).copy(),
+								'path': list(A[-1]['path'][:i+1][:-1] + spurPath),
+								'path_rel': list(A[-1]['path_rel'][:i+1][:] + spurPathRel[1:]),
+								'path_weights': list(A[-1]['path_weights'][:i+1][:-1] + spurPathWeights[:])}
 				if not (potential_k in B or potential_k in A):
 					# removes repititive paths in A & B
 					B.append(potential_k)
@@ -390,6 +393,7 @@ def yenKSP5(Gv, Gr, sid, pid, oid, K = 5):
 			add_node(Gv, Gr, removed_nodes)
 			removed_edges.reverse()
 			add_edge(Gv, Gr, removed_edges)
+			gc.collect()
 		if len(B):
 			B = sorted(B, key=lambda k: k['path_total_cost'])
 			A.append(B[0])
@@ -398,7 +402,6 @@ def yenKSP5(Gv, Gr, sid, pid, oid, K = 5):
 			break
 	for path_dict in A:
 		discovered_paths.append(RelationalPathSM(sid, pid, oid, path_dict['path_total_cost'], len(path_dict['path'])-1, path_dict['path'], path_dict['path_rel'], path_dict['path_weights']))
-	gc.collect()
 	return discovered_paths
 
 
