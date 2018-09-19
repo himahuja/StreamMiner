@@ -1,8 +1,0 @@
-[09/17/2018 18:55:26 PM] Launching predpath..
-[09/17/2018 18:55:26 PM] Dataset: derived_filtered_profession_train_25facts.csv
-[09/17/2018 18:55:26 PM] Output dir: /home/galois/Documents/streamminer/output
-[09/17/2018 18:55:26 PM] Read data: (440, 8) derived_filtered_profession_train_25facts.csv
-[09/17/2018 18:55:26 PM] Note: Found non-NA records: (440, 8)
-[09/17/2018 18:55:28 PM] 
-Done!
-

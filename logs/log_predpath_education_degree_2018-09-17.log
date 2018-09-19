@@ -1,8 +1,0 @@
-[09/17/2018 18:57:32 PM] Launching predpath..
-[09/17/2018 18:57:32 PM] Dataset: education_degree.csv
-[09/17/2018 18:57:32 PM] Output dir: /home/galois/Documents/streamminer/output
-[09/17/2018 18:57:32 PM] Read data: (1861, 7) education_degree.csv
-[09/17/2018 18:57:32 PM] Note: Found non-NA records: (1861, 7)
-[09/17/2018 18:57:34 PM] 
-Done!
-

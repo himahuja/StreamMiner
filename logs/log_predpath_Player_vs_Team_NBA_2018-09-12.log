@@ -1,5 +1,0 @@
-[09/12/2018 20:43:48 PM] Launching predpath..
-[09/12/2018 20:43:48 PM] Dataset: Player_vs_Team_NBA.csv
-[09/12/2018 20:43:48 PM] Output dir: /home/galois/Documents/streamminer/output
-[09/12/2018 20:43:48 PM] Read data: (164, 7) Player_vs_Team_NBA.csv
-[09/12/2018 20:43:48 PM] Note: Found non-NA records: (164, 7)

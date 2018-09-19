@@ -1,8 +1,0 @@
-[09/17/2018 18:39:03 PM] Launching stream..
-[09/17/2018 18:39:03 PM] Dataset: institution.alm.csv
-[09/17/2018 18:39:03 PM] Output dir: /home/galois/Documents/streamminer/output
-[09/17/2018 18:39:03 PM] Read data: (26156, 7) institution.alm.csv
-[09/17/2018 18:39:03 PM] Note: Found non-NA records: (26156, 7)
-[09/17/2018 18:39:11 PM] 
-Done!
-

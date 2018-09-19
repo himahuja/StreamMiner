@@ -1,5 +1,0 @@
-[09/16/2018 11:40:40 AM] Launching klinker..
-[09/16/2018 11:40:40 AM] Dataset: sample.csv
-[09/16/2018 11:40:40 AM] Output dir: /home/galois/Documents/streamminer/output
-[09/16/2018 11:40:40 AM] Read data: (104, 7) sample.csv
-[09/16/2018 11:40:40 AM] Note: Found non-NA records: (104, 7)

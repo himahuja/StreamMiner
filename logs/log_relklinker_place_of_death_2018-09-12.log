@@ -1,5 +1,0 @@
-[09/12/2018 20:38:41 PM] Launching relklinker..
-[09/12/2018 20:38:41 PM] Dataset: place_of_death.csv
-[09/12/2018 20:38:41 PM] Output dir: /home/galois/Documents/streamminer/output
-[09/12/2018 20:38:41 PM] Read data: (504, 7) place_of_death.csv
-[09/12/2018 20:38:41 PM] Note: Found non-NA records: (504, 7)

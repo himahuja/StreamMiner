@@ -1,8 +1,0 @@
-[09/17/2018 18:41:23 PM] Launching stream..
-[09/17/2018 18:41:23 PM] Dataset: predpath_state_capital.csv
-[09/17/2018 18:41:23 PM] Output dir: /home/galois/Documents/streamminer/output
-[09/17/2018 18:41:23 PM] Read data: (300, 7) predpath_state_capital.csv
-[09/17/2018 18:41:23 PM] Note: Found non-NA records: (300, 7)
-[09/17/2018 18:41:42 PM] 
-Done!
-

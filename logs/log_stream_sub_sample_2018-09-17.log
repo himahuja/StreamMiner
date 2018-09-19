@@ -1,8 +1,0 @@
-[09/17/2018 18:40:14 PM] Launching stream..
-[09/17/2018 18:40:14 PM] Dataset: sub_sample.csv
-[09/17/2018 18:40:14 PM] Output dir: /home/galois/Documents/streamminer/output
-[09/17/2018 18:40:14 PM] Read data: (39, 7) sub_sample.csv
-[09/17/2018 18:40:14 PM] Note: Found non-NA records: (39, 7)
-[09/17/2018 18:40:20 PM] 
-Done!
-

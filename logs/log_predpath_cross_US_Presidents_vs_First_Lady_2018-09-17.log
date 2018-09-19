@@ -1,8 +1,0 @@
-[09/17/2018 18:54:23 PM] Launching predpath..
-[09/17/2018 18:54:23 PM] Dataset: cross_US_Presidents_vs_First_Lady.csv
-[09/17/2018 18:54:23 PM] Output dir: /home/galois/Documents/streamminer/output
-[09/17/2018 18:54:23 PM] Read data: (256, 7) cross_US_Presidents_vs_First_Lady.csv
-[09/17/2018 18:54:23 PM] Note: Found non-NA records: (256, 7)
-[09/17/2018 18:54:25 PM] 
-Done!
-

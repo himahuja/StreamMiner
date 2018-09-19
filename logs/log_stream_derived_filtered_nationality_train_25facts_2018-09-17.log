@@ -1,8 +1,0 @@
-[09/17/2018 18:32:08 PM] Launching stream..
-[09/17/2018 18:32:08 PM] Dataset: derived_filtered_nationality_train_25facts.csv
-[09/17/2018 18:32:08 PM] Output dir: /home/galois/Documents/streamminer/output
-[09/17/2018 18:32:08 PM] Read data: (200, 8) derived_filtered_nationality_train_25facts.csv
-[09/17/2018 18:32:08 PM] Note: Found non-NA records: (200, 8)
-[09/17/2018 18:32:12 PM] 
-Done!
-

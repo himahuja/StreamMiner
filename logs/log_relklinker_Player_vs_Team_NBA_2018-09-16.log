@@ -1,5 +1,0 @@
-[09/16/2018 11:45:56 AM] Launching relklinker..
-[09/16/2018 11:45:56 AM] Dataset: Player_vs_Team_NBA.csv
-[09/16/2018 11:45:56 AM] Output dir: /home/galois/Documents/streamminer/output
-[09/16/2018 11:45:56 AM] Read data: (164, 7) Player_vs_Team_NBA.csv
-[09/16/2018 11:45:56 AM] Note: Found non-NA records: (164, 7)
