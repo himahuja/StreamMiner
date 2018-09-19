@@ -1,0 +1,14 @@
+[09/17/2018 19:25:59 PM] Launching sm..
+[09/17/2018 19:25:59 PM] Dataset: cross_Movies_vs_Directors.csv
+[09/17/2018 19:25:59 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 19:25:59 PM] Read data: (4680, 8) cross_Movies_vs_Directors.csv
+[09/17/2018 19:25:59 PM] Note: Found non-NA records: (4680, 8)
+[09/17/2018 19:26:03 PM] PID is: 178, with type: int64
+[09/17/2018 19:26:09 PM] => Removing predicate 178 from KG.
+
+[09/17/2018 19:26:14 PM] Constructing adjacency matrix for: 178
+[09/17/2018 21:40:48 PM] Launching sm..
+[09/17/2018 21:40:48 PM] Dataset: cross_Movies_vs_Directors.csv
+[09/17/2018 21:40:48 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 21:40:48 PM] Read data: (4680, 8) cross_Movies_vs_Directors.csv
+[09/17/2018 21:40:48 PM] Note: Found non-NA records: (4680, 8)

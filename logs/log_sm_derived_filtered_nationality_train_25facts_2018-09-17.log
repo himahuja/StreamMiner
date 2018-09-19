@@ -1,0 +1,10 @@
+[09/17/2018 21:39:21 PM] Launching sm..
+[09/17/2018 21:39:21 PM] Dataset: derived_filtered_nationality_train_25facts.csv
+[09/17/2018 21:39:21 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 21:39:21 PM] Read data: (200, 8) derived_filtered_nationality_train_25facts.csv
+[09/17/2018 21:39:21 PM] Note: Found non-NA records: (200, 8)
+[09/17/2018 21:42:51 PM] Launching sm..
+[09/17/2018 21:42:51 PM] Dataset: derived_filtered_nationality_train_25facts.csv
+[09/17/2018 21:42:51 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 21:42:51 PM] Read data: (200, 8) derived_filtered_nationality_train_25facts.csv
+[09/17/2018 21:42:51 PM] Note: Found non-NA records: (200, 8)

@@ -1,0 +1,32 @@
+[09/17/2018 17:47:58 PM] Launching relklinker..
+[09/17/2018 17:47:58 PM] Dataset: birthplace_deathplace.csv
+[09/17/2018 17:47:58 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 17:47:58 PM] Read data: (500, 8) birthplace_deathplace.csv
+[09/17/2018 17:47:58 PM] Note: Found non-NA records: (500, 8)
+[09/17/2018 17:48:01 PM] 
+Done!
+
+[09/17/2018 18:08:23 PM] Launching relklinker..
+[09/17/2018 18:08:23 PM] Dataset: birthplace_deathplace.csv
+[09/17/2018 18:08:23 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 18:08:23 PM] Read data: (500, 8) birthplace_deathplace.csv
+[09/17/2018 18:08:23 PM] Note: Found non-NA records: (500, 8)
+[09/17/2018 18:08:38 PM] 
+Done!
+
+[09/17/2018 21:44:47 PM] Launching relklinker..
+[09/17/2018 21:44:47 PM] Dataset: birthplace_deathplace.csv
+[09/17/2018 21:44:47 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 21:44:47 PM] Read data: (500, 8) birthplace_deathplace.csv
+[09/17/2018 21:44:47 PM] Note: Found non-NA records: (500, 8)
+[09/17/2018 21:44:47 PM] 
+Done!
+
+[09/17/2018 22:18:05 PM] Launching relklinker..
+[09/17/2018 22:18:05 PM] Dataset: birthplace_deathplace.csv
+[09/17/2018 22:18:05 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 22:18:05 PM] Read data: (500, 8) birthplace_deathplace.csv
+[09/17/2018 22:18:05 PM] Note: Found non-NA records: (500, 8)
+[09/17/2018 22:18:05 PM] 
+Done!
+

@@ -1,0 +1,32 @@
+[09/17/2018 17:53:54 PM] Launching relklinker..
+[09/17/2018 17:53:54 PM] Dataset: cross_US_Presidents_vs_First_Lady.csv
+[09/17/2018 17:53:54 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 17:53:54 PM] Read data: (256, 7) cross_US_Presidents_vs_First_Lady.csv
+[09/17/2018 17:53:54 PM] Note: Found non-NA records: (256, 7)
+[09/17/2018 17:53:58 PM] 
+Done!
+
+[09/17/2018 18:14:01 PM] Launching relklinker..
+[09/17/2018 18:14:01 PM] Dataset: cross_US_Presidents_vs_First_Lady.csv
+[09/17/2018 18:14:01 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 18:14:01 PM] Read data: (256, 7) cross_US_Presidents_vs_First_Lady.csv
+[09/17/2018 18:14:01 PM] Note: Found non-NA records: (256, 7)
+[09/17/2018 18:14:04 PM] 
+Done!
+
+[09/17/2018 21:49:56 PM] Launching relklinker..
+[09/17/2018 21:49:56 PM] Dataset: cross_US_Presidents_vs_First_Lady.csv
+[09/17/2018 21:49:56 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 21:49:56 PM] Read data: (256, 7) cross_US_Presidents_vs_First_Lady.csv
+[09/17/2018 21:49:56 PM] Note: Found non-NA records: (256, 7)
+[09/17/2018 21:49:58 PM] 
+Done!
+
+[09/17/2018 22:23:12 PM] Launching relklinker..
+[09/17/2018 22:23:12 PM] Dataset: cross_US_Presidents_vs_First_Lady.csv
+[09/17/2018 22:23:12 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 22:23:12 PM] Read data: (256, 7) cross_US_Presidents_vs_First_Lady.csv
+[09/17/2018 22:23:12 PM] Note: Found non-NA records: (256, 7)
+[09/17/2018 22:23:13 PM] 
+Done!
+

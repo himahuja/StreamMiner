@@ -1,0 +1,8 @@
+[09/17/2018 19:05:02 PM] Launching predpath..
+[09/17/2018 19:05:02 PM] Dataset: place_of_death.csv
+[09/17/2018 19:05:02 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 19:05:02 PM] Read data: (504, 7) place_of_death.csv
+[09/17/2018 19:05:02 PM] Note: Found non-NA records: (504, 7)
+[09/17/2018 19:05:06 PM] 
+Done!
+

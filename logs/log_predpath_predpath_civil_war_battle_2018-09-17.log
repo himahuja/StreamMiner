@@ -1,0 +1,8 @@
+[09/17/2018 18:56:29 PM] Launching predpath..
+[09/17/2018 18:56:29 PM] Dataset: predpath_civil_war_battle.csv
+[09/17/2018 18:56:29 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/17/2018 18:56:29 PM] Read data: (710, 7) predpath_civil_war_battle.csv
+[09/17/2018 18:56:29 PM] Note: Found non-NA records: (710, 7)
+[09/17/2018 18:56:31 PM] 
+Done!
+

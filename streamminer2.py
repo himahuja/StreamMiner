@@ -479,7 +479,7 @@ def main(args=None):
 	LOGPATH = join(HOME, '../logs')
 	assert exists(LOGPATH)
 	base = splitext(basename(args.dataset))[0]
-	log_file = join('logs/', 'log_{}_{}_{}.log'.format(args.method, base, DATE))
+	log_file = join('logs/', 'log_{}_{}_{}_{}.log'.format(args.method, base, DATE, time()))
 	log.basicConfig(format = '[%(asctime)s] %(message)s', datefmt = '%m/%d/%Y %H:%M:%S %p', filename = log_file, level=log.DEBUG)
 	log.getLogger().addHandler(log.StreamHandler())
 	log.info('Launching {}..'.format(args.method))
