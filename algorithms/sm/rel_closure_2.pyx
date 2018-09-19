@@ -41,9 +41,9 @@ cpdef relational_closure_sm(G, G_rel, s, p, o, kind='metric', linkpred=True):
 	"""
 	cdef:
 		Closure closure
-		double[:] data
-		long[:] indices
-		int[:] indptr
+		#double[:] data
+		#long[:] indices
+		#int[:] indptr
 	# set the closure object
 	if kind == 'metric':
 		closure.disjf = fmax

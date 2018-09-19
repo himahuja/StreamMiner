@@ -2728,7 +2728,7 @@ static PyObject *__pyx_f_10algorithms_2sm_13rel_closure_2_relational_closure_sm(
   }
 
   /* "algorithms/sm/rel_closure_2.pyx":48
- * 		int[:] indptr
+ * 		#int[:] indptr
  * 	# set the closure object
  * 	if kind == 'metric':             # <<<<<<<<<<<<<<
  * 		closure.disjf = fmax
@@ -2756,7 +2756,7 @@ static PyObject *__pyx_f_10algorithms_2sm_13rel_closure_2_relational_closure_sm(
     __pyx_v_closure.conjf = __pyx_f_10algorithms_2sm_13rel_closure_2__dombit1;
 
     /* "algorithms/sm/rel_closure_2.pyx":48
- * 		int[:] indptr
+ * 		#int[:] indptr
  * 	# set the closure object
  * 	if kind == 'metric':             # <<<<<<<<<<<<<<
  * 		closure.disjf = fmax
