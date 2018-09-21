@@ -1,0 +1,20 @@
+[09/20/2018 22:44:31 PM] Launching sm..
+[09/20/2018 22:44:31 PM] Dataset: sample.csv
+[09/20/2018 22:44:31 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/20/2018 22:44:31 PM] Read data: (104, 7) sample.csv
+[09/20/2018 22:44:31 PM] Note: Found non-NA records: (104, 7)
+[09/20/2018 22:44:32 PM] PID is: 599.0, with type: float64
+[09/20/2018 22:44:37 PM] => Path extraction..(this can take a while)
+[09/20/2018 23:34:58 PM] P: +:61, -:0, unique tot:61
+[09/20/2018 23:34:58 PM] Time taken: 3021.20s
+
+[09/20/2018 23:34:58 PM] => Path selection..
+[09/20/2018 23:34:58 PM] D: +:61, -:0, tot:61
+[09/20/2018 23:34:58 PM] Time taken: 0.11s
+
+[09/20/2018 23:34:58 PM] => Model building..
+[09/20/2018 23:34:59 PM] #Features: 61, best-AUROC: 0.95673
+[09/20/2018 23:34:59 PM] Time taken: 0.44s
+
+[09/20/2018 23:34:59 PM] Time taken: 3027.27s
+

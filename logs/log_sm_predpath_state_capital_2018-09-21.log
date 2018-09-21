@@ -1,0 +1,23 @@
+[09/21/2018 02:02:02 AM] Launching sm..
+[09/21/2018 02:02:02 AM] Dataset: predpath_state_capital.csv
+[09/21/2018 02:02:02 AM] Output dir: /home/galois/Documents/streamminer/output
+[09/21/2018 02:02:02 AM] Read data: (300, 7) predpath_state_capital.csv
+[09/21/2018 02:02:02 AM] Note: Found non-NA records: (300, 7)
+[09/21/2018 02:02:06 AM] PID is: 87, with type: int64
+[09/21/2018 02:02:09 AM] => Removing predicate 87 from KG.
+
+[09/21/2018 02:02:11 AM] Constructing adjacency matrix for: 87
+[09/21/2018 02:05:30 AM] => Path extraction..(this can take a while)
+[09/21/2018 03:40:13 AM] P: +:105, -:0, unique tot:105
+[09/21/2018 03:40:14 AM] Time taken: 5683.71s
+
+[09/21/2018 03:40:14 AM] => Path selection..
+[09/21/2018 03:40:14 AM] D: +:100, -:0, tot:100
+[09/21/2018 03:40:14 AM] Time taken: 0.24s
+
+[09/21/2018 03:40:14 AM] => Model building..
+[09/21/2018 03:40:15 AM] #Features: 100, best-AUROC: 1.00000
+[09/21/2018 03:40:15 AM] Time taken: 0.65s
+
+[09/21/2018 03:41:45 AM] Time taken: 5979.41s
+

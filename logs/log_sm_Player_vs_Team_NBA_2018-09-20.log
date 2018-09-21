@@ -1,0 +1,20 @@
+[09/20/2018 23:36:02 PM] Launching sm..
+[09/20/2018 23:36:02 PM] Dataset: Player_vs_Team_NBA.csv
+[09/20/2018 23:36:02 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/20/2018 23:36:02 PM] Read data: (164, 7) Player_vs_Team_NBA.csv
+[09/20/2018 23:36:02 PM] Note: Found non-NA records: (164, 7)
+[09/20/2018 23:36:05 PM] PID is: 599.0, with type: float64
+[09/20/2018 23:36:12 PM] => Path extraction..(this can take a while)
+[09/21/2018 01:02:47 AM] P: +:84, -:0, unique tot:84
+[09/21/2018 01:02:47 AM] Time taken: 5195.29s
+
+[09/21/2018 01:02:47 AM] => Path selection..
+[09/21/2018 01:02:47 AM] D: +:84, -:0, tot:84
+[09/21/2018 01:02:47 AM] Time taken: 0.20s
+
+[09/21/2018 01:02:47 AM] => Model building..
+[09/21/2018 01:02:48 AM] #Features: 84, best-AUROC: 0.96341
+[09/21/2018 01:02:48 AM] Time taken: 0.66s
+
+[09/21/2018 01:02:48 AM] Time taken: 5202.47s
+

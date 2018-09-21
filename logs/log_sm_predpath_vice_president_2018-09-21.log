@@ -1,0 +1,23 @@
+[09/21/2018 03:42:49 AM] Launching sm..
+[09/21/2018 03:42:49 AM] Dataset: predpath_vice_president.csv
+[09/21/2018 03:42:49 AM] Output dir: /home/galois/Documents/streamminer/output
+[09/21/2018 03:42:49 AM] Read data: (274, 7) predpath_vice_president.csv
+[09/21/2018 03:42:49 AM] Note: Found non-NA records: (274, 7)
+[09/21/2018 03:42:52 AM] PID is: 627, with type: int64
+[09/21/2018 03:42:55 AM] => Removing predicate 627 from KG.
+
+[09/21/2018 03:42:58 AM] Constructing adjacency matrix for: 627
+[09/21/2018 03:46:17 AM] => Path extraction..(this can take a while)
+[09/21/2018 04:51:59 AM] P: +:66, -:0, unique tot:66
+[09/21/2018 04:51:59 AM] Time taken: 3942.13s
+
+[09/21/2018 04:51:59 AM] => Path selection..
+[09/21/2018 04:51:59 AM] D: +:66, -:0, tot:66
+[09/21/2018 04:51:59 AM] Time taken: 0.17s
+
+[09/21/2018 04:51:59 AM] => Model building..
+[09/21/2018 04:52:00 AM] #Features: 66, best-AUROC: 0.85365
+[09/21/2018 04:52:00 AM] Time taken: 0.64s
+
+[09/21/2018 04:52:24 AM] Time taken: 4171.85s
+
