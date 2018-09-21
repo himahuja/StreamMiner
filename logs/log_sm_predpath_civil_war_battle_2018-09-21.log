@@ -1,0 +1,23 @@
+[09/21/2018 13:29:51 PM] Launching sm..
+[09/21/2018 13:29:51 PM] Dataset: predpath_civil_war_battle.csv
+[09/21/2018 13:29:51 PM] Output dir: /home/galois/Documents/streamminer/output
+[09/21/2018 13:29:51 PM] Read data: (710, 7) predpath_civil_war_battle.csv
+[09/21/2018 13:29:51 PM] Note: Found non-NA records: (710, 7)
+[09/21/2018 13:29:55 PM] PID is: 57, with type: int64
+[09/21/2018 13:29:57 PM] => Removing predicate 57 from KG.
+
+[09/21/2018 13:30:00 PM] Constructing adjacency matrix for: 57
+[09/21/2018 13:33:20 PM] => Path extraction..(this can take a while)
+[09/21/2018 16:02:21 PM] P: +:82, -:0, unique tot:82
+[09/21/2018 16:02:22 PM] Time taken: 8941.25s
+
+[09/21/2018 16:02:22 PM] => Path selection..
+[09/21/2018 16:02:22 PM] D: +:82, -:0, tot:82
+[09/21/2018 16:02:22 PM] Time taken: 0.26s
+
+[09/21/2018 16:02:22 PM] => Model building..
+[09/21/2018 16:02:23 PM] #Features: 82, best-AUROC: 0.67044
+[09/21/2018 16:02:23 PM] Time taken: 0.67s
+
+[09/21/2018 16:05:45 PM] Time taken: 9350.92s
+
