@@ -1,4 +1,8 @@
-### To get this started:
+# README.md
+
+The volume of information today is outpacing the capacity of experts to fact-check it, and in the Information Age the real-world consequences of misinformation are becoming increasingly dire. Recently, computational methods for tackling this problem have been proposed with many of them revolving around knowledge graphs. We present a novel approach to this problem which draws on concepts from two of the leading algorithms for computational fact-checking on knowledge graphs, Knowledge Stream and PredPath. Our solution views the problem of fact-checking as a link-prediction problem which relies on discriminitive path model, but draws on the idea of relational similarity and node generality to redefine path length. This gives our solution the advantage of training on more specific paths consisting of edges whose predicates are more conceptually similar to the target predicate. Combining these concepts lead to a more robust and intuitive model for computational fact-checking.
+
+## Getting Started
 
 Make the environment settings with "requirements.txt": `pip install -r requirements.txt`  
 
@@ -8,24 +12,30 @@ The Directory where this will work: `$HOME/Documents/streamminer`
 
 Download data from the following URL http://carl.cs.indiana.edu/data/fact-checking/data.zip and decompress it inside streamminer directory.
 
-## CSR Matrix
+## Inspiration and Acknowledgements:
+
+[Discriminative Predicate Path Mining for Fact Checking in Knowledge Graphs](https://arxiv.org/abs/1510.05911)
+
+Baoxu Shi, Tim Weninger
+
+> Traditional fact checking by experts and analysts cannot keep pace with the volume of newly created information. It is important and necessary, therefore, to enhance our ability to computationally determine whether some statement of fact is true or false. We view this problem as a link-prediction task in a knowledge graph, and present a discriminative path-based method for fact checking in knowledge graphs that incorporates connectivity, type information, and predicate interactions. Given a statement S of the form (subject, predicate, object), for example, (Chicago, capitalOf, Illinois), our approach mines discriminative paths that alternatively define the generalized statement (U.S. city, predicate, U.S. state) and uses the mined rules to evaluate the veracity of statement S. We evaluate our approach by examining thousands of claims related to history, geography, biology, and politics using a public, million node knowledge graph extracted from Wikipedia and PubMedDB. Not only does our approach significantly outperform related models, we also find that the discriminative predicate path model is easily interpretable and provides sensible reasons for the final determination.
+
+[Finding Streams in Knowledge Graphs to Support Fact Checking](https://arxiv.org/abs/1708.07239)
+
+Prashant Shiralkar, Alessandro Flammini, Filippo Menczer, Giovanni Luca Ciampaglia
+
+> The volume and velocity of information that gets generated online limits current journalistic practices to fact-check claims at the same rate. Computational approaches for fact checking may be the key to help mitigate the risks of massive misinformation spread. Such approaches can be designed to not only be scalable and effective at assessing veracity of dubious claims, but also to boost a human fact checker's productivity by surfacing relevant facts and patterns to aid their analysis. To this end, we present a novel, unsupervised network-flow based approach to determine the truthfulness of a statement of fact expressed in the form of a (subject, predicate, object) triple. We view a knowledge graph of background information about real-world entities as a flow network, and knowledge as a fluid, abstract commodity. We show that computational fact checking of such a triple then amounts to finding a "knowledge stream" that emanates from the subject node and flows toward the object node through paths connecting them. Evaluation on a range of real-world and hand-crafted datasets of facts related to entertainment, business, sports, geography and more reveals that this network-flow model can be very effective in discerning true statements from false ones, outperforming existing algorithms on many test cases. Moreover, the model is expressive in its ability to automatically discover several useful path patterns and surface relevant facts that may help a human fact checker corroborate or refute a claim.
+
+Our work would not be possible without the relentless work of many researchers, and in particular Prashant Shiralkar who has contributed much to the field and whose [Knowledge Stream GitHub repo](https://github.com/shiralkarprashant/knowledgestream) was indispensable to our work.
+
+Special thanks are also in order to the [Indiana University Bloomington Networks & agents Network (NaN) group](http://cnets.indiana.edu/groups/nan/) for providing a [data repository](http://carl.cs.indiana.edu/data/) which we utilized.
+
+## Helpful Resources
+
+#### CSR Matrices
 
 [Compressed Sparse Row Format (CSR)](https://www.scipy-lectures.org/advanced/scipy_sparse/csr_matrix.html)
 
-## Issues:
+#### Cython
 
-#### Memory Usage
-
-Streamminer's memory usage increases linearly as a function of time while Knowledge Stream's does not. Something tells me that has to be an error somewhere. We should be deleting some variables from memory or something that we aren't which is causing the memory to keep growing, making the main hard to run on most computers.
-
-#### Paths Have Cycles
-
-I have noted many paths with cycles in them.
-
-#### "599 Error"
-
-Something is going on with the mask that is hiding the pid allowing the target predicate to be found by the path extraction after a couple iterations?
-
-## k-Shortest Simple Paths
-
-Okay so I found a YouTube video on [Finding k Simple Shortest Paths and Cycles](https://www.youtube.com/watch?v=RXRyqyxO_jc) and she discusses her work (haven't made it all the way through), saying [Yen](http://www.ams.org/journals/qam/1970-27-04/S0033-569X-1970-0253822-7/S0033-569X-1970-0253822-7.pdf) is the best so far and references [Subcubic Equivalences Between Path, Matrix, and Triangle Problems](https://people.csail.mit.edu/rrw/tria-mmult.pdf) to say that it has been proven to be really fucking hard, but her paper on "algorithms and hardness results" (skimmed, but didn't read all of it yet) is here [Finding k Simple Shortest Paths and Cycles](https://arxiv.org/abs/1512.02157v2). I will look into this and get back to you.
+[Cython Wiki](https://github.com/cython/cython/wiki)

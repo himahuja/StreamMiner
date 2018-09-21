@@ -595,8 +595,9 @@ def predpath_train_model(G, triples, use_interpretable_features=False, cv=10):
 	print '=> Model building..'
 	t1 = time()
 	model = find_best_model(X_select, y, cv=cv)
-	log.info('#Features: {}, best-AUROC: {:.5f}'.format(X_select.shape[1], model['best_score']))
-	log.info('Time taken: {:.2f}s\n'.format(time() - t1))
+	print '#Features: {}, best-AUROC: {:.5f}'.format(X_select.shape[1], model['best_score'])
+	print 'Time taken: {:.2f}s'.format(time() - t1)
+	print ''
 
 	return vec, model
 
@@ -996,7 +997,7 @@ def main(args=None):
 	LOGPATH = join(HOME, '../logs')
 	assert exists(LOGPATH)
 	base = splitext(basename(args.dataset))[0]
-	log_file = join('logs/', 'log_{}_{}_{}_{}.log'.format(args.method, base, DATE, time()))
+	log_file = join('logs/', 'log_{}_{}_{}.log'.format(args.method, base, DATE))
 	log.basicConfig(format = '[%(asctime)s] %(message)s', datefmt = '%m/%d/%Y %H:%M:%S %p', filename = log_file, level=log.DEBUG)
 	log.getLogger().addHandler(log.StreamHandler())
 	log.info('Launching {}..'.format(args.method))

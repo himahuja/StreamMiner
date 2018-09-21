@@ -10,7 +10,6 @@ import ujson as json
 import logging as log
 from copy import copy
 from tqdm import tqdm
-import gc
 ###### Cython benign warning ignore ##########################
 warnings.filterwarnings("ignore", message="numpy.dtype size changed")
 warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
@@ -130,7 +129,7 @@ def delete_edge(Gv, Gr, s, p, o):
 	end = Gr.indptr[o+1]
 	neighbors = Gr.indices[start:end]
 	rels = Gr.data[start:end]
-	pos = Gr.indptr[o] + np.where(np.logical_and(neighbors == s, rels == p))
+	pos = start + np.where(np.logical_and(neighbors == s, rels == p))
 
 	deletedEdges.append((o, s, p, Gv.data[pos]))
 	Gv.data[pos] = np.inf
@@ -209,7 +208,8 @@ def train_model_sm(G, triples, relsim, use_interpretable_features=False, cv=10):
 		eraseedges_mask = ((G.csr.indices - (G.csr.indices % G.N)) / G.N) == pid
 		specificity_wt[eraseedges_mask] = 0
 		relsim_wt[eraseedges_mask] = 0
-		G.csr.data = specificity_wt
+		G.csr.data = specificity_wt.copy()
+		print ''
 
 		G.csr.data = np.multiply(relsim_wt, G.csr.data)
 		log.info("Constructing adjacency matrix for: {}".format(pid))
@@ -249,14 +249,12 @@ def train_model_sm(G, triples, relsim, use_interpretable_features=False, cv=10):
 	log.info('=> Path extraction..(this can take a while)')
 	t1 = time()
 	features, pos_features, neg_features, measurements = extract_paths_sm(Gv, Gr, triples, y)
-	del Gr
-	del Gv
-	gc.collect()
 	log.info('P: +:{}, -:{}, unique tot:{}'.format(len(pos_features), len(neg_features), len(features)))
 	vec = DictVectorizer()
 	X = vec.fit_transform(measurements)
 	n, m = X.shape
-	log.info('Time taken: {:.2f}s\n\n'.format(time() - t1))
+	log.info('Time taken: {:.2f}s\n'.format(time() - t1))
+	print ''
 
 	########### Path selection ###############
 	log.info('=> Path selection..')
@@ -281,8 +279,8 @@ def train_model_sm(G, triples, relsim, use_interpretable_features=False, cv=10):
 		t1 = time()
 		theta = 10
 		select_neg_idx = [i for i, f in enumerate(vec.get_feature_names()) if f in select_neg_features]
-		#removemask = np.where(np.sum(X_select[:, select_neg_idx], axis=0) >= theta)[0]
-		restrictidx = select_neg_idx[np.where(np.sum(X_select[:, select_neg_idx], axis=0) >= theta)[0]]
+		removemask = np.where(np.sum(X_select[:, select_neg_idx], axis=0) >= theta)[0]
+		restrictidx = select_neg_idx[removemask]
 		keepidx = []
 		for i, f in enumerate(vec.get_feature_names()):
 			if i not in restrictidx:
@@ -302,6 +300,8 @@ def train_model_sm(G, triples, relsim, use_interpretable_features=False, cv=10):
 	log.info('#Features: {}, best-AUROC: {:.5f}'.format(X_select.shape[1], model['best_score']))
 	#print '#Features: {}, best-AUROC: {:.5f}'.format(X_select.shape[1], model['best_score'])
 	log.info('Time taken: {:.2f}s\n'.format(time() - t1))
+	#print 'Time taken: {:.2f}s'.format(time() - t1)
+	#print ''
 
 	return vec, model
 
@@ -324,7 +324,7 @@ def extract_paths_sm(Gv, Gr, triples, y, features=None):
         triple_feature = dict()
         discovered_paths = yenKSP5(Gv, Gr, sid, pid, oid, K = 5)
         for path in discovered_paths:
-            log.info(path)
+            print path
             ff = tuple(path.relational_path)
             if ff not in features:
                 features.add(ff)
@@ -334,11 +334,9 @@ def extract_paths_sm(Gv, Gr, triples, y, features=None):
                     neg_features.add(ff)
                 else:
                     raise Exception("Unknown class label: {}".format(label))
-        	triple_feature[ff] = triple_feature.get(ff, 0) + 1
-		gc.collect()
+            triple_feature[ff] = triple_feature.get(ff, 0) + 1
         measurements.append(triple_feature)
-
-    log.info("\n")
+    print ''
     if return_features:
         return features, pos_features, neg_features, measurements
     return measurements
@@ -365,27 +363,28 @@ def yenKSP5(Gv, Gr, sid, pid, oid, K = 5):
 	for k in xrange(1, K): #for the k-th path, it assumes all paths 1..k-1 are available
 		for i in xrange(0, len(A[-1]['path'])-1):
 			# the spurnode ranges from first node of the previous (k-1) shortest path to its next to last node.
-			#spurNode = A[-1]['path'][i]
-			#rootPath = A[-1]['path'][:i+1]
-			#rootPathRel = A[-1]['path_rel'][:i+1]
-			#rootPathWeights = A[-1]['path_weights'][:i+1]
+			spurNode = A[-1]['path'][i]
+			rootPath = A[-1]['path'][:i+1]
+			rootPathRel = A[-1]['path_rel'][:i+1]
+			rootPathWeights = A[-1]['path_weights'][:i+1]
+			# print "SpurNode: {}, Rootpath: {}".format(spurNode, rootPath)
 			removed_edges[:] = []
 			removed_nodes[:] = []
 			for path_dict in A:
-				if len(path_dict['path']) > i and A[-1]['path'][:i+1] == path_dict['path'][:i+1]:
+				if len(path_dict['path']) > i and rootPath == path_dict['path'][:i+1]:
 					removed_edges.extend( delete_edge(Gv, Gr, path_dict['path'][i], path_dict['path_rel'][i+1], path_dict['path'][i+1]) )
-			for rootPathNode in A[-1]['path'][:i+1][:-1]:
+			for rootPathNode in rootPath[:-1]:
 				removed_nodes.extend( delete_node(Gv, Gr, rootPathNode) )
-			spurPathWeights, spurPath, spurPathRel = relclosure_sm(Gv, Gr, int(A[-1]['path'][i]), int(pid), int(oid), kind='metric', linkpred = False)
+			spurPathWeights, spurPath, spurPathRel = relclosure_sm(Gv, Gr, int(spurNode), int(pid), int(oid), kind='metric', linkpred = False)
 			if spurPath and spurPathRel != [-1]:
-				#totalPath = A[-1]['path'][:i+1][:-1] + spurPath
-				#totalDist = np.sum(A[-1]['path_weights'][:i+1][:-1]) + np.sum(spurPathWeights[:-1])
-				#totalWeights = A[-1]['path_weights'][:i+1][:-1] + spurPathWeights[:]
-				#totalPathRel = A[-1]['path_rel'][:i+1][:] + spurPathRel[1:]
-				potential_k = {'path_total_cost': (np.sum(A[-1]['path_weights'][:i+1][:-1]) + np.sum(spurPathWeights[:-1])).copy(),
-								'path': list(A[-1]['path'][:i+1][:-1] + spurPath),
-								'path_rel': list(A[-1]['path_rel'][:i+1][:] + spurPathRel[1:]),
-								'path_weights': list(A[-1]['path_weights'][:i+1][:-1] + spurPathWeights[:])}
+				totalPath = rootPath[:-1] + spurPath
+				totalDist = np.sum(rootPathWeights[:-1]) + np.sum(spurPathWeights[:-1])
+				totalWeights = rootPathWeights[:-1] + spurPathWeights[:]
+				totalPathRel = rootPathRel[:] + spurPathRel[1:]
+				potential_k = {'path_total_cost': totalDist,
+								'path': totalPath,
+								'path_rel': totalPathRel,
+								'path_weights': totalWeights}
 				if not (potential_k in B or potential_k in A):
 					# removes repititive paths in A & B
 					B.append(potential_k)
@@ -393,7 +392,6 @@ def yenKSP5(Gv, Gr, sid, pid, oid, K = 5):
 			add_node(Gv, Gr, removed_nodes)
 			removed_edges.reverse()
 			add_edge(Gv, Gr, removed_edges)
-			gc.collect()
 		if len(B):
 			B = sorted(B, key=lambda k: k['path_total_cost'])
 			A.append(B[0])
@@ -403,56 +401,6 @@ def yenKSP5(Gv, Gr, sid, pid, oid, K = 5):
 	for path_dict in A:
 		discovered_paths.append(RelationalPathSM(sid, pid, oid, path_dict['path_total_cost'], len(path_dict['path'])-1, path_dict['path'], path_dict['path_rel'], path_dict['path_weights']))
 	return discovered_paths
-
-
-# ███████ ██ ███    ██ ██████      ██████  ███████ ███████ ████████
-# ██      ██ ████   ██ ██   ██     ██   ██ ██      ██         ██
-# █████   ██ ██ ██  ██ ██   ██     ██████  █████   ███████    ██
-# ██      ██ ██  ██ ██ ██   ██     ██   ██ ██           ██    ██
-# ██      ██ ██   ████ ██████      ██████  ███████ ███████    ██
-
-
-def find_best_model(X, y, scoring='roc_auc', cv=10):
-	"""
-	Fits a logistic regression classifier to the input data (X, y),
-	and returns the best model that maximizes `scoring` (e.g. AUROC).
-
-	Parameters:
-	-----------
-	X: sparse matrix
-		Feature matrix.
-	y: array
-		A vector of ground truth labels.
-	scoring: str
-		A string indicating the evaluation criteria to use. e.g. ROC curve.
-	cv: int
-		No. of folds in cross-validation.
-
-	Returns:
-	--------
-	best: dict
-		Best model key-value pairs. e.g. classifier, best score on
-		left out data, optimal parameter.
-	"""
-	steps = [('clf', LogisticRegression())]
-	pipe = Pipeline(steps)
-	params = {'clf__C': [1, 5, 10, 15, 20]}
-	grid_search = GridSearchCV(pipe, param_grid=params, cv=cv, refit=True, scoring=scoring)
-	grid_search.fit(X, y)
-	best = {
-		'clf': grid_search.best_estimator_,
-		'best_score': grid_search.best_score_,
-		'best_param': grid_search.best_params_
-	}
-	return best
-
-# ███    ███  █████  ██ ███    ██
-# ████  ████ ██   ██ ██ ████   ██
-# ██ ████ ██ ███████ ██ ██ ██  ██
-# ██  ██  ██ ██   ██ ██ ██  ██ ██
-# ██      ██ ██   ██ ██ ██   ████
-
-
 
 def main(args=None):
 	parser = argparse.ArgumentParser(
@@ -479,7 +427,7 @@ def main(args=None):
 	LOGPATH = join(HOME, '../logs')
 	assert exists(LOGPATH)
 	base = splitext(basename(args.dataset))[0]
-	log_file = join('logs/', 'log_{}_{}_{}_{}.log'.format(args.method, base, DATE, time()))
+	log_file = join('logs/', 'log_{}_{}_{}.log'.format(args.method, base, DATE))
 	log.basicConfig(format = '[%(asctime)s] %(message)s', datefmt = '%m/%d/%Y %H:%M:%S %p', filename = log_file, level=log.DEBUG)
 	log.getLogger().addHandler(log.StreamHandler())
 	log.info('Launching {}..'.format(args.method))
@@ -502,6 +450,7 @@ def main(args=None):
 
 	if args.method == 'sm':
 		vec, model = train_model_sm(G, spo_df, relsim) # train
+		print 'Time taken: {:.2f}s\n'.format(time() - t1)
 		log.info('Time taken: {:.2f}s\n'.format(time() - t1))
 		# save model
 		predictor = { 'dictvectorizer': vec, 'model': model }
@@ -509,10 +458,10 @@ def main(args=None):
 			outpkl = join(args.outdir, 'out_streamminer_{}_{}.pkl'.format(base, DATE))
 			with open(outpkl, 'wb') as g:
 				pkl.dump(predictor, g, protocol=pkl.HIGHEST_PROTOCOL)
-			log.info('Saved: {}'.format(outpkl))
+			print 'Saved: {}'.format(outpkl)
 		except IOError, e:
 			raise e
-	log.info('\nDone!\n')
+	print '\nDone!\n'
 
 if __name__ == '__main__':
 	main()
