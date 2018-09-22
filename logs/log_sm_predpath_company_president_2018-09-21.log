@@ -8,3 +8,16 @@
 
 [09/21/2018 16:06:58 PM] Constructing adjacency matrix for: 309
 [09/21/2018 16:10:16 PM] => Path extraction..(this can take a while)
+[09/22/2018 02:33:17 AM] P: +:626, -:113, unique tot:739
+[09/22/2018 02:33:17 AM] Time taken: 37380.65s
+
+[09/22/2018 02:33:17 AM] => Path selection..
+[09/22/2018 02:33:18 AM] D: +:100, -:0, tot:100
+[09/22/2018 02:33:18 AM] Time taken: 1.02s
+
+[09/22/2018 02:33:18 AM] => Model building..
+[09/22/2018 02:33:19 AM] #Features: 100, best-AUROC: 0.79345
+[09/22/2018 02:33:19 AM] Time taken: 0.67s
+
+[09/22/2018 02:36:41 AM] Time taken: 37788.07s
+
