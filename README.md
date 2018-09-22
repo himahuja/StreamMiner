@@ -12,6 +12,16 @@ The Directory where this will work: `$HOME/Documents/streamminer`
 
 Download data from the following URL http://carl.cs.indiana.edu/data/fact-checking/data.zip and decompress it inside streamminer directory.
 
+## Performance
+
+|                                       | StreamMiner | PredPath | KS     | KL-REL |
+|---------------------------------------|-------------|----------|--------|--------|
+| cross_US_Presidents_vs_First_Lady.csv | 1.0000      | 1.0000   | 0.9805 | 0.9832 |
+| Player_vs_Team_NBA.csv                | 0.96341     | 0.9231   | 0.9996 | 0.9994 |
+| predpath_state_capital.csv            | 1.0000      | 0.9968   | 1.0000 | 1.0000 |
+| predpath_vice_president.csv           | 0.85365     | 0.9440   | 0.7780 | 0.8729 |
+
+
 ## Inspiration and Acknowledgements:
 
 [Discriminative Predicate Path Mining for Fact Checking in Knowledge Graphs](https://arxiv.org/abs/1510.05911)
