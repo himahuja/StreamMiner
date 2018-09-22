@@ -1,0 +1,135 @@
+[09/21/2018 19:55:05 PM] Launching sm..
+[09/21/2018 19:55:05 PM] Dataset: sub_sample.csv
+[09/21/2018 19:55:05 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/21/2018 19:55:05 PM] Read data: (39, 7) sub_sample.csv
+[09/21/2018 19:55:05 PM] Note: Found non-NA records: (39, 7)
+[09/21/2018 19:55:05 PM] PID is: 599.0, with type: float64
+[09/21/2018 19:55:07 PM] => Removing predicate 599.0 from KG.
+
+[09/21/2018 19:55:09 PM] Constructing adjacency matrix for: 599.0
+[09/21/2018 19:57:15 PM] => Path extraction..(this can take a while)
+[09/21/2018 20:54:44 PM] Launching sm..
+[09/21/2018 20:54:44 PM] Dataset: sub_sample.csv
+[09/21/2018 20:54:44 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/21/2018 20:54:44 PM] Read data: (39, 7) sub_sample.csv
+[09/21/2018 20:54:44 PM] Note: Found non-NA records: (39, 7)
+[09/21/2018 20:54:46 PM] PID is: 599.0, with type: float64
+[09/21/2018 20:54:50 PM] => Path extraction..(this can take a while)
+[09/21/2018 20:56:44 PM] Launching sm..
+[09/21/2018 20:56:44 PM] Dataset: sub_sample.csv
+[09/21/2018 20:56:44 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/21/2018 20:56:44 PM] Read data: (39, 7) sub_sample.csv
+[09/21/2018 20:56:44 PM] Note: Found non-NA records: (39, 7)
+[09/21/2018 20:56:44 PM] PID is: 599.0, with type: float64
+[09/21/2018 20:56:48 PM] => Path extraction..(this can take a while)
+[09/21/2018 20:58:21 PM] Launching sm..
+[09/21/2018 20:58:21 PM] Dataset: sub_sample.csv
+[09/21/2018 20:58:21 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/21/2018 20:58:21 PM] Read data: (39, 7) sub_sample.csv
+[09/21/2018 20:58:21 PM] Note: Found non-NA records: (39, 7)
+[09/21/2018 20:58:21 PM] PID is: 599.0, with type: float64
+[09/21/2018 20:58:25 PM] => Path extraction..(this can take a while)
+[09/21/2018 21:15:54 PM] P: +:34, -:0, unique tot:34
+[09/21/2018 21:15:54 PM] Time taken: 1048.32s
+
+[09/21/2018 21:15:54 PM] => Path selection..
+[09/21/2018 21:15:54 PM] D: +:34, -:0, tot:34
+[09/21/2018 21:15:54 PM] Time taken: 0.04s
+
+[09/21/2018 21:15:54 PM] => Model building..
+[09/21/2018 21:15:54 PM] #Features: 34, best-AUROC: 0.89744
+[09/21/2018 21:15:54 PM] Time taken: 0.21s
+
+[09/21/2018 21:15:54 PM] Time taken: 1052.78s
+
+[09/21/2018 22:35:01 PM] Launching sm..
+[09/21/2018 22:35:01 PM] Dataset: sub_sample.csv
+[09/21/2018 22:35:01 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/21/2018 22:35:01 PM] Read data: (39, 7) sub_sample.csv
+[09/21/2018 22:35:01 PM] Note: Found non-NA records: (39, 7)
+[09/21/2018 22:35:03 PM] PID is: 599.0, with type: float64
+[09/21/2018 22:35:07 PM] => Path extraction..(this can take a while)
+[09/21/2018 22:38:49 PM] Launching sm..
+[09/21/2018 22:38:49 PM] Dataset: sub_sample.csv
+[09/21/2018 22:38:49 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/21/2018 22:38:49 PM] Read data: (39, 7) sub_sample.csv
+[09/21/2018 22:38:49 PM] Note: Found non-NA records: (39, 7)
+[09/21/2018 22:38:49 PM] PID is: 599.0, with type: float64
+[09/21/2018 22:38:53 PM] => Path extraction..(this can take a while)
+[09/21/2018 22:40:50 PM] Launching sm..
+[09/21/2018 22:40:50 PM] Dataset: sub_sample.csv
+[09/21/2018 22:40:50 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/21/2018 22:40:50 PM] Read data: (39, 7) sub_sample.csv
+[09/21/2018 22:40:50 PM] Note: Found non-NA records: (39, 7)
+[09/21/2018 22:40:50 PM] PID is: 599.0, with type: float64
+[09/21/2018 22:40:55 PM] => Path extraction..(this can take a while)
+[09/21/2018 22:45:30 PM] Launching sm..
+[09/21/2018 22:45:30 PM] Dataset: sub_sample.csv
+[09/21/2018 22:45:30 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/21/2018 22:45:30 PM] Read data: (39, 7) sub_sample.csv
+[09/21/2018 22:45:30 PM] Note: Found non-NA records: (39, 7)
+[09/21/2018 22:45:30 PM] PID is: 599.0, with type: float64
+[09/21/2018 22:45:35 PM] => Path extraction..(this can take a while)
+[09/21/2018 22:46:51 PM] Launching sm..
+[09/21/2018 22:46:51 PM] Dataset: sub_sample.csv
+[09/21/2018 22:46:51 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/21/2018 22:46:51 PM] Read data: (39, 7) sub_sample.csv
+[09/21/2018 22:46:51 PM] Note: Found non-NA records: (39, 7)
+[09/21/2018 22:46:52 PM] PID is: 599.0, with type: float64
+[09/21/2018 22:46:56 PM] => Path extraction..(this can take a while)
+[09/21/2018 22:51:48 PM] Launching sm..
+[09/21/2018 22:51:48 PM] Dataset: sub_sample.csv
+[09/21/2018 22:51:48 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/21/2018 22:51:48 PM] Read data: (39, 7) sub_sample.csv
+[09/21/2018 22:51:48 PM] Note: Found non-NA records: (39, 7)
+[09/21/2018 22:51:48 PM] PID is: 599.0, with type: float64
+[09/21/2018 22:51:52 PM] => Path extraction..(this can take a while)
+[09/21/2018 22:56:25 PM] Launching sm..
+[09/21/2018 22:56:25 PM] Dataset: sub_sample.csv
+[09/21/2018 22:56:25 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/21/2018 22:56:25 PM] Read data: (39, 7) sub_sample.csv
+[09/21/2018 22:56:25 PM] Note: Found non-NA records: (39, 7)
+[09/21/2018 22:56:25 PM] PID is: 599.0, with type: float64
+[09/21/2018 22:56:29 PM] => Path extraction..(this can take a while)
+[09/21/2018 23:07:18 PM] Launching sm..
+[09/21/2018 23:07:18 PM] Dataset: sub_sample.csv
+[09/21/2018 23:07:18 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/21/2018 23:07:18 PM] Read data: (39, 7) sub_sample.csv
+[09/21/2018 23:07:18 PM] Note: Found non-NA records: (39, 7)
+[09/21/2018 23:07:18 PM] PID is: 599.0, with type: float64
+[09/21/2018 23:07:22 PM] => Path extraction..(this can take a while)
+[09/21/2018 23:15:07 PM] Launching sm..
+[09/21/2018 23:15:07 PM] Dataset: sub_sample.csv
+[09/21/2018 23:15:07 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/21/2018 23:15:07 PM] Read data: (39, 7) sub_sample.csv
+[09/21/2018 23:15:07 PM] Note: Found non-NA records: (39, 7)
+[09/21/2018 23:15:08 PM] PID is: 599.0, with type: float64
+[09/21/2018 23:15:12 PM] => Path extraction..(this can take a while)
+[09/21/2018 23:20:08 PM] Launching sm..
+[09/21/2018 23:20:08 PM] Dataset: sub_sample.csv
+[09/21/2018 23:20:08 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/21/2018 23:20:08 PM] Read data: (39, 7) sub_sample.csv
+[09/21/2018 23:20:08 PM] Note: Found non-NA records: (39, 7)
+[09/21/2018 23:20:09 PM] PID is: 599.0, with type: float64
+[09/21/2018 23:20:13 PM] => Path extraction..(this can take a while)
+[09/21/2018 23:25:21 PM] Launching sm..
+[09/21/2018 23:25:21 PM] Dataset: sub_sample.csv
+[09/21/2018 23:25:21 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/21/2018 23:25:21 PM] Read data: (39, 7) sub_sample.csv
+[09/21/2018 23:25:21 PM] Note: Found non-NA records: (39, 7)
+[09/21/2018 23:25:21 PM] PID is: 599.0, with type: float64
+[09/21/2018 23:25:25 PM] => Path extraction..(this can take a while)
+[09/21/2018 23:31:55 PM] Launching sm..
+[09/21/2018 23:31:55 PM] Dataset: sub_sample.csv
+[09/21/2018 23:31:55 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/21/2018 23:31:55 PM] Read data: (39, 7) sub_sample.csv
+[09/21/2018 23:31:55 PM] Note: Found non-NA records: (39, 7)
+[09/21/2018 23:31:55 PM] PID is: 599.0, with type: float64
+[09/21/2018 23:32:00 PM] => Path extraction..(this can take a while)
+[09/21/2018 23:33:14 PM] Launching sm..
+[09/21/2018 23:33:14 PM] Dataset: sub_sample.csv
+[09/21/2018 23:33:14 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/21/2018 23:33:14 PM] Read data: (39, 7) sub_sample.csv
+[09/21/2018 23:33:14 PM] Note: Found non-NA records: (39, 7)
+[09/21/2018 23:33:14 PM] PID is: 599.0, with type: float64
+[09/21/2018 23:33:18 PM] => Path extraction..(this can take a while)

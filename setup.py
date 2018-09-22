@@ -11,6 +11,9 @@ from os.path import join, exists, dirname, abspath, expanduser
 from Cython.Build import cythonize
 from numpy import get_include
 from setuptools import setup, Extension, find_packages
+#for optimzation
+import Cython.Compiler.Options
+Cython.Compiler.Options.annotate = True
 
 _wd = abspath(os.curdir)
 base = abspath(dirname(__file__))
@@ -65,6 +68,14 @@ ext = [
 	Extension(
 		name='algorithms.sm.rel_closure_2',
 		sources=['algorithms/sm/rel_closure_2.pyx'],
+		include_dirs=_incl,
+		extra_compile_args=['-w'],
+		extra_link_args=['-w']
+	),
+ 
+     Extension(
+		name='algorithms.sm.yenKSP',
+		sources=['algorithms/sm/yenKSP.pyx'],
 		include_dirs=_incl,
 		extra_compile_args=['-w'],
 		extra_link_args=['-w']

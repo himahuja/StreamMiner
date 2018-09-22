@@ -1,11 +1,7 @@
 # coding: utf-8
-import heapq
-import sys
-import os
-import argparse
+import argparse, gc, heapq, os, sys, warnings
 import numpy as np
 import pandas as pd
-import warnings
 import ujson as json
 import logging as log
 from copy import copy
@@ -15,8 +11,7 @@ warnings.filterwarnings("ignore", message="numpy.dtype size changed")
 warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
 ###############################################################
 from pandas import DataFrame, Series
-from os.path import expanduser, abspath, isfile, isdir, basename, splitext, \
-	dirname, join, exists
+from os.path import expanduser, abspath, isfile, isdir, basename, splitext, dirname, join, exists
 from time import time
 from datetime import date
 import cPickle as pkl
@@ -24,8 +19,7 @@ import cPickle as pkl
 from datastructures.rgraph import Graph, weighted_degree
 #####################################
 from time import time
-from os.path import exists, join, abspath, expanduser, basename, dirname, \
-	isdir, splitext
+from os.path import exists, join, abspath, expanduser, basename, dirname, isdir, splitext
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.feature_selection import mutual_info_classif, SelectKBest
 from sklearn.linear_model import LogisticRegression
@@ -39,6 +33,7 @@ from datastructures.relationalpath_sm import RelationalPathSM
 from algorithms.sm.rel_closure_2 import relational_closure_sm as relclosure_sm
 from algorithms.pra.pra_mining import find_best_model
 ##############################################
+from algorithms.sm.yenKSP import yenKSP
 
 # data types for int and float
 _short = np.int16
@@ -322,7 +317,7 @@ def extract_paths_sm(Gv, Gr, triples, y, features=None):
         sid, pid, oid = triple['sid'], triple['pid'], triple['oid']
         label = y[idx]
         triple_feature = dict()
-        discovered_paths = yenKSP5(Gv, Gr, sid, pid, oid, K = 5)
+        discovered_paths = yenKSP(Gv, Gr, sid, pid, oid, K = 5)
         for path in discovered_paths:
             print path
             ff = tuple(path.relational_path)
@@ -336,71 +331,11 @@ def extract_paths_sm(Gv, Gr, triples, y, features=None):
                     raise Exception("Unknown class label: {}".format(label))
             triple_feature[ff] = triple_feature.get(ff, 0) + 1
         measurements.append(triple_feature)
+        gc.collect()
     print ''
     if return_features:
         return features, pos_features, neg_features, measurements
     return measurements
-
-# ██   ██ ███████ ██████
-# ██  ██  ██      ██   ██
-# █████   ███████ ██████
-# ██  ██       ██ ██
-# ██   ██ ███████ ██
-
-def yenKSP5(Gv, Gr, sid, pid, oid, K = 5):
-	discovered_paths = []
-	weight_stack, path_stack, rel_stack = relclosure_sm(Gv, Gr, int(sid), int(pid), int(oid), kind='metric', linkpred = False)
-	if rel_stack == [-1]:
-		## if the first shortest path is empty, retuen empty discoverd_paths
-		return discovered_paths
-	A = [{'path_total_cost': np.sum(weight_stack[:-1]),
-		'path': path_stack,
-		'path_rel': rel_stack,
-		'path_weights': weight_stack}]
-	B = []
-	removed_edges = []
-	removed_nodes = []
-	for k in xrange(1, K): #for the k-th path, it assumes all paths 1..k-1 are available
-		for i in xrange(0, len(A[-1]['path'])-1):
-			# the spurnode ranges from first node of the previous (k-1) shortest path to its next to last node.
-			spurNode = A[-1]['path'][i]
-			rootPath = A[-1]['path'][:i+1]
-			rootPathRel = A[-1]['path_rel'][:i+1]
-			rootPathWeights = A[-1]['path_weights'][:i+1]
-			# print "SpurNode: {}, Rootpath: {}".format(spurNode, rootPath)
-			removed_edges[:] = []
-			removed_nodes[:] = []
-			for path_dict in A:
-				if len(path_dict['path']) > i and rootPath == path_dict['path'][:i+1]:
-					removed_edges.extend( delete_edge(Gv, Gr, path_dict['path'][i], path_dict['path_rel'][i+1], path_dict['path'][i+1]) )
-			for rootPathNode in rootPath[:-1]:
-				removed_nodes.extend( delete_node(Gv, Gr, rootPathNode) )
-			spurPathWeights, spurPath, spurPathRel = relclosure_sm(Gv, Gr, int(spurNode), int(pid), int(oid), kind='metric', linkpred = False)
-			if spurPath and spurPathRel != [-1]:
-				totalPath = rootPath[:-1] + spurPath
-				totalDist = np.sum(rootPathWeights[:-1]) + np.sum(spurPathWeights[:-1])
-				totalWeights = rootPathWeights[:-1] + spurPathWeights[:]
-				totalPathRel = rootPathRel[:] + spurPathRel[1:]
-				potential_k = {'path_total_cost': totalDist,
-								'path': totalPath,
-								'path_rel': totalPathRel,
-								'path_weights': totalWeights}
-				if not (potential_k in B or potential_k in A):
-					# removes repititive paths in A & B
-					B.append(potential_k)
-			removed_nodes.reverse()
-			add_node(Gv, Gr, removed_nodes)
-			removed_edges.reverse()
-			add_edge(Gv, Gr, removed_edges)
-		if len(B):
-			B = sorted(B, key=lambda k: k['path_total_cost'])
-			A.append(B[0])
-			B.pop(0)
-		else:
-			break
-	for path_dict in A:
-		discovered_paths.append(RelationalPathSM(sid, pid, oid, path_dict['path_total_cost'], len(path_dict['path'])-1, path_dict['path'], path_dict['path_rel'], path_dict['path_weights']))
-	return discovered_paths
 
 def main(args=None):
 	parser = argparse.ArgumentParser(
