@@ -1,0 +1,21 @@
+[09/21/2018 21:25:41 PM] Launching sm..
+[09/21/2018 21:25:41 PM] Dataset: sub_sample.csv
+[09/21/2018 21:25:41 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/21/2018 21:25:41 PM] Read data: (39, 7) sub_sample.csv
+[09/21/2018 21:25:41 PM] Note: Found non-NA records: (39, 7)
+[09/21/2018 21:25:43 PM] PID is: 599.0, with type: float64
+[09/21/2018 21:25:45 PM] => Removing predicate 599.0 from KG.
+
+[09/21/2018 21:25:47 PM] Constructing adjacency matrix for: 599.0
+[09/21/2018 21:27:57 PM] => Path extraction..(this can take a while)
+[09/21/2018 21:45:34 PM] P: +:34, -:0, unique tot:34
+[09/21/2018 21:45:34 PM] Time taken: 1056.99s
+
+[09/21/2018 21:45:34 PM] => Path selection..
+[09/21/2018 21:45:34 PM] D: +:34, -:0, tot:34
+[09/21/2018 21:45:34 PM] Time taken: 0.11s
+
+[09/21/2018 21:45:34 PM] => Model building..
+[09/21/2018 21:45:35 PM] #Features: 34, best-AUROC: 0.89744
+[09/21/2018 21:45:35 PM] Time taken: 0.44s
+
