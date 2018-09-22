@@ -1,0 +1,7 @@
+[09/22/2018 00:09:37 AM] Launching sm..
+[09/22/2018 00:09:37 AM] Dataset: Player_vs_Team_NBA.csv
+[09/22/2018 00:09:37 AM] Output dir: /home/alex/Documents/streamminer/output
+[09/22/2018 00:09:37 AM] Read data: (164, 7) Player_vs_Team_NBA.csv
+[09/22/2018 00:09:37 AM] Note: Found non-NA records: (164, 7)
+[09/22/2018 00:09:37 AM] PID is: 599.0, with type: float64
+[09/22/2018 00:09:42 AM] => Path extraction..(this can take a while)

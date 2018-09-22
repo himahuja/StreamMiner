@@ -1,0 +1,14 @@
+[09/22/2018 00:08:25 AM] Launching sm..
+[09/22/2018 00:08:25 AM] Dataset: sample.csv
+[09/22/2018 00:08:25 AM] Output dir: /home/alex/Documents/streamminer/output
+[09/22/2018 00:08:25 AM] Read data: (104, 7) sample.csv
+[09/22/2018 00:08:25 AM] Note: Found non-NA records: (104, 7)
+[09/22/2018 00:08:25 AM] PID is: 599.0, with type: float64
+[09/22/2018 00:08:30 AM] => Path extraction..(this can take a while)
+[09/22/2018 01:01:20 AM] Launching sm..
+[09/22/2018 01:01:20 AM] Dataset: sample.csv
+[09/22/2018 01:01:20 AM] Output dir: /home/alex/Documents/streamminer/output
+[09/22/2018 01:01:20 AM] Read data: (104, 7) sample.csv
+[09/22/2018 01:01:20 AM] Note: Found non-NA records: (104, 7)
+[09/22/2018 01:01:22 AM] Relation is: (392035.0, 599.0, 2115741.0)
+[09/22/2018 01:01:27 AM] => Path extraction..(this can take a while)

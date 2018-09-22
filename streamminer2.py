@@ -51,8 +51,8 @@ DATE = '{}'.format(date.today())
 # KG - DBpedia
 HOME = abspath(expanduser('~/Documents/streamminer/data/'))
 if not exists(HOME):
-	print 'Data directory not found: %s' % HOME
-	print 'and enter the directory path below.'
+	log.error('Data directory not found: %s'.format(HOME))
+	log.error('and enter the directory path below.')
 	data_dir = raw_input('\nPlease enter data directory path: ')
 	if data_dir != '':
 		data_dir = abspath(expanduser(data_dir))
@@ -78,67 +78,67 @@ assert exists(RELSIMPATH)
 # ██    ██    ██    ██ ██      ██    ██       ██
 #  ██████     ██    ██ ███████ ██    ██       ██
 
-def weighted_degree(arr, weight='logdegree'):
-	"""Returns a weighted version of the array."""
-	if weight == 'degree':
-		arr = 1./(1 + arr)
-	elif weight == 'logdegree':
-		arr = 1./(1 + np.log(arr))
-	else:
-		raise ValueError('Unknown weight function.')
-	return arr
-
-def delete_node(Gv, Gr, s):
-    # for now it just deletes outward edges from the s node
-    s = int(s)
-    deletedNodes = []
-    start = Gr.indptr[s]
-    end = Gr.indptr[s+1]
-    tmp = Gv.data[start:end]
-    # deleting data values
-    Gv.data[start:end] = np.inf
-    deletedNodes.append((s, tmp))
-    return deletedNodes
-
-def add_node(Gv, Gr, removedNodes):
-    for removedNode in removedNodes:
-        start = Gr.indptr[removedNode[0]]
-        end = Gr.indptr[removedNode[0]+1]
-        Gv.data[start:end] = removedNode[1]
-
-def delete_edge(Gv, Gr, s, p, o):
-	s, p, o = int(s), int(p), int(o)
-	deletedEdges = []
-
-	# deleting the edge: s --> o
-	start = Gr.indptr[s]
-	end = Gr.indptr[s+1]
-	neighbors = Gr.indices[start:end]
-	rels = Gr.data[start:end]
-	pos = start + np.where(np.logical_and(neighbors == o, rels == p))
-	deletedEdges.append((s, o, p, Gv.data[pos]))
-	Gv.data[pos] = np.inf
-
-	# deleting the edge: o --> s
-	start = Gr.indptr[o]
-	end = Gr.indptr[o+1]
-	neighbors = Gr.indices[start:end]
-	rels = Gr.data[start:end]
-	pos = start + np.where(np.logical_and(neighbors == s, rels == p))
-
-	deletedEdges.append((o, s, p, Gv.data[pos]))
-	Gv.data[pos] = np.inf
-
-	return deletedEdges
-
-def add_edge(Gv, Gr, removed_edges):
-    for removed_edge in removed_edges:
-        s, o, p, cost = removed_edge
-        start = Gr.indptr[s]
-        end = Gr.indptr[s+1]
-        neighbors = Gr.indices[start:end]
-        rels = Gr.data[start:end]
-        Gv.data[start + np.where(np.logical_and(neighbors == o, rels == p))] = cost
+#def weighted_degree(arr, weight='logdegree'):
+#	"""Returns a weighted version of the array."""
+#	if weight == 'degree':
+#		arr = 1./(1 + arr)
+#	elif weight == 'logdegree':
+#		arr = 1./(1 + np.log(arr))
+#	else:
+#		raise ValueError('Unknown weight function.')
+#	return arr
+#
+#def delete_node(Gv, Gr, s):
+#    # for now it just deletes outward edges from the s node
+#    s = int(s)
+#    deletedNodes = []
+#    start = Gr.indptr[s]
+#    end = Gr.indptr[s+1]
+#    tmp = Gv.data[start:end]
+#    # deleting data values
+#    Gv.data[start:end] = np.inf
+#    deletedNodes.append((s, tmp))
+#    return deletedNodes
+#
+#def add_node(Gv, Gr, removedNodes):
+#    for removedNode in removedNodes:
+#        start = Gr.indptr[removedNode[0]]
+#        end = Gr.indptr[removedNode[0]+1]
+#        Gv.data[start:end] = removedNode[1]
+#
+#def delete_edge(Gv, Gr, s, p, o):
+#	s, p, o = int(s), int(p), int(o)
+#	deletedEdges = []
+#
+#	# deleting the edge: s --> o
+#	start = Gr.indptr[s]
+#	end = Gr.indptr[s+1]
+#	neighbors = Gr.indices[start:end]
+#	rels = Gr.data[start:end]
+#	pos = start + np.where(np.logical_and(neighbors == o, rels == p))
+#	deletedEdges.append((s, o, p, Gv.data[pos]))
+#	Gv.data[pos] = np.inf
+#
+#	# deleting the edge: o --> s
+#	start = Gr.indptr[o]
+#	end = Gr.indptr[o+1]
+#	neighbors = Gr.indices[start:end]
+#	rels = Gr.data[start:end]
+#	pos = start + np.where(np.logical_and(neighbors == s, rels == p))
+#
+#	deletedEdges.append((o, s, p, Gv.data[pos]))
+#	Gv.data[pos] = np.inf
+#
+#	return deletedEdges
+#
+#def add_edge(Gv, Gr, removed_edges):
+#    for removed_edge in removed_edges:
+#        s, o, p, cost = removed_edge
+#        start = Gr.indptr[s]
+#        end = Gr.indptr[s+1]
+#        neighbors = Gr.indices[start:end]
+#        rels = Gr.data[start:end]
+#        Gv.data[start + np.where(np.logical_and(neighbors == o, rels == p))] = cost
 
 # ██████   █████  ███████ ███████     ███████ ███    ███
 # ██   ██ ██   ██ ██      ██          ██      ████  ████
@@ -180,8 +180,7 @@ def train_model_sm(G, triples, relsim, use_interpretable_features=False, cv=10):
 	triples = triples[['sid', 'pid', 'oid']].to_dict(orient='records')
 
 	pid = triples[0]['pid']
-	log.info('PID is: {}, with type: {}'.format(pid, pid.dtype))
-	#print 'PID is: {}, with type: {}'.format(pid, pid.dtype)
+	log.info('Relation is: ({}, {}, {})'.format(triples[0]['sid'], triples[0]['pid'], triples[0]['oid']))
 
 	if np.DataSource().exists(join(HOME, "sm", "G_fil_val_{}.npz".format(int(pid)) ))\
 	   and np.DataSource().exists(join(HOME, "sm", "G_fil_rel_{}.npz".format(int(pid)) )):
@@ -199,12 +198,11 @@ def train_model_sm(G, triples, relsim, use_interpretable_features=False, cv=10):
 		specificity_wt = indegsim[targets] # specificity
 
 		## Removing all the edges with the predicte p in between any nodes.
-		log.info('=> Removing predicate {} from KG.\n'.format(pid))
+		log.info('=> Removing predicate {} from KG.\n\n'.format(pid))
 		eraseedges_mask = ((G.csr.indices - (G.csr.indices % G.N)) / G.N) == pid
 		specificity_wt[eraseedges_mask] = 0
 		relsim_wt[eraseedges_mask] = 0
 		G.csr.data = specificity_wt.copy()
-		print ''
 
 		G.csr.data = np.multiply(relsim_wt, G.csr.data)
 		log.info("Constructing adjacency matrix for: {}".format(pid))
@@ -248,8 +246,7 @@ def train_model_sm(G, triples, relsim, use_interpretable_features=False, cv=10):
 	vec = DictVectorizer()
 	X = vec.fit_transform(measurements)
 	n, m = X.shape
-	log.info('Time taken: {:.2f}s\n'.format(time() - t1))
-	print ''
+	log.info('Time taken: {:.2f}s\n\n'.format(time() - t1))
 
 	########### Path selection ###############
 	log.info('=> Path selection..')
@@ -265,8 +262,7 @@ def train_model_sm(G, triples, relsim, use_interpretable_features=False, cv=10):
 		if feature in neg_features:
 			select_neg_features.add(feature)
 	log.info('D: +:{}, -:{}, tot:{}'.format(len(select_pos_features), len(select_neg_features), X_select.shape[1]))
-	log.info('Time taken: {:.2f}s\n'.format(time() - t1))
-	print ''
+	log.info('Time taken: {:.2f}s\n\n'.format(time() - t1))
 
 	# Fact interpretation
 	if use_interpretable_features and len(select_neg_features) > 0:
@@ -289,14 +285,10 @@ def train_model_sm(G, triples, relsim, use_interpretable_features=False, cv=10):
 
 	# Model creation
 	log.info('=> Model building..')
-	#print '=> Model building..'
 	t1 = time()
 	model = find_best_model(X_select, y, cv=cv)
 	log.info('#Features: {}, best-AUROC: {:.5f}'.format(X_select.shape[1], model['best_score']))
-	#print '#Features: {}, best-AUROC: {:.5f}'.format(X_select.shape[1], model['best_score'])
 	log.info('Time taken: {:.2f}s\n'.format(time() - t1))
-	#print 'Time taken: {:.2f}s'.format(time() - t1)
-	#print ''
 
 	return vec, model
 
@@ -319,7 +311,7 @@ def extract_paths_sm(Gv, Gr, triples, y, features=None):
         triple_feature = dict()
         discovered_paths = yenKSP(Gv, Gr, sid, pid, oid, K = 5)
         for path in discovered_paths:
-            print path
+            log.info(path)
             ff = tuple(path.relational_path)
             if ff not in features:
                 features.add(ff)
@@ -332,7 +324,7 @@ def extract_paths_sm(Gv, Gr, triples, y, features=None):
             triple_feature[ff] = triple_feature.get(ff, 0) + 1
         measurements.append(triple_feature)
         gc.collect()
-    print ''
+    log.info("\n")
     if return_features:
         return features, pos_features, neg_features, measurements
     return measurements
@@ -375,7 +367,6 @@ def main(args=None):
 	spo_df = df.dropna(axis=0, subset=['sid', 'pid', 'oid'])
 	log.info('Note: Found non-NA records: {}'.format(spo_df.shape))
 	df = spo_df[['sid', 'pid', 'oid']].values
-	subs, preds, objs  = df[:,0].astype(_int), df[:,1].astype(_int), df[:,2].astype(_int)
 
 	# load knowledge graph
 	G = Graph.reconstruct(PATH, SHAPE, sym=True) # undirected
@@ -385,7 +376,6 @@ def main(args=None):
 
 	if args.method == 'sm':
 		vec, model = train_model_sm(G, spo_df, relsim) # train
-		print 'Time taken: {:.2f}s\n'.format(time() - t1)
 		log.info('Time taken: {:.2f}s\n'.format(time() - t1))
 		# save model
 		predictor = { 'dictvectorizer': vec, 'model': model }
@@ -393,10 +383,10 @@ def main(args=None):
 			outpkl = join(args.outdir, 'out_streamminer_{}_{}.pkl'.format(base, DATE))
 			with open(outpkl, 'wb') as g:
 				pkl.dump(predictor, g, protocol=pkl.HIGHEST_PROTOCOL)
-			print 'Saved: {}'.format(outpkl)
+			log.info('Saved: {}'.format(outpkl))
 		except IOError, e:
 			raise e
-	print '\nDone!\n'
+	log.info('\nDone!\n')
 
 if __name__ == '__main__':
 	main()
