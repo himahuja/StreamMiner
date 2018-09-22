@@ -18,6 +18,7 @@ Download data from the following URL http://carl.cs.indiana.edu/data/fact-checki
 |---------------------------------------|-------------|----------|--------|--------|
 | cross_US_Presidents_vs_First_Lady.csv | 1.0000      | 1.0000   | 0.9805 | 0.9832 |
 | Player_vs_Team_NBA.csv                | 0.96341     | 0.9231   | 0.9996 | 0.9994 |
+| predpath_civil_war_battle.csv         | 0.67044     | 0.9951   | 0.7780 | 0.8634 |
 | predpath_state_capital.csv            | 1.0000      | 0.9968   | 1.0000 | 1.0000 |
 | predpath_vice_president.csv           | 0.85365     | 0.9440   | 0.7780 | 0.8729 |
 
@@ -38,7 +39,7 @@ Prashant Shiralkar, Alessandro Flammini, Filippo Menczer, Giovanni Luca Ciampagl
 
 Our work would not be possible without the relentless work of many researchers, and in particular Prashant Shiralkar who has contributed much to the field and whose [Knowledge Stream GitHub repo](https://github.com/shiralkarprashant/knowledgestream) was indispensable to our work.
 
-Special thanks are also in order to the [Indiana University Bloomington Networks & agents Network (NaN) group](http://cnets.indiana.edu/groups/nan/) for providing a [data repository](http://carl.cs.indiana.edu/data/) which we utilized.
+Special thanks are also in order to the [Indiana University Bloomington Networks & agents Network (NaN) group](http://cnets.indiana.edu/groups/nan/) for providing a [data repository](http://carl.cs.indiana.edu/data/) which we utilized and both [Google Relation Extraction Corpora (GREC)](https://ai.googleblog.com/2013/04/50000-lessons-on-how-to-read-relation.html) and [WSDM Cup 2017 Triple Scoring challenge corpus](https://www.wsdm-cup-2017.org/triple-scoring.html) who provide relational triples we utlized in evaluating our algorithm
 
 ## Helpful Resources
 
