@@ -4,7 +4,7 @@ A class to create instances of relational paths produced by closure algorithms.
 import numpy as np
 
 ROUND_DIGITS = 15
-rel_delim = " -{}-> "
+rel_delim = " --{}-> "
 node_delim = "[{}]"
 
 class RelationalPathSM:
@@ -19,9 +19,7 @@ class RelationalPathSM:
 		self.weights = caps
 
 	def __str__(self):
-		terminal = ""
-		terminal = self.pretty()
-		return terminal
+		return self.pretty()
 
 	def pretty(self, nodes=None, relations=None):
 		"""
@@ -38,11 +36,7 @@ class RelationalPathSM:
 		relations: dict
 			A dictionary of relation index and name pairs.
 		"""
-		terminal = ""
-		print "SPO: [ {} {} {}], Score: {}, Path ({}):".format(
-			self.source, self.relation, self.target,
-			round(self.score, ROUND_DIGITS), self.pathlen
-		),
+		terminal = "SPO: [ {} {} {}], Score: {}, Length: ({})\n".format(self.source, self.relation, self.target, round(self.score, ROUND_DIGITS), self.pathlen)
 		for i in xrange(1 + self.pathlen):
 			node = self.path[i]
 

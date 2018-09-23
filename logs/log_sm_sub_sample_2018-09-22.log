@@ -265,3 +265,101 @@ Done!
 [09/22/2018 06:38:15 AM] Note: Found non-NA records: (39, 7)
 [09/22/2018 06:38:15 AM] Relation is: (392035.0, 599.0, 2115741.0)
 [09/22/2018 06:38:21 AM] => Path extraction..(this can take a while)
+[09/22/2018 23:07:22 PM] Launching sm..
+[09/22/2018 23:07:22 PM] Dataset: sub_sample.csv
+[09/22/2018 23:07:22 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/22/2018 23:07:22 PM] Read data: (39, 7) sub_sample.csv
+[09/22/2018 23:07:22 PM] Note: Found non-NA records: (39, 7)
+[09/22/2018 23:07:23 PM] Relation is: (392035.0, 599.0, 2115741.0)
+[09/22/2018 23:07:28 PM] => Path extraction..(this can take a while)
+[09/22/2018 23:08:42 PM] Launching sm..
+[09/22/2018 23:08:42 PM] Dataset: sub_sample.csv
+[09/22/2018 23:08:42 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/22/2018 23:08:42 PM] Read data: (39, 7) sub_sample.csv
+[09/22/2018 23:08:42 PM] Note: Found non-NA records: (39, 7)
+[09/22/2018 23:08:43 PM] Relation is: (392035.0, 599.0, 2115741.0)
+[09/22/2018 23:08:47 PM] => Path extraction..(this can take a while)
+[09/22/2018 23:09:41 PM] Launching sm..
+[09/22/2018 23:09:41 PM] Dataset: sub_sample.csv
+[09/22/2018 23:09:41 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/22/2018 23:09:41 PM] Read data: (39, 7) sub_sample.csv
+[09/22/2018 23:09:41 PM] Note: Found non-NA records: (39, 7)
+[09/22/2018 23:09:41 PM] Relation is: (392035.0, 599.0, 2115741.0)
+[09/22/2018 23:09:45 PM] => Path extraction..(this can take a while)
+[09/22/2018 23:20:25 PM] Launching sm..
+[09/22/2018 23:20:25 PM] Dataset: sub_sample.csv
+[09/22/2018 23:20:25 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/22/2018 23:20:25 PM] Read data: (39, 7) sub_sample.csv
+[09/22/2018 23:20:25 PM] Note: Found non-NA records: (39, 7)
+[09/22/2018 23:20:25 PM] Relation is: (392035.0, 599.0, 2115741.0)
+[09/22/2018 23:20:30 PM] => Path extraction..(this can take a while)
+[09/22/2018 23:23:15 PM] Launching sm..
+[09/22/2018 23:23:15 PM] Dataset: sub_sample.csv
+[09/22/2018 23:23:15 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/22/2018 23:23:15 PM] Read data: (39, 7) sub_sample.csv
+[09/22/2018 23:23:15 PM] Note: Found non-NA records: (39, 7)
+[09/22/2018 23:23:16 PM] Relation is: (392035.0, 599.0, 2115741.0)
+[09/22/2018 23:23:20 PM] => Path extraction..(this can take a while)
+[09/22/2018 23:25:19 PM] Launching sm..
+[09/22/2018 23:25:19 PM] Dataset: sub_sample.csv
+[09/22/2018 23:25:19 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/22/2018 23:25:19 PM] Read data: (39, 7) sub_sample.csv
+[09/22/2018 23:25:19 PM] Note: Found non-NA records: (39, 7)
+[09/22/2018 23:25:20 PM] Relation is: (392035.0, 599.0, 2115741.0)
+[09/22/2018 23:25:24 PM] => Path extraction..(this can take a while)
+[09/22/2018 23:25:32 PM] Launching sm..
+[09/22/2018 23:25:32 PM] Dataset: sub_sample.csv
+[09/22/2018 23:25:32 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/22/2018 23:25:32 PM] Read data: (39, 7) sub_sample.csv
+[09/22/2018 23:25:32 PM] Note: Found non-NA records: (39, 7)
+[09/22/2018 23:25:33 PM] Relation is: (392035.0, 599.0, 2115741.0)
+[09/22/2018 23:25:53 PM] Launching sm..
+[09/22/2018 23:25:53 PM] Dataset: sub_sample.csv
+[09/22/2018 23:25:53 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/22/2018 23:25:53 PM] Read data: (39, 7) sub_sample.csv
+[09/22/2018 23:25:53 PM] Note: Found non-NA records: (39, 7)
+[09/22/2018 23:27:26 PM] Launching sm..
+[09/22/2018 23:27:26 PM] Dataset: sub_sample.csv
+[09/22/2018 23:27:26 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/22/2018 23:27:26 PM] Read data: (39, 7) sub_sample.csv
+[09/22/2018 23:27:26 PM] Note: Found non-NA records: (39, 7)
+[09/22/2018 23:27:30 PM] Relation is: (392035.0, 599.0, 2115741.0)
+[09/22/2018 23:27:42 PM] => Path extraction..(this can take a while)
+[09/22/2018 23:30:16 PM] Launching sm..
+[09/22/2018 23:30:16 PM] Dataset: sub_sample.csv
+[09/22/2018 23:30:16 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/22/2018 23:30:16 PM] Read data: (39, 7) sub_sample.csv
+[09/22/2018 23:30:16 PM] Note: Found non-NA records: (39, 7)
+[09/22/2018 23:30:18 PM] Relation is: (392035.0, 599.0, 2115741.0)
+[09/22/2018 23:30:23 PM] => Path extraction..(this can take a while)
+[09/22/2018 23:36:33 PM] Launching sm..
+[09/22/2018 23:36:33 PM] Dataset: sub_sample.csv
+[09/22/2018 23:36:33 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/22/2018 23:36:33 PM] Read data: (39, 7) sub_sample.csv
+[09/22/2018 23:36:33 PM] Note: Found non-NA records: (39, 7)
+[09/22/2018 23:36:35 PM] Relation is: (392035.0, 599.0, 2115741.0)
+[09/22/2018 23:36:40 PM] => Path extraction..(this can take a while)
+[09/22/2018 23:39:46 PM] SPO: [ 392035 599 2115741], Score: 0.0, Length: (5)
+[392035] --123 (0.03)-> [3845794] --123 (0.04)-> [3212007] --462 (0.05)-> [769614] --462 (0.11)-> [532169] --236 (0.19)-> [2115741]
+[09/22/2018 23:39:46 PM] SPO: [ 392035 599 2115741], Score: 0.0, Length: (5)
+[392035] --123 (0.03)-> [3845794] --123 (0.04)-> [3212007] --462 (0.05)-> [769614] --462 (0.11)-> [532169] --236 (0.19)-> [2115741]
+[09/22/2018 23:39:46 PM] SPO: [ 392035 599 2115741], Score: 0.0, Length: (5)
+[392035] --123 (0.03)-> [3845794] --123 (0.04)-> [3212007] --462 (0.05)-> [769614] --462 (0.11)-> [532169] --236 (0.19)-> [2115741]
+[09/22/2018 23:39:46 PM] SPO: [ 392035 599 2115741], Score: 0.0, Length: (5)
+[392035] --123 (0.03)-> [3845794] --123 (0.04)-> [3212007] --462 (0.05)-> [769614] --462 (0.11)-> [532169] --236 (0.19)-> [2115741]
+[09/22/2018 23:39:46 PM] SPO: [ 392035 599 2115741], Score: 0.0, Length: (5)
+[392035] --123 (0.03)-> [3845794] --123 (0.04)-> [3212007] --462 (0.05)-> [769614] --462 (0.11)-> [532169] --236 (0.19)-> [2115741]
+[09/22/2018 23:55:13 PM] Launching sm..
+[09/22/2018 23:55:13 PM] Dataset: sub_sample.csv
+[09/22/2018 23:55:13 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/22/2018 23:55:13 PM] Read data: (39, 7) sub_sample.csv
+[09/22/2018 23:55:13 PM] Note: Found non-NA records: (39, 7)
+[09/22/2018 23:55:13 PM] Relation is: (392035.0, 599.0, 2115741.0)
+[09/22/2018 23:55:17 PM] => Path extraction..(this can take a while)
+[09/22/2018 23:56:53 PM] Launching sm..
+[09/22/2018 23:56:53 PM] Dataset: sub_sample.csv
+[09/22/2018 23:56:53 PM] Output dir: /home/alex/Documents/streamminer/output
+[09/22/2018 23:56:53 PM] Read data: (39, 7) sub_sample.csv
+[09/22/2018 23:56:53 PM] Note: Found non-NA records: (39, 7)
+[09/22/2018 23:56:53 PM] Relation is: (392035.0, 599.0, 2115741.0)
+[09/22/2018 23:56:58 PM] => Path extraction..(this can take a while)
