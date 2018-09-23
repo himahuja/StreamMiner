@@ -252,3 +252,16 @@
 [09/22/2018 06:02:38 AM] 
 Done!
 
+[09/22/2018 06:37:42 AM] Launching sm..
+[09/22/2018 06:37:42 AM] Dataset: sub_sample.csv
+[09/22/2018 06:37:42 AM] Output dir: /home/galois/Documents/streamminer/output
+[09/22/2018 06:37:42 AM] Read data: (39, 7) sub_sample.csv
+[09/22/2018 06:37:42 AM] Note: Found non-NA records: (39, 7)
+[09/22/2018 06:37:45 AM] Relation is: (392035.0, 599.0, 2115741.0)
+[09/22/2018 06:38:15 AM] Launching sm..
+[09/22/2018 06:38:15 AM] Dataset: sub_sample.csv
+[09/22/2018 06:38:15 AM] Output dir: /home/galois/Documents/streamminer/output
+[09/22/2018 06:38:15 AM] Read data: (39, 7) sub_sample.csv
+[09/22/2018 06:38:15 AM] Note: Found non-NA records: (39, 7)
+[09/22/2018 06:38:15 AM] Relation is: (392035.0, 599.0, 2115741.0)
+[09/22/2018 06:38:21 AM] => Path extraction..(this can take a while)
