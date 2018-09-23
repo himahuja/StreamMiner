@@ -257,6 +257,7 @@ def extract_paths_sm(Gv, Gr, triples, y, features=None):
                     raise Exception("Unknown class label: {}".format(label))
             triple_feature[ff] = triple_feature.get(ff, 0) + 1
         measurements.append(triple_feature)
+        gc.collect()
     if return_features:
         return features, pos_features, neg_features, measurements
     return measurements

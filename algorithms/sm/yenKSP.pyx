@@ -3,6 +3,8 @@ from algorithms.sm.rel_closure_2 import relational_closure_sm as relclosure_sm
 from datastructures.relationalpath_sm import RelationalPathSM
 
 def yenKSP(Gv, Gr, int sid, int pid, int oid, K = 5):
+    cdef int s, o, p
+    cdef float cost
     discovered_paths = []
     weight_stack, path_stack, rel_stack = relclosure_sm(Gv, Gr, sid, pid, oid, kind='metric', linkpred = False)
     if rel_stack == [-1]:
@@ -17,24 +19,20 @@ def yenKSP(Gv, Gr, int sid, int pid, int oid, K = 5):
     removed_nodes = []
     for k in xrange(1, K): #for the k-th path, it assumes all paths 1..k-1 are available
         for i in xrange(0, len(A[-1]['path'])-1):
-            # the spurnode ranges from first node of the previous (k-1) shortest path to its next to last node.
-#            spurNode = A[-1]['path'][i]
             rootPath = A[-1]['path'][:i+1]
-#            rootPathRel = A[-1]['path_rel'][:i+1]
             rootPathWeights = A[-1]['path_weights'][:i+1]
             removed_edges[:] = []
             removed_nodes[:] = []
             for path_dict in A:
-                if len(path_dict['path']) > i and rootPath == path_dict['path'][:i+1]:
+                if len(path_dict['path']) > i and np.array_equal(rootPath, path_dict['path'][:i+1]):
                     removed_edges.extend( delete_edge(Gv, Gr, path_dict['path'][i], path_dict['path_rel'][i+1], path_dict['path'][i+1]) )
             for rootPathNode in rootPath[:-1]:
-                removed_nodes.append( delete_node(Gv, Gr, rootPathNode) )
+                start = Gr.indptr[s]
+                end = Gr.indptr[s+1]
+                Gv.data[start:end] = np.inf
+                removed_nodes.append( (s, np.copy(Gv.data[start:end])) )
             spurPathWeights, spurPath, spurPathRel = relclosure_sm(Gv, Gr, A[-1]['path'][i], pid, oid, kind='metric', linkpred = False)
             if spurPath and spurPathRel != [-1]:
-#                totalPath = rootPath[:-1] + spurPath
-#                totalDist = np.sum(rootPathWeights[:-1]) + np.sum(spurPathWeights[:-1])
-#                totalWeights = rootPathWeights[:-1] + spurPathWeights[:]
-#                totalPathRel = rootPathRel[:] + spurPathRel[1:]
                 potential_k = {'path_total_cost': np.sum(rootPathWeights[:-1]) + np.sum(spurPathWeights[:-1]),
                                 'path': list(rootPath[:-1] + spurPath),
                                 'path_rel': list(A[-1]['path_rel'][:i+1] + spurPathRel[1:]),
@@ -43,9 +41,18 @@ def yenKSP(Gv, Gr, int sid, int pid, int oid, K = 5):
                     # removes repititive paths in A & B
                     B.append(potential_k)
             removed_nodes.reverse()
-            add_node(Gv, Gr, removed_nodes)
+#            add_node(Gv, Gr, removed_nodes)
+            for removedNode in removed_nodes:
+                start = Gr.indptr[removedNode[0]]
+                end = Gr.indptr[removedNode[0]+1]
+                Gv.data[start:end] = removedNode[1]
             removed_edges.reverse()
-            add_edge(Gv, Gr, removed_edges)
+#            add_edge(Gv, Gr, removed_edges)
+            for removed_edge in removed_edges:
+                s, o, p, cost = removed_edge
+                start = Gr.indptr[s]
+                end = Gr.indptr[s+1]
+                Gv.data[start + np.where(np.logical_and(Gr.indices[start:end] == o, Gr.data[start:end] == p))] = cost
         if len(B):
             mergeSort(B,0,len(B)-1)
             A.append(B[0])
@@ -55,20 +62,6 @@ def yenKSP(Gv, Gr, int sid, int pid, int oid, K = 5):
     for path_dict in A:
         discovered_paths.append(RelationalPathSM(sid, pid, oid, path_dict['path_total_cost'], len(path_dict['path'])-1, path_dict['path'], path_dict['path_rel'], path_dict['path_weights']))
     return discovered_paths
-
-cpdef delete_node(Gv, Gr, int s):
-    # for now it just deletes outward edges from the s node
-    start = Gr.indptr[s]
-    end = Gr.indptr[s+1]
-    # deleting data values
-    Gv.data[start:end] = np.inf
-    return (s, np.copy(Gv.data[start:end]))
-
-def add_node(Gv, Gr, removedNodes):
-    for removedNode in removedNodes:
-        start = Gr.indptr[removedNode[0]]
-        end = Gr.indptr[removedNode[0]+1]
-        Gv.data[start:end] = removedNode[1]
 
 cpdef delete_edge(Gv, Gr, int s, int p, int o):
     cdef int pos
@@ -89,15 +82,6 @@ cpdef delete_edge(Gv, Gr, int s, int p, int o):
     Gv.data[pos] = np.inf
 
     return deletedEdges
-
-def add_edge(Gv, Gr, removed_edges):
-    cdef int s, o, p
-    cdef float cost
-    for removed_edge in removed_edges:
-        s, o, p, cost = removed_edge
-        start = Gr.indptr[s]
-        end = Gr.indptr[s+1]
-        Gv.data[start + np.where(np.logical_and(Gr.indices[start:end] == o, Gr.data[start:end] == p))] = cost
         
 cpdef merge(arr, int l, int m, int r): 
     cdef int n1 = m - l + 1
