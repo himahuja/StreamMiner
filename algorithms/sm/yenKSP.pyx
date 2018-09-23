@@ -4,6 +4,10 @@ cimport numpy as np
 from datastructures.relationalpath_sm import RelationalPathSM
 from algorithms.sm.rel_closure_2 import relational_closure_sm as relclosure_sm
 
+#profiling
+from memory_profiler import profiler
+
+@profile
 cpdef yenKSP(Gv, Gr, int sid, int pid, int oid, int K = 5):
     cdef int s, p, o, pos
     cdef int start, end

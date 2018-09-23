@@ -35,6 +35,10 @@ from algorithms.pra.pra_mining import find_best_model
 ##############################################
 from algorithms.sm.yenKSP import yenKSP
 
+
+# for memory profiling
+from memory_profiler import LogFile, profile
+
 # data types for int and float
 _short = np.int16
 _int = np.int32
@@ -51,17 +55,17 @@ DATE = '{}'.format(date.today())
 # KG - DBpedia
 HOME = abspath(expanduser('~/Documents/streamminer/data/'))
 if not exists(HOME):
-	print 'Data directory not found: %s' % HOME
-	print 'and enter the directory path below.'
-	data_dir = raw_input('\nPlease enter data directory path: ')
-	if data_dir != '':
-		data_dir = abspath(expanduser(data_dir))
-	if not os.path.isdir(data_dir):
-		raise Exception('Entered path "%s" not a directory.' % data_dir)
-	if not exists(data_dir):
-		raise Exception('Directory does not exist: %s' % data_dir)
-	HOME = data_dir
-	# raise Exception('Please set HOME to data directory in algorithms/__main__.py')
+    log.error('Data directory not found: %s'.format(HOME))
+    log.error('and enter the directory path below.')
+    data_dir = raw_input('\nPlease enter data directory path: ')
+    if data_dir != '':
+        data_dir = abspath(expanduser(data_dir))
+    if not os.path.isdir(data_dir):
+        raise Exception('Entered path "%s" not a directory.' % data_dir)
+    if not exists(data_dir):
+        raise Exception('Directory does not exist: %s' % data_dir)
+    HOME = data_dir
+    # raise Exception('Please set HOME to data directory in algorithms/__main__.py')
 PATH = join(HOME, 'kg/_undir/')
 assert exists(PATH)
 SHAPE = (6060993, 6060993, 663)
@@ -72,238 +76,162 @@ RELSIMPATH = join(HOME, 'relsim/coo_mat_sym_2016-10-24_log-tf_tfidf.npy')
 assert exists(RELSIMPATH)
 ##############################################################
 
-# ██    ██ ████████ ██ ██      ██ ████████ ██    ██
-# ██    ██    ██    ██ ██      ██    ██     ██  ██
-# ██    ██    ██    ██ ██      ██    ██      ████
-# ██    ██    ██    ██ ██      ██    ██       ██
-#  ██████     ██    ██ ███████ ██    ██       ██
-
-def weighted_degree(arr, weight='logdegree'):
-	"""Returns a weighted version of the array."""
-	if weight == 'degree':
-		arr = 1./(1 + arr)
-	elif weight == 'logdegree':
-		arr = 1./(1 + np.log(arr))
-	else:
-		raise ValueError('Unknown weight function.')
-	return arr
-
-def delete_node(Gv, Gr, s):
-    # for now it just deletes outward edges from the s node
-    s = int(s)
-    deletedNodes = []
-    start = Gr.indptr[s]
-    end = Gr.indptr[s+1]
-    tmp = Gv.data[start:end]
-    # deleting data values
-    Gv.data[start:end] = np.inf
-    deletedNodes.append((s, tmp))
-    return deletedNodes
-
-def add_node(Gv, Gr, removedNodes):
-    for removedNode in removedNodes:
-        start = Gr.indptr[removedNode[0]]
-        end = Gr.indptr[removedNode[0]+1]
-        Gv.data[start:end] = removedNode[1]
-
-def delete_edge(Gv, Gr, s, p, o):
-	s, p, o = int(s), int(p), int(o)
-	deletedEdges = []
-
-	# deleting the edge: s --> o
-	start = Gr.indptr[s]
-	end = Gr.indptr[s+1]
-	neighbors = Gr.indices[start:end]
-	rels = Gr.data[start:end]
-	pos = start + np.where(np.logical_and(neighbors == o, rels == p))
-	deletedEdges.append((s, o, p, Gv.data[pos]))
-	Gv.data[pos] = np.inf
-
-	# deleting the edge: o --> s
-	start = Gr.indptr[o]
-	end = Gr.indptr[o+1]
-	neighbors = Gr.indices[start:end]
-	rels = Gr.data[start:end]
-	pos = start + np.where(np.logical_and(neighbors == s, rels == p))
-
-	deletedEdges.append((o, s, p, Gv.data[pos]))
-	Gv.data[pos] = np.inf
-
-	return deletedEdges
-
-def add_edge(Gv, Gr, removed_edges):
-    for removed_edge in removed_edges:
-        s, o, p, cost = removed_edge
-        start = Gr.indptr[s]
-        end = Gr.indptr[s+1]
-        neighbors = Gr.indices[start:end]
-        rels = Gr.data[start:end]
-        Gv.data[start + np.where(np.logical_and(neighbors == o, rels == p))] = cost
-
 # ██████   █████  ███████ ███████     ███████ ███    ███
 # ██   ██ ██   ██ ██      ██          ██      ████  ████
 # ██████  ███████ ███████ █████       ███████ ██ ████ ██
 # ██   ██ ██   ██      ██ ██               ██ ██  ██  ██
 # ██████  ██   ██ ███████ ███████     ███████ ██      ██
-
+@profile
 def train_model_sm(G, triples, relsim, use_interpretable_features=False, cv=10):
-	"""
-	Entry point for building a fact-checking classifier.
-	Performs three steps:
-	1. Path extraction (features)
-	2a. Path selection using information gain
-	2b. Filtering most informative discriminative predicate paths
-	3. Building logistic regression model
-	Parameters:
-	-----------
-	G: rgraph
-		Knowledge graph.
-	triples: dataframe
-		A data frame consisting of at least four columns, including
-		sid, pid, oid, class.
-	use_interpretable_features: bool
-		Whether or not to perform 2b.
-	cv: int
-		Number of cross-validation folds.
-	Returns:
-	--------
-	vec: DictVectorizer
-		Useful for preprocessing future triples.
-	model: dict
-		A dictionary containing 'clf' as the built model,
-		and two other key-value pairs, including best parameter
-		and best AUROC score.
-	"""
-	y = triples['class'] # ground truth
-	triples = triples[['sid', 'pid', 'oid']].to_dict(orient='records')
+    """
+    Entry point for building a fact-checking classifier.
+    Performs three steps:
+    1. Path extraction (features)
+    2a. Path selection using information gain
+    2b. Filtering most informative discriminative predicate paths
+    3. Building logistic regression model
+    Parameters:
+    -----------
+    G: rgraph
+        Knowledge graph.
+    triples: dataframe
+        A data frame consisting of at least four columns, including
+        sid, pid, oid, class.
+    use_interpretable_features: bool
+        Whether or not to perform 2b.
+    cv: int
+        Number of cross-validation folds.
+    Returns:
+    --------
+    vec: DictVectorizer
+        Useful for preprocessing future triples.
+    model: dict
+        A dictionary containing 'clf' as the built model,
+        and two other key-value pairs, including best parameter
+        and best AUROC score.
+    """
+    y = triples['class'] # ground truth
+    triples = triples[['sid', 'pid', 'oid']].to_dict(orient='records')
 
-	pid = triples[0]['pid']
-	log.info('PID is: {}, with type: {}'.format(pid, pid.dtype))
-	#print 'PID is: {}, with type: {}'.format(pid, pid.dtype)
+    pid = triples[0]['pid']
+    log.info('Relation is: ({}, {}, {})'.format(triples[0]['sid'], triples[0]['pid'], triples[0]['oid']))
 
-	if np.DataSource().exists(join(HOME, "sm", "G_fil_val_{}.npz".format(int(pid)) ))\
-	   and np.DataSource().exists(join(HOME, "sm", "G_fil_rel_{}.npz".format(int(pid)) )):
-		Gr = load_npz(join(HOME, 'sm', 'G_fil_rel_{}.npz'.format(int(pid)) ))
-		Gv = load_npz(join(HOME, 'sm', 'G_fil_val_{}.npz'.format(int(pid)) ))
-	else:
-		# set weights
-		indegsim = weighted_degree(G.indeg_vec, weight=WTFN).reshape((1, G.N))
-		indegsim = indegsim.ravel()
-		targets = G.csr.indices % G.N
-		relations = (G.csr.indices - targets) / G.N
-		relsimvec = np.array(relsim[int(pid), :]) # specific to predicate p
-		relsim_wt = relsimvec[relations] # with the size of relations as the number of relations
-		######################################################
-		specificity_wt = indegsim[targets] # specificity
+    if np.DataSource().exists(join(HOME, "sm", "G_fil_val_{}.npz".format(int(pid)) ))\
+       and np.DataSource().exists(join(HOME, "sm", "G_fil_rel_{}.npz".format(int(pid)) )):
+        Gr = load_npz(join(HOME, 'sm', 'G_fil_rel_{}.npz'.format(int(pid)) ))
+        Gv = load_npz(join(HOME, 'sm', 'G_fil_val_{}.npz'.format(int(pid)) ))
+    else:
+        # set weights
+        indegsim = weighted_degree(G.indeg_vec, weight=WTFN).reshape((1, G.N))
+        indegsim = indegsim.ravel()
+        targets = G.csr.indices % G.N
+        relations = (G.csr.indices - targets) / G.N
+        relsimvec = np.array(relsim[int(pid), :]) # specific to predicate p
+        relsim_wt = relsimvec[relations] # with the size of relations as the number of relations
+        ######################################################
+        specificity_wt = indegsim[targets] # specificity
 
-		## Removing all the edges with the predicte p in between any nodes.
-		log.info('=> Removing predicate {} from KG.\n'.format(pid))
-		eraseedges_mask = ((G.csr.indices - (G.csr.indices % G.N)) / G.N) == pid
-		specificity_wt[eraseedges_mask] = 0
-		relsim_wt[eraseedges_mask] = 0
-		G.csr.data = specificity_wt.copy()
-		print ''
+        ## Removing all the edges with the predicte p in between any nodes.
+        log.info('=> Removing predicate {} from KG.\n\n'.format(pid))
+        eraseedges_mask = ((G.csr.indices - (G.csr.indices % G.N)) / G.N) == pid
+        specificity_wt[eraseedges_mask] = 0
+        relsim_wt[eraseedges_mask] = 0
+        G.csr.data = specificity_wt.copy()
 
-		G.csr.data = np.multiply(relsim_wt, G.csr.data)
-		log.info("Constructing adjacency matrix for: {}".format(pid))
-		adj_list_data = []
-		adj_list_s = []
-		adj_list_p = []
-		adj_list_o = []
-		sel_data = np.array([])
-		sel_relations = np.array([])
-		dicti = {}
-		num_nodes = len(G.csr.indptr)-1
-		for node in tqdm(xrange(num_nodes)):
-		    dicti = {}
-		    start = G.csr.indptr[node]
-		    end = G.csr.indptr[node+1]
+        G.csr.data = np.multiply(relsim_wt, G.csr.data)
+        log.info("Constructing adjacency matrix for: {}".format(pid))
+        adj_list_data = []
+        adj_list_s = []
+        adj_list_p = []
+        adj_list_o = []
+        sel_data = np.array([])
+        sel_relations = np.array([])
+        dicti = {}
+        num_nodes = len(G.csr.indptr)-1
+        for node in tqdm(xrange(num_nodes)):
+            dicti = {}
+            start = G.csr.indptr[node]
+            end = G.csr.indptr[node+1]
 
-		    sel_data = G.csr.data[start:end]
-		    sel_relations = relations[start:end]
-		    for i, sel_tar in enumerate(targets[start:end]):
-		        if sel_tar in dicti:
-		            if dicti[sel_tar][0] < sel_data[i]:
-		                dicti[sel_tar] = (sel_data[i], sel_relations[i])
-		        else:
-		            dicti[sel_tar] = (sel_data[i], sel_relations[i])
-		    for key, value in dicti.iteritems():
-		        if value[0] != 0:
-		            adj_list_data.append(value[0])
-		            adj_list_s.append(node)
-		            adj_list_p.append(value[1])
-		            adj_list_o.append(key)
-		Gr = csr_matrix((adj_list_p, (adj_list_s, adj_list_o)), shape=(num_nodes, num_nodes))
-		Gv = csr_matrix((adj_list_data, (adj_list_s, adj_list_o)), shape=(num_nodes, num_nodes))
-		save_npz(join(HOME, 'sm', 'G_fil_rel_{}.npz'.format(int(pid))), Gr)
-		save_npz(join(HOME, 'sm', 'G_fil_val_{}.npz'.format(int(pid))), Gv)
+            sel_data = G.csr.data[start:end]
+            sel_relations = relations[start:end]
+            for i, sel_tar in enumerate(targets[start:end]):
+                if sel_tar in dicti:
+                    if dicti[sel_tar][0] < sel_data[i]:
+                        dicti[sel_tar] = (sel_data[i], sel_relations[i])
+                else:
+                    dicti[sel_tar] = (sel_data[i], sel_relations[i])
+            for key, value in dicti.iteritems():
+                if value[0] != 0:
+                    adj_list_data.append(value[0])
+                    adj_list_s.append(node)
+                    adj_list_p.append(value[1])
+                    adj_list_o.append(key)
+        Gr = csr_matrix((adj_list_p, (adj_list_s, adj_list_o)), shape=(num_nodes, num_nodes))
+        Gv = csr_matrix((adj_list_data, (adj_list_s, adj_list_o)), shape=(num_nodes, num_nodes))
+        save_npz(join(HOME, 'sm', 'G_fil_rel_{}.npz'.format(int(pid))), Gr)
+        save_npz(join(HOME, 'sm', 'G_fil_val_{}.npz'.format(int(pid))), Gv)
 
-	############# Path extraction ###################
-	log.info('=> Path extraction..(this can take a while)')
-	t1 = time()
-	features, pos_features, neg_features, measurements = extract_paths_sm(Gv, Gr, triples, y)
-	log.info('P: +:{}, -:{}, unique tot:{}'.format(len(pos_features), len(neg_features), len(features)))
-	vec = DictVectorizer()
-	X = vec.fit_transform(measurements)
-	n, m = X.shape
-	log.info('Time taken: {:.2f}s\n'.format(time() - t1))
-	print ''
+    ############# Path extraction ###################
+    log.info('=> Path extraction..(this can take a while)')
+    t1 = time()
+    features, pos_features, neg_features, measurements = extract_paths_sm(Gv, Gr, triples, y)
+    log.info('P: +:{}, -:{}, unique tot:{}'.format(len(pos_features), len(neg_features), len(features)))
+    vec = DictVectorizer()
+    X = vec.fit_transform(measurements)
+    n, m = X.shape
+    log.info('Time taken: {:.2f}s\n\n'.format(time() - t1))
 
-	########### Path selection ###############
-	log.info('=> Path selection..')
-	t1 = time()
-	pathselect = SelectKBest(mutual_info_classif, k=min(100, m))
-	X_select = pathselect.fit_transform(X, y)
-	selectidx = pathselect.get_support(indices=True) # selected feature indices
-	vec = vec.restrict(selectidx, indices=True)
-	select_pos_features, select_neg_features = set(), set()
-	for feature in vec.get_feature_names():
-		if feature in pos_features:
-			select_pos_features.add(feature)
-		if feature in neg_features:
-			select_neg_features.add(feature)
-	log.info('D: +:{}, -:{}, tot:{}'.format(len(select_pos_features), len(select_neg_features), X_select.shape[1]))
-	log.info('Time taken: {:.2f}s\n'.format(time() - t1))
-	print ''
+    ########### Path selection ###############
+    log.info('=> Path selection..')
+    t1 = time()
+    pathselect = SelectKBest(mutual_info_classif, k=min(100, m))
+    X_select = pathselect.fit_transform(X, y)
+    selectidx = pathselect.get_support(indices=True) # selected feature indices
+    vec = vec.restrict(selectidx, indices=True)
+    select_pos_features, select_neg_features = set(), set()
+    for feature in vec.get_feature_names():
+        if feature in pos_features:
+            select_pos_features.add(feature)
+        if feature in neg_features:
+            select_neg_features.add(feature)
+    log.info('D: +:{}, -:{}, tot:{}'.format(len(select_pos_features), len(select_neg_features), X_select.shape[1]))
+    log.info('Time taken: {:.2f}s\n\n'.format(time() - t1))
 
-	# Fact interpretation
-	if use_interpretable_features and len(select_neg_features) > 0:
-		log.info('=> Fact interpretation..')
-		t1 = time()
-		theta = 10
-		select_neg_idx = [i for i, f in enumerate(vec.get_feature_names()) if f in select_neg_features]
-		removemask = np.where(np.sum(X_select[:, select_neg_idx], axis=0) >= theta)[0]
-		restrictidx = select_neg_idx[removemask]
-		keepidx = []
-		for i, f in enumerate(vec.get_feature_names()):
-			if i not in restrictidx:
-				keepidx.append(i)
-			else:
-				select_neg_features.remove(f)
-		vec = vec.restrictidx(keepidx, indices=True)
-		X_select = X_select[:, keepidx]
-		log.info('D*: +:{}, -:{}, tot:{}'.format(len(select_pos_features), len(select_neg_features), X_select.shape[1]))
-		log.info('Time taken: {:.2f}s\n'.format(time() - t1))
+    # Fact interpretation
+    if use_interpretable_features and len(select_neg_features) > 0:
+        log.info('=> Fact interpretation..')
+        t1 = time()
+        theta = 10
+        select_neg_idx = [i for i, f in enumerate(vec.get_feature_names()) if f in select_neg_features]
+        removemask = np.where(np.sum(X_select[:, select_neg_idx], axis=0) >= theta)[0]
+        restrictidx = select_neg_idx[removemask]
+        keepidx = []
+        for i, f in enumerate(vec.get_feature_names()):
+            if i not in restrictidx:
+                keepidx.append(i)
+            else:
+                select_neg_features.remove(f)
+        vec = vec.restrictidx(keepidx, indices=True)
+        X_select = X_select[:, keepidx]
+        log.info('D*: +:{}, -:{}, tot:{}'.format(len(select_pos_features), len(select_neg_features), X_select.shape[1]))
+        log.info('Time taken: {:.2f}s\n'.format(time() - t1))
 
-	# Model creation
-	log.info('=> Model building..')
-	#print '=> Model building..'
-	t1 = time()
-	model = find_best_model(X_select, y, cv=cv)
-	log.info('#Features: {}, best-AUROC: {:.5f}'.format(X_select.shape[1], model['best_score']))
-	#print '#Features: {}, best-AUROC: {:.5f}'.format(X_select.shape[1], model['best_score'])
-	log.info('Time taken: {:.2f}s\n'.format(time() - t1))
-	#print 'Time taken: {:.2f}s'.format(time() - t1)
-	#print ''
+    # Model creation
+    log.info('=> Model building..')
+    t1 = time()
+    model = find_best_model(X_select, y, cv=cv)
+    log.info('#Features: {}, best-AUROC: {:.5f}'.format(X_select.shape[1], model['best_score']))
+    log.info('Time taken: {:.2f}s\n'.format(time() - t1))
 
-	return vec, model
+    return vec, model
 
 # ███████ ██   ██ ████████ ██████   █████   ██████ ████████
 # ██       ██ ██     ██    ██   ██ ██   ██ ██         ██
 # █████     ███      ██    ██████  ███████ ██         ██
 # ██       ██ ██     ██    ██   ██ ██   ██ ██         ██
 # ███████ ██   ██    ██    ██   ██ ██   ██  ██████    ██
-
+@profile
 def extract_paths_sm(Gv, Gr, triples, y, features=None):
     return_features = False
     if features is None:
@@ -317,7 +245,7 @@ def extract_paths_sm(Gv, Gr, triples, y, features=None):
         triple_feature = dict()
         discovered_paths = yenKSP(Gv, Gr, sid, pid, oid, K = 5)
         for path in discovered_paths:
-            print path
+            log.info(path)
             ff = tuple(path.relational_path)
             if ff not in features:
                 features.add(ff)
@@ -330,71 +258,70 @@ def extract_paths_sm(Gv, Gr, triples, y, features=None):
             triple_feature[ff] = triple_feature.get(ff, 0) + 1
         measurements.append(triple_feature)
         gc.collect()
-    print ''
+    log.info("\n")
     if return_features:
         return features, pos_features, neg_features, measurements
     return measurements
 
 def main(args=None):
-	parser = argparse.ArgumentParser(
-		description=__doc__,
-		formatter_class=argparse.ArgumentDefaultsHelpFormatter
-	)
-	parser.add_argument('-d', type=str, required=True,
-			dest='dataset', help='Dataset to test on.')
-	parser.add_argument('-o', type=str, required=True,
-			dest='outdir', help='Path to the output directory.')
-	parser.add_argument('-m', type=str, required=True,
-			dest='method', help='Method to use: stream, relklinker, klinker, \
-			predpath, sm')
-	args = parser.parse_args()
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+    parser.add_argument('-d', type=str, required=True,
+            dest='dataset', help='Dataset to test on.')
+    parser.add_argument('-o', type=str, required=True,
+            dest='outdir', help='Path to the output directory.')
+    parser.add_argument('-m', type=str, required=True,
+            dest='method', help='Method to use: stream, relklinker, klinker, \
+            predpath, sm')
+    args = parser.parse_args()
 
-	relsim = np.load(RELSIMPATH)
+    relsim = np.load(RELSIMPATH)
 
-	outdir = abspath(expanduser(args.outdir))
-	assert exists(outdir)
-	args.outdir = outdir
-	datafile = abspath(expanduser(args.dataset))
-	assert exists(datafile)
-	args.dataset = datafile
-	LOGPATH = join(HOME, '../logs')
-	assert exists(LOGPATH)
-	base = splitext(basename(args.dataset))[0]
-	log_file = join('logs/', 'log_{}_{}_{}.log'.format(args.method, base, DATE))
-	log.basicConfig(format = '[%(asctime)s] %(message)s', datefmt = '%m/%d/%Y %H:%M:%S %p', filename = log_file, level=log.DEBUG)
-	log.getLogger().addHandler(log.StreamHandler())
-	log.info('Launching {}..'.format(args.method))
-	log.info('Dataset: {}'.format(basename(args.dataset)))
-	log.info('Output dir: {}'.format(args.outdir))
+    outdir = abspath(expanduser(args.outdir))
+    assert exists(outdir)
+    args.outdir = outdir
+    datafile = abspath(expanduser(args.dataset))
+    assert exists(datafile)
+    args.dataset = datafile
+    LOGPATH = join(HOME, '../logs')
+    assert exists(LOGPATH)
+    base = splitext(basename(args.dataset))[0]
+    log_file = join('logs/', 'log_{}_{}_{}.log'.format(args.method, base, DATE)) 
+    sys.stdout = LogFile('logs/memory_profile_{}_{}_{}.log'.format(args.method, base, DATE))
+    log.basicConfig(format = '[%(asctime)s] %(message)s', datefmt = '%m/%d/%Y %H:%M:%S %p', filename = log_file, level=log.DEBUG)
+    log.getLogger().addHandler(log.StreamHandler())
+    log.info('Launching {}..'.format(args.method))
+    log.info('Dataset: {}'.format(basename(args.dataset)))
+    log.info('Output dir: {}'.format(args.outdir))
 
-	# read data
-	df = pd.read_table(args.dataset, sep=',', header=0)
-	log.info('Read data: {} {}'.format(df.shape, basename(args.dataset)))
-	spo_df = df.dropna(axis=0, subset=['sid', 'pid', 'oid'])
-	log.info('Note: Found non-NA records: {}'.format(spo_df.shape))
-	df = spo_df[['sid', 'pid', 'oid']].values
-	subs, preds, objs  = df[:,0].astype(_int), df[:,1].astype(_int), df[:,2].astype(_int)
+    # read data
+    df = pd.read_table(args.dataset, sep=',', header=0)
+    log.info('Read data: {} {}'.format(df.shape, basename(args.dataset)))
+    spo_df = df.dropna(axis=0, subset=['sid', 'pid', 'oid'])
+    log.info('Note: Found non-NA records: {}'.format(spo_df.shape))
+    df = spo_df[['sid', 'pid', 'oid']].values
 
-	# load knowledge graph
-	G = Graph.reconstruct(PATH, SHAPE, sym=True) # undirected
-	assert np.all(G.csr.indices >= 0)
+    # load knowledge graph
+    G = Graph.reconstruct(PATH, SHAPE, sym=True) # undirected
+    assert np.all(G.csr.indices >= 0)
 
-	t1 = time()
+    t1 = time()
 
-	if args.method == 'sm':
-		vec, model = train_model_sm(G, spo_df, relsim) # train
-		print 'Time taken: {:.2f}s\n'.format(time() - t1)
-		log.info('Time taken: {:.2f}s\n'.format(time() - t1))
-		# save model
-		predictor = { 'dictvectorizer': vec, 'model': model }
-		try:
-			outpkl = join(args.outdir, 'out_streamminer_{}_{}.pkl'.format(base, DATE))
-			with open(outpkl, 'wb') as g:
-				pkl.dump(predictor, g, protocol=pkl.HIGHEST_PROTOCOL)
-			print 'Saved: {}'.format(outpkl)
-		except IOError, e:
-			raise e
-	print '\nDone!\n'
+    if args.method == 'sm':
+        vec, model = train_model_sm(G, spo_df, relsim) # train
+        log.info('Time taken: {:.2f}s\n'.format(time() - t1))
+        # save model
+        predictor = { 'dictvectorizer': vec, 'model': model }
+        try:
+            outpkl = join(args.outdir, 'out_streamminer_{}_{}.pkl'.format(base, DATE))
+            with open(outpkl, 'wb') as g:
+                pkl.dump(predictor, g, protocol=pkl.HIGHEST_PROTOCOL)
+            log.info('Saved: {}'.format(outpkl))
+        except IOError, e:
+            raise e
+    log.info('\nDone!\n')
 
 if __name__ == '__main__':
-	main()
+    main()

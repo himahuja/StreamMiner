@@ -42,6 +42,8 @@ matplotlib
 mistune
 notebook
 numpy
+memory_profiler
+line_profiler
 pandas
 pandocfilters
 pathlib2
