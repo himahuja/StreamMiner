@@ -71,13 +71,13 @@ ext = [
 		extra_compile_args=['-w'],
 		extra_link_args=['-w']
 	),
-#    Extension(
-#		name='algorithms.sm.yenKSP',
-#		sources=['algorithms/sm/yenKSP.pyx'],
-#		include_dirs=_incl,
-#		extra_compile_args=['-w'],
-#		extra_link_args=['-w']
-#	),
+    Extension(
+		name='algorithms.sm.yenKSP',
+		sources=['algorithms/sm/yenKSP.pyx'],
+		include_dirs=_incl,
+		extra_compile_args=['-w'],
+		extra_link_args=['-w']
+	),
 	# ====== RELATIONAL KNOWLEDGE LINKER (KL-REL) ======
 	Extension(
 		name='algorithms.relklinker.rel_closure',

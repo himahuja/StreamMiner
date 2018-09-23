@@ -54,3 +54,9 @@ Special thanks are also in order to the [Indiana University Bloomington Networks
 #### Cython
 
 [Cython Wiki](https://github.com/cython/cython/wiki)
+
+#### Profiling
+
+[Line_Profiler](https://github.com/rkern/line_profiler)
+
+[Memory Profiler](https://pypi.org/project/memory_profiler/)
