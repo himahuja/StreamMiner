@@ -78,6 +78,13 @@ ext = [
 		extra_compile_args=['-w'],
 		extra_link_args=['-w']
 	),
+    Extension(
+		name='algorithms.sm.extract_paths',
+		sources=['algorithms/sm/extract_paths.pyx'],
+		include_dirs=_incl,
+		extra_compile_args=['-w'],
+		extra_link_args=['-w']
+	),
 	# ====== RELATIONAL KNOWLEDGE LINKER (KL-REL) ======
 	Extension(
 		name='algorithms.relklinker.rel_closure',
@@ -96,8 +103,8 @@ ext = [
 	),
 	# ====== PREDICATE PATH MINING (PREDPATH) ======
 	Extension(
-		name='pathenum',
-		sources=['pathenum.pyx'],
+		name='algorithms.pathenum',
+		sources=['algorithms/pathenum.pyx'],
 		include_dirs=_incl,
 		extra_compile_args=['-w'],
 		extra_link_args=['-w'],
