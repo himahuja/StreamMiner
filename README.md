@@ -37,6 +37,18 @@ Prashant Shiralkar, Alessandro Flammini, Filippo Menczer, Giovanni Luca Ciampagl
 
 > The volume and velocity of information that gets generated online limits current journalistic practices to fact-check claims at the same rate. Computational approaches for fact checking may be the key to help mitigate the risks of massive misinformation spread. Such approaches can be designed to not only be scalable and effective at assessing veracity of dubious claims, but also to boost a human fact checker's productivity by surfacing relevant facts and patterns to aid their analysis. To this end, we present a novel, unsupervised network-flow based approach to determine the truthfulness of a statement of fact expressed in the form of a (subject, predicate, object) triple. We view a knowledge graph of background information about real-world entities as a flow network, and knowledge as a fluid, abstract commodity. We show that computational fact checking of such a triple then amounts to finding a "knowledge stream" that emanates from the subject node and flows toward the object node through paths connecting them. Evaluation on a range of real-world and hand-crafted datasets of facts related to entertainment, business, sports, geography and more reveals that this network-flow model can be very effective in discerning true statements from false ones, outperforming existing algorithms on many test cases. Moreover, the model is expressive in its ability to automatically discover several useful path patterns and surface relevant facts that may help a human fact checker corroborate or refute a claim.
 
+## Ideas for Increasing Performance
+
+#### [A* Search Algorithm](https://en.wikipedia.org/wiki/A*_search_algorithm)
+
+<center><img src="img/AstarExampleEn.gif"></center>
+
+> In computer science, A* (pronounced as "A star") is a computer algorithm that is widely used in pathfinding and graph traversal, which is the process of finding a path between multiple points, called "nodes". It enjoys widespread use due to its performance and accuracy. However, in practical travel-routing systems, it is generally outperformed by algorithms which can pre-process the graph to attain better performance, although other work has found A* to be superior to other approaches. Peter Hart, Nils Nilsson and Bertram Raphael of Stanford Research Institute (now SRI International) first published the algorithm in 1968. It can be seen an extension of Edsger Dijkstra's 1959 algorithm. A* achieves better performance by using heuristics to guide its search.
+
+#### [Other K-Shortest Path Algorithms](https://en.wikipedia.org/wiki/K_shortest_path_routing)
+
+[K⁎: A heuristic search algorithm for finding the k shortest paths](https://www.sciencedirect.com/science/article/pii/S0004370211000865?via%3Dihub)
+
 ## Helpful Resources
 
 #### CSR Matrices
