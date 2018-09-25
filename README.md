@@ -1,10 +1,6 @@
 # README.md
 
-The volume of information today is outpacing the capacity of experts to fact-check it, and in the Information Age the real-world consequences of misinformation are becoming increasingly dire. Recently, computational methods for tackling this problem have been proposed with many of them revolving around knowledge graphs. We present a novel computational fact-checking algorithm, **We should give it a name**, *inspired from/ improving on/ inspired from and imporving on* the techniques used in state-of-the-art fact-checking algorithms, PredPath and Knowledge Stream. ~~which draws on concepts from two of the leading algorithms for computational fact-checking on knowledge graphs, Knowledge Stream and PredPath.~~ Our solution views the problem of fact-checking as a link-prediction problem which relies on discriminitive path model, but draws on the idea of relational similarity and node generality to redefine path length. This gives our solution the advantage of training on more specific paths consisting of edges whose predicates are more conceptually similar to the target predicate. ~~Combining these concepts lead to a more robust and intuitive model for computational fact-checking.~~ The proposed algorithm shows *perfromance at-par with the state-of-the-arts* but lead to a more robust and intuitive model for computational fact-checking.
-
-## Version 2
-
-The volume of information today is outpacing the capacity of experts to fact-check it, and in the Information Age the real-world consequences of misinformation are becoming increasingly dire. Recently, computational methods for tackling this problem have been proposed with many of them revolving around knowledge graphs. We present a novel computational fact-checking algorithm, **OurAlgo<sup>TM</sup>**, inspired by and improving on the techniques used in state-of-the-art fact-checking algorithms, PredPath and Knowledge Stream. Our solution views the problem of fact-checking as a link-prediction problem which relies on discriminitive path model, but draws on ~~the idea of~~ relational similarity and node generality to redefine path length. This gives our solution the advantage of training on more specific paths consisting of edges whose predicates are more conceptually similar to the target predicate. **OurAlgo<sup>TM</sup>** shows performance at-par with other state-of-the-art fact-checking algorithms, but leads to a more robust and intuitive model for computational fact-checking.
+The volume of information today is outpacing the capacity of experts to fact-check it, and in the Information Age the real-world consequences of misinformation are becoming increasingly dire. Recently, computational methods for tackling this problem have been proposed with many of them revolving around knowledge graphs. We present a novel computational fact-checking algorithm, RelPredPath, inspired by and improving on the techniques used in state-of-the-art fact-checking algorithms, PredPath and Knowledge Stream. Our solution views the problem of fact-checking as a link-prediction problem which relies on discriminitive path model, but draws on relational similarity and node generality to redefine path length. This gives our solution the advantage of training on more specific paths consisting of edges whose predicates are more conceptually similar to the target predicate. RelPredPath shows performance at-par with other state-of-the-art fact-checking algorithms, but leads to a more robust and intuitive model for computational fact-checking.
 
 ## Getting Started
 
@@ -18,7 +14,7 @@ Download data from the following URL http://carl.cs.indiana.edu/data/fact-checki
 
 ## Performance
 
-|                                       | StreamMiner | PredPath | KS     | KL-REL |
+|                                       | RelPredPath | PredPath | KS     | KL-REL |
 |---------------------------------------|-------------|----------|--------|--------|
 | cross_US_Presidents_vs_First_Lady.csv | 1.0000      | 1.0000   | 0.9805 | 0.9832 |
 | Player_vs_Team_NBA.csv                | 0.96341     | 0.9231   | 0.9996 | 0.9994 |
@@ -27,7 +23,7 @@ Download data from the following URL http://carl.cs.indiana.edu/data/fact-checki
 | predpath_vice_president.csv           | 0.85365     | 0.9440   | 0.7780 | 0.8729 |
 
 
-## Inspiration and Acknowledgements:
+## Inspiration
 
 [Discriminative Predicate Path Mining for Fact Checking in Knowledge Graphs](https://arxiv.org/abs/1510.05911)
 
@@ -41,17 +37,26 @@ Prashant Shiralkar, Alessandro Flammini, Filippo Menczer, Giovanni Luca Ciampagl
 
 > The volume and velocity of information that gets generated online limits current journalistic practices to fact-check claims at the same rate. Computational approaches for fact checking may be the key to help mitigate the risks of massive misinformation spread. Such approaches can be designed to not only be scalable and effective at assessing veracity of dubious claims, but also to boost a human fact checker's productivity by surfacing relevant facts and patterns to aid their analysis. To this end, we present a novel, unsupervised network-flow based approach to determine the truthfulness of a statement of fact expressed in the form of a (subject, predicate, object) triple. We view a knowledge graph of background information about real-world entities as a flow network, and knowledge as a fluid, abstract commodity. We show that computational fact checking of such a triple then amounts to finding a "knowledge stream" that emanates from the subject node and flows toward the object node through paths connecting them. Evaluation on a range of real-world and hand-crafted datasets of facts related to entertainment, business, sports, geography and more reveals that this network-flow model can be very effective in discerning true statements from false ones, outperforming existing algorithms on many test cases. Moreover, the model is expressive in its ability to automatically discover several useful path patterns and surface relevant facts that may help a human fact checker corroborate or refute a claim.
 
-Our work would not be possible without the relentless work of many researchers, and in particular Prashant Shiralkar who has contributed much to the field and whose [Knowledge Stream GitHub repo](https://github.com/shiralkarprashant/knowledgestream) was indispensable to our work.
-
-Special thanks are also in order to the [Indiana University Bloomington Networks & agents Network (NaN) group](http://cnets.indiana.edu/groups/nan/) for providing a [data repository](http://carl.cs.indiana.edu/data/) which we utilized and both [Google Relation Extraction Corpora (GREC)](https://ai.googleblog.com/2013/04/50000-lessons-on-how-to-read-relation.html) and [WSDM Cup 2017 Triple Scoring challenge corpus](https://www.wsdm-cup-2017.org/triple-scoring.html) who provide relational triples we utlized in evaluating our algorithm
-
 ## Helpful Resources
 
 #### CSR Matrices
 
-[Compressed Sparse Row Format (CSR)](https://www.scipy-lectures.org/advanced/scipy_sparse/csr_matrix.html)
+Compressed Sparse Row matrix
 
-#### Cython
+From [Compressed Sparse Row Format (CSR)](https://www.scipy-lectures.org/advanced/scipy_sparse/csr_matrix.html):
+
+Advantages of the CSR format
+* efficient arithmetic operations CSR + CSR, CSR * CSR, etc.
+* efficient row slicing
+* fast matrix vector products
+
+Disadvantages of the CSR format
+* slow column slicing operations (consider CSC)
+* changes to the sparsity structure are expensive (consider LIL or DOK)
+
+#### [Cython](http://cython.org/)
+
+> Cython is an optimising static compiler for both the Python programming language and the extended Cython programming language (based on Pyrex). It makes writing C extensions for Python as easy as Python itself.
 
 [Cython Wiki](https://github.com/cython/cython/wiki)
 
@@ -59,4 +64,33 @@ Special thanks are also in order to the [Indiana University Bloomington Networks
 
 [Line_Profiler](https://github.com/rkern/line_profiler)
 
+> line_profiler is a module for doing line-by-line profiling of functions.
+
+The easiest way to get started is to use the kernprof script.
+
+```bash
+$ kernprof -l -v streamminer2.py -o output -d datasets/sub_sample.csv -m sm
+```
+
+To view the results, run
+```bash
+$ python -m line_profiler streamminer2.py.lprof
+```
+
 [Memory Profiler](https://pypi.org/project/memory_profiler/)
+
+> This is a python module for monitoring memory consumption of a process as well as line-by-line analysis of memory consumption for python programs. It is a pure python module which depends on the psutil module.
+
+```bash
+$ python -m memory_profiler streamminer2.py -o output -d datasets/sub_sample.csv -m sm
+```
+
+## Acknowledgements
+
+Our work would not be possible without the relentless work of many researchers, and in particular Prashant Shiralkar who has contributed much to the field and whose [Knowledge Stream GitHub repo](https://github.com/shiralkarprashant/knowledgestream) was indispensable to our work and served as the code base for this project.
+
+We are also extremely thankful to [UCLA's Institute for Pure and Applied Mathematics](http://www.ipam.ucla.edu/) [Research in Industrial Projects for Students (RIPS)](https://www.ipam.ucla.edu/programs/student-research-programs/research-in-industrial-projects-for-students-rips-2018/) and the NSF for funding our research and especially Susana Serna for going above and beyond to advise and support us both academically, personally, and professionally.
+
+Special thanks are also in order to the [Indiana University Bloomington Networks & agents Network (NaN) group](http://cnets.indiana.edu/groups/nan/) for providing a [data repository](http://carl.cs.indiana.edu/data/) which we utilized and both [Google Relation Extraction Corpora (GREC)](https://ai.googleblog.com/2013/04/50000-lessons-on-how-to-read-relation.html) and [WSDM Cup 2017 Triple Scoring challenge corpus](https://www.wsdm-cup-2017.org/triple-scoring.html) who provide relational triples we utlized in evaluating our algorithm
+
+```
