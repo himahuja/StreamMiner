@@ -7,7 +7,7 @@ for i in "${methods[@]}"
 do
     for j in "${datasets[@]}"
     do
-        python -m streamminer2 -d $j -o output -m $i
+        python -m streamminer -d $j -o output -m $i
         sleep 60
     done
 done
