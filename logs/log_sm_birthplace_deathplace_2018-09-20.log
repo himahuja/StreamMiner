@@ -1,7 +1,0 @@
-[09/20/2018 22:19:53 PM] Launching sm..
-[09/20/2018 22:19:53 PM] Dataset: birthplace_deathplace.csv
-[09/20/2018 22:19:53 PM] Output dir: /home/galois/Documents/streamminer/output
-[09/20/2018 22:19:53 PM] Read data: (500, 8) birthplace_deathplace.csv
-[09/20/2018 22:19:53 PM] Note: Found non-NA records: (500, 8)
-[09/20/2018 22:19:57 PM] PID is: 65, with type: int64
-[09/20/2018 22:20:03 PM] => Path extraction..(this can take a while)

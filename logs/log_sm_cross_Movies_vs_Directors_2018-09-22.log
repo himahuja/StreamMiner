@@ -1,7 +1,0 @@
-[09/22/2018 02:37:48 AM] Launching sm..
-[09/22/2018 02:37:48 AM] Dataset: cross_Movies_vs_Directors.csv
-[09/22/2018 02:37:48 AM] Output dir: /home/galois/Documents/streamminer/output
-[09/22/2018 02:37:48 AM] Read data: (4680, 8) cross_Movies_vs_Directors.csv
-[09/22/2018 02:37:48 AM] Note: Found non-NA records: (4680, 8)
-[09/22/2018 02:37:51 AM] PID is: 178, with type: int64
-[09/22/2018 02:37:58 AM] => Path extraction..(this can take a while)
