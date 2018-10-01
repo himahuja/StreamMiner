@@ -103,6 +103,8 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+README.html
+README.pdf
 
 MANIFEST
 build
