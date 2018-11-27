@@ -149,3 +149,4 @@ package-lock.json
 .DS_Store
 
 data/
+*.html
