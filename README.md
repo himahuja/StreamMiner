@@ -17,6 +17,11 @@ Download data from the following URL http://carl.cs.indiana.edu/data/fact-checki
 |                                       | RelPredPath | PredPath | KS     | KL-REL |
 |---------------------------------------|-------------|----------|--------|--------|
 | cross_US_Presidents_vs_First_Lady.csv | 1.0000      | 1.0000   | 0.9805 | 0.9832 |
+| cross_Movies_vs_Directors             | 0.97412     | 0.9997   | 0.9500 | 0.9767 |
+| derived_filtered_nationality          | 0.84000     | 0.9520   | 0.9792 | 0.9692 |
+| derived_filtered_profession           | 0.94545     | 0.9271   | 0.9866 | 0.9732 |
+| place_of_birth                        | 0.64983     | 0.8464   | 0.7292 | 0.9254 |
+| place_of_death                        | 0.68581     | 0.7654   | 0.8002 | 0.9091 |
 | Player_vs_Team_NBA.csv                | 0.96341     | 0.9231   | 0.9996 | 0.9994 |
 | predpath_civil_war_battle.csv         | 0.67044     | 0.9951   | 0.7780 | 0.8634 |
 | predpath_company_president.csv        | 0.79345     | 0.8867   | 0.8119 | 0.8988 |
