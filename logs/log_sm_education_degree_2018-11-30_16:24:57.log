@@ -1,0 +1,7 @@
+[11/30/2018 16:24:57 PM] Launching sm..
+[11/30/2018 16:24:57 PM] Dataset: education_degree.csv
+[11/30/2018 16:24:57 PM] Output dir: /home/galois/Documents/streamminer/output
+[11/30/2018 16:24:57 PM] Read data: (1861, 7) education_degree.csv
+[11/30/2018 16:24:57 PM] Note: Found non-NA records: (1861, 7)
+[11/30/2018 16:24:58 PM] PID is: 194, with type: int64
+[11/30/2018 16:25:05 PM] => Path extraction..(this can take a while)

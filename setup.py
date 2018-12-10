@@ -85,6 +85,13 @@ ext = [
 		extra_compile_args=['-w'],
 		extra_link_args=['-w']
 	),
+    Extension(
+		name='algorithms.sm.extract_paths_par',
+		sources=['algorithms/sm/extract_paths_par.pyx'],
+		include_dirs=_incl,
+		extra_compile_args=['-w'],
+		extra_link_args=['-w']
+	),
 	# ====== RELATIONAL KNOWLEDGE LINKER (KL-REL) ======
 	Extension(
 		name='algorithms.relklinker.rel_closure',

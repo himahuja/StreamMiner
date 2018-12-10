@@ -25,6 +25,7 @@ from algorithms.klinker.closure import closure
 from algorithms.mincostflow.ssp import succ_shortest_path
 from algorithms.pathenum import get_paths as c_get_paths
 from algorithms.sm.extract_paths import extract_paths_sm
+from algorithms.sm.extract_paths_par import extract_paths_sm_par
 from algorithms.relklinker.rel_closure import relational_closure as relclosure
 ##############################################
 from memory_profiler import profile
@@ -81,6 +82,7 @@ def train_model_sm(G, triples, relsim, use_interpretable_features=False, cv=10):
     2a. Path selection using information gain
     2b. Filtering most informative discriminative predicate paths
     3. Building logistic regression model
+
     Parameters:
     -----------
     G: rgraph
@@ -92,6 +94,7 @@ def train_model_sm(G, triples, relsim, use_interpretable_features=False, cv=10):
         Whether or not to perform 2b.
     cv: int
         Number of cross-validation folds.
+
     Returns:
     --------
     vec: DictVectorizer
@@ -166,7 +169,7 @@ def train_model_sm(G, triples, relsim, use_interpretable_features=False, cv=10):
     ############# Path extraction ###################
     log.info('=> Path extraction..(this can take a while)')
     t1 = time()
-    features, pos_features, neg_features, measurements = extract_paths_sm(Gv, Gr, triples, y)
+    features, pos_features, neg_features, measurements = extract_paths_sm_par(Gv, Gr, triples, y)
     gc.collect()
     log.info('P: +:{}, -:{}, unique tot:{}'.format(len(pos_features), len(neg_features), len(features)))
     vec = DictVectorizer()
@@ -226,6 +229,7 @@ def predpath_train_model(G, triples, use_interpretable_features=False, cv=10):
     2a. Path selection using information gain
     2b. Filtering most informative discriminative predicate paths
     3. Building logistic regression model
+
     Parameters:
     -----------
     G: rgraph
@@ -237,6 +241,7 @@ def predpath_train_model(G, triples, use_interpretable_features=False, cv=10):
         Whether or not to perform 2b.
     cv: int
         Number of cross-validation folds.
+
     Returns:
     --------
     vec: DictVectorizer
@@ -322,6 +327,7 @@ def predpath_train_model(G, triples, use_interpretable_features=False, cv=10):
 def extract_paths(G, triples, y, length=3, features=None):
     """
     Extracts anchored predicate paths for a given sequence of triples.
+
     Parameters:
     -----------
     G: rgraph
@@ -336,6 +342,7 @@ def extract_paths(G, triples, y, length=3, features=None):
         Features extracted earlier. A set of (feature_id, path) pairs.
         If None, it is assumed feature set and feature matrix are desired.
         If not None, only X (feature matrix) is returned.
+
     Returns:
     --------
     features: dict
@@ -393,6 +400,7 @@ def compute_mincostflow(G, relsim, subs, preds, objs, flowfile):
     flowfile: str
         Absolute path of the file where flow will be stored as JSON,
         one line per triple.
+
     Returns:
     --------
     mincostflows: sequence
@@ -464,6 +472,7 @@ def compute_relklinker(G, relsim, subs, preds, objs):
     subs, preds, objs: sequence
         Sequences representing the subject, predicate and object of
         input triples.
+
     Returns:
     --------
     scores, paths, rpaths, times: sequence
@@ -533,6 +542,7 @@ def compute_klinker(G, subs, preds, objs):
     subs, preds, objs: sequence
         Sequences representing the subject, predicate and object of
         input triples.
+
     Returns:
     --------
     scores, paths, rpaths, times: sequence

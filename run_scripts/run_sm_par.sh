@@ -4,6 +4,6 @@ declare -a datasets=( "datasets/sub_sample.csv" "datasets/sample.csv" "datasets/
 
 for i in "${datasets[@]}"
 do
-    python -m streamminer -d $i -o output -m sm
+    python -m streamminer_par -d $i -o output -m sm
     sleep 60
 done

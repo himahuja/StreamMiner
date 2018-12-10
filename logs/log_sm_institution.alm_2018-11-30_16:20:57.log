@@ -1,0 +1,5 @@
+[11/30/2018 16:20:57 PM] Launching sm..
+[11/30/2018 16:20:57 PM] Dataset: institution.alm.csv
+[11/30/2018 16:20:57 PM] Output dir: /home/galois/Documents/streamminer/output
+[11/30/2018 16:20:57 PM] Read data: (26156, 7) institution.alm.csv
+[11/30/2018 16:20:57 PM] Note: Found non-NA records: (26156, 7)
