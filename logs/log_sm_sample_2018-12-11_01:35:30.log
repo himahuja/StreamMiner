@@ -1,0 +1,10 @@
+[12/11/2018 01:35:30 AM] Launching sm..
+[12/11/2018 01:35:30 AM] Dataset: sample.csv
+[12/11/2018 01:35:30 AM] Output dir: /home/dijkstra/Documents/streamminer/output
+[12/11/2018 01:35:30 AM] Read data: (104, 7) sample.csv
+[12/11/2018 01:35:30 AM] Note: Found non-NA records: (104, 7)
+[12/11/2018 01:35:30 AM] PID is: 599.0, with type: float64
+[12/11/2018 01:35:32 AM] => Removing predicate 599.0 from KG.
+
+
+[12/11/2018 01:35:34 AM] Constructing adjacency matrix for: 599.0

@@ -1,0 +1,17 @@
+argparse
+Cython
+jupyter-client
+jupyter-core
+logging
+matplotlib
+memory_profiler
+multiprocessing
+notebook
+numpy
+pandas
+pickleshare
+scikit-learn
+scipy
+sklearn
+tqdm
+ujson
