@@ -69,7 +69,7 @@ python-igraph==0.7.1.post6
 pytz==2018.5
 PyYAML==3.13
 pyzmq==17.1.2
-requests==2.19.1
+requests==2.20.0
 scandir==1.9.0
 scikit-learn==0.19.2
 scipy==1.1.0
