@@ -67,7 +67,7 @@ PySocks==1.6.8
 python-dateutil==2.7.3
 python-igraph==0.7.1.post6
 pytz==2018.5
-PyYAML==3.13
+PyYAML==5.4
 pyzmq==17.1.2
 requests==2.19.1
 scandir==1.9.0
